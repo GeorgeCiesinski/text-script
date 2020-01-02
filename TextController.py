@@ -23,6 +23,11 @@ class WordCatcher:
 
         self.log.debug("WordCatcher has been initialized.")
 
+        # Start listener
+        with Listener(on_press=self.word_builder) as listener:
+            listener.join()
+            self.log.debug("Listener started.")
+
     def word_builder(self, key):
         """
         word_test should listen for the delimiter. If delimiter is pressed, this method should:
@@ -63,6 +68,7 @@ class WordCatcher:
         self.keydata = str(self.key)
         self.keydata = self.keydata.strip("'")
 
+        # Prints typed letter to console
         print(self.keydata)
 
     def delimiter_check(self):
@@ -70,15 +76,19 @@ class WordCatcher:
         Checks if delimiter has been entered
         """
 
+        # If delimiter is entered but there is a word in progress, clear the word and start a new word
         if self.keydata == self.delimiter and self.word_in_progress is True:
-            # If delimiter is entered but there is a word in progress, clear the word and start anew
+
             self.clear_current_word()
+
+            # Sets word_in_progress to True as new word has been started
             self.word_in_progress = True
 
-            self.log.debug("Delimiter detected while word in progress.")
+            self.log.debug("Delimiter detected while word in progress. Restarting word.")
 
+        # If delimiter is entered and there is no word in progress, start a new word
         elif self.keydata == self.delimiter and self.word_in_progress is False:
-            # If delimiter is entered, start a new word
+
             self.word_in_progress = True
 
             self.log.debug("Delimiter detected. Starting new word.")
@@ -90,10 +100,13 @@ class WordCatcher:
 
         if self.keydata == "Key.tab" or self.keydata == "Key.space" or self.keydata == "Key.enter":
 
-            self.log.debug(f"Word has ended: {self.current_word}\n")
+            # Checks if there is a word in progress, clears it if true
+            if self.word_in_progress is True:
 
-            # Clears current word
-            self.clear_current_word()
+                self.log.debug(f"Word ended by {self.keydata}: {self.current_word}")
+
+                # Clears current word
+                self.clear_current_word()
 
     def backspace_check(self):
 
@@ -101,6 +114,8 @@ class WordCatcher:
 
             # Removes last letter from word
             self.current_word = self.current_word[:-1]
+
+            self.log.debug("Key.backspace entered, removing last letter from word.")
 
     def letter_append(self):
         """
@@ -129,12 +144,8 @@ class TextTyper:
 if __name__ == "__main__":
 
     # Creates instance of Logger
-    l = Logger()
-    l.log.debug("Program started from TextController.py. Debugging.")
+    L = Logger()
+    L.log.debug("Program started from TextController.py. Debugging.")
 
     # Creates instance of WordCatcher
-    w = WordCatcher(l)
-
-    # Starting listener
-    with Listener(on_press=w.word_builder) as listener:
-        listener.join()
+    w = WordCatcher(L)
