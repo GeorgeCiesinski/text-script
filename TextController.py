@@ -1,10 +1,14 @@
 from pynput.keyboard import Listener
+from Logger import Logger
 
 
 # Class catches individual words as they are typed
 class WordCatcher:
 
-    def __init__(self):
+    def __init__(self, log):
+
+        # Creates instance wide log variable
+        self.log = log.log
 
         # Temporary word variable
         self.word_in_progress = False
@@ -17,7 +21,7 @@ class WordCatcher:
         # Delimiter
         self.delimiter = "#"
 
-        print("WordCatcher has been initialized.")
+        self.log.debug("WordCatcher has been initialized.")
 
     def word_builder(self, key):
         """
@@ -44,6 +48,9 @@ class WordCatcher:
         # Checks if word has ended
         self.word_end_check()
 
+        # Checks for backspace
+        self.backspace_check()
+
         # Appends letter if word is in progress
         self.letter_append()
 
@@ -68,11 +75,13 @@ class WordCatcher:
             self.clear_current_word()
             self.word_in_progress = True
 
-            print("Delimiter has been detected while word in progress.")
+            self.log.debug("Delimiter detected while word in progress.")
+
         elif self.keydata == self.delimiter and self.word_in_progress is False:
             # If delimiter is entered, start a new word
             self.word_in_progress = True
-            print("Delimiter has been detected. Word in progress set to True.")
+
+            self.log.debug("Delimiter detected. Starting new word.")
 
     def word_end_check(self):
         """
@@ -80,31 +89,52 @@ class WordCatcher:
         """
 
         if self.keydata == "Key.tab" or self.keydata == "Key.space" or self.keydata == "Key.enter":
-            print(self.current_word)
+
+            self.log.debug(f"Word has ended: {self.current_word}\n")
+
+            # Clears current word
             self.clear_current_word()
 
-            print("Word has ended.\n")
+    def backspace_check(self):
+
+        if self.keydata == "Key.backspace":
+
+            # Removes last letter from word
+            self.current_word = self.current_word[:-1]
 
     def letter_append(self):
         """
         Appends the letter to self.current_word if self.word_in_progress is true
         """
 
-        if self.word_in_progress is True:
+        if self.word_in_progress is True and len(self.keydata) == 1:
+
+            # Adds letter to the word
             self.current_word += self.keydata
-            print(f"Appended {self.keydata} to self.current_word.")
+
+            self.log.debug(f"Appended {self.keydata} to self.current_word.")
 
     def clear_current_word(self):
 
         self.current_word = ""
         self.word_in_progress = False
 
-        print("Clearing current word.")
+        self.log.debug("self.current_word changed to False.")
 
 
-# Creates instance of WordCatcher
-w = WordCatcher()
+class TextTyper:
+    pass
 
-# Starting listener
-with Listener(on_press=w.word_builder) as listener:
-    listener.join()
+
+if __name__ == "__main__":
+
+    # Creates instance of Logger
+    l = Logger()
+    l.log.debug("Program started from TextController.py. Debugging.")
+
+    # Creates instance of WordCatcher
+    w = WordCatcher(l)
+
+    # Starting listener
+    with Listener(on_press=w.word_builder) as listener:
+        listener.join()
