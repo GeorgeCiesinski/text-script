@@ -1,0 +1,1 @@
+Text-Script generated logs appear in this folder.
