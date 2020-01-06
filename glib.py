@@ -20,10 +20,11 @@ def list_subdirectories(directory):
 
 def list_files(directory):
     """
-    Lists all files and subdirectories in the directory.
+    Lists all files and subdirectories in the directory. Returns list
 
     :param directory:
-    :return:
+    :return file_list:
+    :rtype list:
     """
 
     file_list = list()
@@ -32,8 +33,21 @@ def list_files(directory):
         for name in files:
             file_list.append(os.path.join(root, name))
 
-    print(file_list)
+    return file_list
 
+def categorizer(file_list):
+    """
+    Creates internal list variable for categories
+
+    :param file_list:
+    :return:
+    """
+
+    pass
+
+#TODO: Make a regex to recognize 'Textblocks/#hello.txt' & 'Textblocks/hello.txt'
+
+#TODO: Make a regex to recognize 'Textblocks/Signatures\\#sig.txt' & 'Textblocks/Signatures\\sig.txt'
 
 text_block_dir = 'Textblocks/'
 list_subdirectories(text_block_dir)
