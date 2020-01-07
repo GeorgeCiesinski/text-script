@@ -5,13 +5,17 @@ from Logger import Logger
 # Class catches individual words as they are typed
 class WordCatcher:
 
-    def __init__(self, log, keyboard):
+    def __init__(self, log, keyboard, shortcut_list, file_dir_list):
 
         # Creates instance wide log variable
         self.log = log.log
 
         # Creates instance wide typer variable
         self.keyboard = keyboard
+
+        # Creates instance wide shortcut_list & file_dir_list
+        self.shortcut_list = shortcut_list
+        self.file_dir_list = file_dir_list
 
         # Temporary word variable
         self.word_in_progress = False
@@ -24,7 +28,7 @@ class WordCatcher:
         # Delimiter
         self.delimiter = "#"
 
-        self.log.debug("WordCatcher has been initialized.")
+        self.log.debug("WordCatcher initialized.")
 
         # Start listener
         with Listener(on_press=self.word_builder) as listener:
@@ -141,10 +145,19 @@ class WordCatcher:
         Checks list of shortcuts for a match. Sets text block if match is found.
         """
 
-        if self.current_word == "#fuck":
+        if self.current_word in self.shortcut_list:
+            # Finds index of self.current_word on shortcut list
+            shortcut_index = self.shortcut_list.index(self.current_word)
+            # Passes the above index to self.read_textblock
+            self.find_file_directory(shortcut_index)
 
-            self.keyboard.delete_shortcut(self.current_word)
-            self.keyboard.type_block()
+    def find_file_directory(self, index):
+        """
+        Finds the directory of the Textblock file.
+        """
+
+        textblock_directory = self.file_dir_list[index]
+        print(textblock_directory)
 
     def clear_current_word(self):
         """
@@ -173,6 +186,13 @@ class KeyboardEmulator:
         for i in range(word_length + 1):
             self.c.press(Key.backspace)
             self.c.release(Key.backspace)
+
+    def read_textblock(self, textblock_directory):
+        """
+        Reads the text blook at the same index as shortcut
+        """
+
+        print(textblock_directory)
 
     def type_block(self):
 

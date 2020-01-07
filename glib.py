@@ -28,28 +28,35 @@ def list_files(directory):
     """
 
     file_list = list()
+    file_dir_list = list()
 
     for root, dirs, files in os.walk(directory, topdown=False):
         for name in files:
-            file_list.append(os.path.join(root, name))
+            file_list.append(name)
+            file_dir_list.append(os.path.join(root, name))
 
-    return file_list
+    print(file_dir_list)
 
-def categorizer(file_list):
-    """
-    Creates internal list variable for categories
+    return file_list, file_dir_list
 
-    :param file_list:
-    :return:
-    """
 
-    pass
+def list_shortcuts(file_list):
 
-#TODO: Make a regex to recognize 'Textblocks/#hello.txt' & 'Textblocks/hello.txt'
+    shortcut_list = list()
 
-#TODO: Make a regex to recognize 'Textblocks/Signatures\\#sig.txt' & 'Textblocks/Signatures\\sig.txt'
+    for f in file_list:
+        f = f.split(".")
+        shortcut_list.append(f[0])
 
-text_block_dir = 'Textblocks/'
-list_subdirectories(text_block_dir)
+    return shortcut_list
 
-list_files(text_block_dir)
+
+if __name__ == "__main__":
+
+    text_block_dir = 'Textblocks/'
+
+    file_list = list_files(text_block_dir)
+
+    shortcut_list = list_shortcuts(file_list)
+
+
