@@ -28,6 +28,9 @@ class WordCatcher:
         # Delimiter
         self.delimiter = "#"
 
+        # Textblock Variable
+        self.textblock = ""
+
         self.log.debug("WordCatcher initialized.")
 
         # Start listener
@@ -146,18 +149,44 @@ class WordCatcher:
         """
 
         if self.current_word in self.shortcut_list:
+
             # Finds index of self.current_word on shortcut list
             shortcut_index = self.shortcut_list.index(self.current_word)
+
             # Passes the above index to self.read_textblock
             self.find_file_directory(shortcut_index)
+
+            # Deletes the typed out shortcut
+            self.keyboard.delete_shortcut(self.current_word)
+
+            # Passes the textbox to the keyboard
+            self.keyboard.type_block(self.textblock)
 
     def find_file_directory(self, index):
         """
         Finds the directory of the Textblock file.
         """
 
+        # Searches self.file_dir_list by index for the directory
         textblock_directory = self.file_dir_list[index]
         print(textblock_directory)
+
+        # Reads the textblock file
+        self.read_textblock(textblock_directory)
+
+    def read_textblock(self, textblock_directory):
+        """
+        Reads the file located in textblock_directory.
+        """
+
+        # Opens the textblock directory
+        f = open(textblock_directory, "r")
+
+        # Assigns textblock content to the variable
+        self.textblock = f.read()
+
+        # Closes the textblock file
+        f.close()
 
     def clear_current_word(self):
         """
@@ -187,16 +216,12 @@ class KeyboardEmulator:
             self.c.press(Key.backspace)
             self.c.release(Key.backspace)
 
-    def read_textblock(self, textblock_directory):
+    def type_block(self, textblock):
         """
-        Reads the text blook at the same index as shortcut
+        Types out the textblock string sent to this method.
         """
 
-        print(textblock_directory)
-
-    def type_block(self):
-
-        self.c.type("Eat a bag of dicks motherfucker, and FUCK you!")
+        self.c.type(textblock)
 
 
 if __name__ == "__main__":
