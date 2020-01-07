@@ -180,13 +180,11 @@ class WordCatcher:
         """
 
         # Opens the textblock directory
-        f = open(textblock_directory, "r")
+        with open(textblock_directory, mode="r", encoding="UTF-16") as f:
 
-        # Assigns textblock content to the variable
-        self.textblock = f.read()
-
-        # Closes the textblock file
-        f.close()
+            # Assigns textblock content to the variable
+            self.textblock = f.read()
+            print(self.textblock)
 
     def clear_current_word(self):
         """
