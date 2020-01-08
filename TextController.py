@@ -1,4 +1,5 @@
 from pynput.keyboard import Controller, Key, Listener
+import pyperclip
 from Logger import Logger
 
 
@@ -160,7 +161,7 @@ class WordCatcher:
             self.keyboard.delete_shortcut(self.current_word)
 
             # Passes the textbox to the keyboard
-            self.keyboard.type_block(self.textblock)
+            self.keyboard.paste_block(self.textblock)
 
     def find_file_directory(self, index):
         """
@@ -214,9 +215,22 @@ class KeyboardEmulator:
             self.c.press(Key.backspace)
             self.c.release(Key.backspace)
 
+    def paste_block(self, textblock):
+        """
+        paste_block copies the textblock into the clipboard and pastes it using pyinput controller.
+        """
+
+        pyperclip.copy(textblock)
+
+        self.c.press(Key.ctrl_l)
+        self.c.press('v')
+        self.c.release(Key.ctrl_l)
+        self.c.release('v')
+
     def type_block(self, textblock):
         """
-        Types out the textblock string sent to this method.
+        Types out the textblock string sent to this method. This is an alternative to paste_block and should be used
+        as a backup only as it is very slow.
         """
 
         self.c.type(textblock)
