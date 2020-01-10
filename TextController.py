@@ -150,11 +150,17 @@ class WordCatcher:
         Checks list of shortcuts for a match. Sets text block if match is found.
         """
 
+        # Exit program if user typed in #exit
         if self.current_word == "#exit":
 
-            # Exit program if user typed in #exit
-            print("Exiting program.")
+            exit_text = "Text-Script exited."
+
+            self.keyboard.delete_shortcut(self.current_word)
+
+            self.keyboard.paste_block(exit_text)
+
             self.log.debug("The user has typed #exit. Exiting program.")
+            print(exit_text)
 
             sys.exit()
 
