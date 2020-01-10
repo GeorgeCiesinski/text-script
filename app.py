@@ -1,5 +1,6 @@
 import glib
 from Logger import Logger
+from Gui import Gui
 from TextController import WordCatcher, KeyboardEmulator
 
 # Initialize Logger
@@ -20,3 +21,9 @@ k = KeyboardEmulator(L)
 
 # Initialize WordCatcher
 w = WordCatcher(L, k, shortcut_list, file_dir_list)
+
+# Create GUI object
+g = Gui(L)
+
+# Tkinter main loop
+g.root.mainloop()
