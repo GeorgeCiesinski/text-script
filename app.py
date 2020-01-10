@@ -1,5 +1,4 @@
 import glib
-import threading
 from Logger import Logger
 from Gui import Gui
 from TextController import WordCatcher, KeyboardEmulator
@@ -38,12 +37,14 @@ def start_gui(logger):
     g.root.mainloop()
 
 
-# Initialize Logger
-L = Logger()
+if __name__ == "__main__":
 
-L.log.debug("Program started from App.py.")
+    # Initialize Logger
+    L = Logger()
 
-# Initializes process to start
-start_text_controller(L)
+    L.log.debug("Program started from App.py.")
 
-start_gui(L)
+    # Initializes process to start
+    start_text_controller(L)
+
+    start_gui(L)
