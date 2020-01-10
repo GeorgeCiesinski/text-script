@@ -3,7 +3,6 @@ George's Library
 Contains non-class methods for this program.
 """
 
-
 import os
 
 
