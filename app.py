@@ -16,14 +16,18 @@ file_list, file_dir_list = glib.list_files(textblock_dir)
 # Creates shortcut list with the same index
 shortcut_list = glib.list_shortcuts(file_list)
 
+# Create GUI object
+g = Gui(L)
+
 # Initializes KeyboardEmulator instance
 k = KeyboardEmulator(L)
 
 # Initialize WordCatcher
 w = WordCatcher(L, k, shortcut_list, file_dir_list)
 
-# Create GUI object
-g = Gui(L)
+# Close program if window is destroyed
+g.root.protocol("WM_DELETE_WINDOW", g.on_closing)
 
 # Tkinter main loop
+L.log.debug("Starting Tkinter mainloop.")
 g.root.mainloop()

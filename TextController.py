@@ -162,7 +162,8 @@ class WordCatcher:
             self.log.debug("The user has typed #exit. Exiting program.")
             print(exit_text)
 
-            sys.exit()
+            # Close the program with no error
+            sys.exit(0)
 
         if self.current_word in self.shortcut_list:
 
