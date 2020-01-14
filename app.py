@@ -2,21 +2,28 @@ import glib
 from Logger import Logger
 from TextController import WordCatcher, KeyboardEmulator
 
-# Initialize Logger
-L = Logger()
 
-L.log.debug("Program started from App.py.")
+if __name__ == "__main__":
 
-# Gets file_list and file_dir_list
-textblock_dir = "Textblocks/"
+    # Initialize Logger
+    L = Logger()
 
-file_list, file_dir_list = glib.list_files(textblock_dir)
+    L.log.debug("Program started from App.py.")
 
-# Creates shortcut list with the same index
-shortcut_list = glib.list_shortcuts(file_list)
+    """
+    Initialize Text Controller
+    """
 
-# Initializes KeyboardEmulator instance
-k = KeyboardEmulator(L)
+    # Gets file_list and file_dir_list
+    textblock_dir = "Textblocks/"
 
-# Initialize WordCatcher
-w = WordCatcher(L, k, shortcut_list, file_dir_list)
+    file_list, file_dir_list = glib.list_files(textblock_dir)
+
+    # Creates shortcut list with the same index
+    shortcut_list = glib.list_shortcuts(file_list)
+
+    # Initializes KeyboardEmulator instance
+    k = KeyboardEmulator(L)
+
+    # Initialize WordCatcher
+    w = WordCatcher(L, k, shortcut_list, file_dir_list)
