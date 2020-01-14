@@ -12,7 +12,7 @@ class WordCatcher:
         # Creates instance wide log variable
         self.log = log.log
 
-        # Creates instance wide typer variable
+        # Creates instance wide keyboard variable
         self.keyboard = keyboard
 
         # Creates instance wide shortcut_list & file_dir_list
@@ -35,9 +35,9 @@ class WordCatcher:
 
         self.log.debug("WordCatcher initialized.")
 
-        # Start listener
-        with Listener(on_press=self.word_builder) as listener:
-            listener.join()
+        # Start self.listener
+        with Listener(on_press=self.word_builder) as self.listener:
+            self.listener.join()
             self.log.debug("Listener started.")
 
     def word_builder(self, key):
@@ -131,7 +131,8 @@ class WordCatcher:
             # Removes last letter from word
             self.current_word = self.current_word[:-1]
 
-            self.log.debug(f"Key.backspace entered, removing last letter from word. The current word is: {self.current_word}")
+            self.log.debug("Key.backspace entered, removing last letter from word. The current word is:")
+            self.log.debug(self.current_word)
 
     def append_letter(self):
         """
@@ -160,7 +161,6 @@ class WordCatcher:
             self.keyboard.paste_block(exit_text)
 
             self.log.debug("The user has typed #exit. Exiting program.")
-            print(exit_text)
 
             # Close the program with no error
             sys.exit(0)
@@ -206,11 +206,10 @@ class WordCatcher:
 
                 # Assigns textblock content to the variable
                 self.textblock = f.read()
-                print(self.textblock)
         except:
             self.log.exception("Attempted to open file in UTF-16. Unsuccessful.")
         else:
-            self.log.debug(f"Successfully read the textblock using UTF-16\n {self.textblock}")
+            self.log.debug("Successfully read the textblock using UTF-16.")
             return
 
         # Attempt to open file in UTF-8
@@ -220,11 +219,10 @@ class WordCatcher:
 
                 # Assigns textblock content to the variable
                 self.textblock = f.read()
-                print(self.textblock)
         except:
             self.log.exception("Attempted to open file in UTF-8. Unsuccessful.")
         else:
-            self.log.debug(f"Successfully read the textblock using UTF-8\n {self.textblock}")
+            self.log.debug("Successfully read the textblock using UTF-8.")
             return
 
         # Todo: Attempt to load file in local encoding (ANSI)

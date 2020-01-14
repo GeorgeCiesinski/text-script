@@ -9,3 +9,5 @@ How to make a shortcut:
 5. Click "Save As" and select the same text file, but change encoding to unicode
 
 Note: Other formats may still work, but this is designed to read unicode text files.
+
+To exit Text-Script, type: #exit

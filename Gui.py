@@ -15,7 +15,7 @@ class Gui:
 		# Creates a new window
 		self.create_window()
 
-		#TODO: Create menu
+		# TODO: Create menu
 
 	def create_window(self):
 
