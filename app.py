@@ -1,5 +1,5 @@
 import glib
-import Settings
+from Settings import Setup
 from Logger import Logger
 from TextController import WordCatcher, KeyboardEmulator
 
@@ -19,8 +19,7 @@ if __name__ == "__main__":
     Configure Settings
     """
 
-    s = Settings()
-
+    s = Setup(L)
 
     """
     Initialize Text Controller
