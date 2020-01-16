@@ -22,6 +22,8 @@ if __name__ == "__main__":
     # Creates shortcut list with the same index
     shortcut_list = glib.list_shortcuts(file_list)
 
+    glib.print_shortcuts(file_dir_list, shortcut_list)
+
     # Initializes KeyboardEmulator instance
     k = KeyboardEmulator(L)
 
