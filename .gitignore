@@ -3,3 +3,6 @@ __pycache__/
 Logs/*
 !Logs/.logfolder.txt
 venv/
+build/*
+dist/*
+app.spec
