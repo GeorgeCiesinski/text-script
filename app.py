@@ -1,14 +1,26 @@
 import glib
+import Settings
 from Logger import Logger
 from TextController import WordCatcher, KeyboardEmulator
 
 
 if __name__ == "__main__":
 
+    """
+    Initialize Logger
+    """
+
     # Initialize Logger
     L = Logger()
 
     L.log.debug("Program started from App.py.")
+
+    """
+    Configure Settings
+    """
+
+    s = Settings()
+
 
     """
     Initialize Text Controller
