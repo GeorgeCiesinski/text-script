@@ -21,12 +21,14 @@ if __name__ == "__main__":
 
     s = Setup(L)
 
+    s.config_exists()
+
+    # Gets file_list and file_dir_list
+    textblock_dir = s.find_directories()
+
     """
     Initialize Text Controller
     """
-
-    # Gets file_list and file_dir_list
-    textblock_dir = "Textblocks/"
 
     file_list, file_dir_list = glib.list_files(textblock_dir)
 

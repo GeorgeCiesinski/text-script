@@ -39,13 +39,13 @@ class Setup:
         Creates a new config file
         """
 
-        self.config['DEFAULT'] = {}
-        self.config.set('DEFAULT', '; Tracks key strokes saved history')
-        self.config.set('DEFAULT', 'shortcutsused', 0)
-        self.config.set('DEFAULT', 'shortcutchars', 0)
-        self.config.set('DEFAULT', 'textblockchars', 0)
+        self.config['HISTORY'] = {}
+        self.config.set('HISTORY', '; Tracks key strokes saved history')
+        self.config.set('HISTORY', 'shortcutsused', 0)
+        self.config.set('HISTORY', 'shortcutchars', 0)
+        self.config.set('HISTORY', 'textblockchars', 0)
         self.config['DIRECTORIES'] = {
-            'defaultdirectory': 'Textblocks /',
+            'defaultdirectory': 'Textblocks/',
             'localdirectory': 'None',
             'remotedirectory': 'None'
         }
@@ -55,8 +55,32 @@ class Setup:
         self.log.debug(f"{self.config_dir} file created successfully.")
 
     def find_directories(self):
+        """
+        Finds the directories in the config file
+        """
 
         self.config.read(self.config_dir)
+        default_directory = self.config['DIRECTORIES']['defaultdirectory']
+
+        return default_directory
+
+    def update_history(self, shortcut, textblock):
+
+        self.config.read(self.config_dir)
+        shortcuts_used = int(self.config['HISTORY']['shortcutsused'])
+        shortcut_chars = int(self.config['HISTORY']['shortcutchars'])
+        textblock_chars = int(self.config['HISTORY']['textblockchars'])
+
+        shortcuts_used += 1
+        shortcut_chars += len(shortcut)
+        textblock_chars += len(textblock)
+
+        self.config.set('HISTORY', 'shortcutsused', shortcuts_used)
+        self.config.set('HISTORY', 'shortcutchars', shortcut_chars)
+        self.config.set('HISTORY', 'textblockchars', textblock_chars)
+
+        with open(self.config_dir, 'wb') as configfile:
+            self.config.write(configfile)
 
 
 if __name__ == "__main__":

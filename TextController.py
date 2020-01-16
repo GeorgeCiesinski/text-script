@@ -2,6 +2,7 @@ import sys
 from pynput.keyboard import Controller, Key, Listener
 import pyperclip
 from Logger import Logger
+from Settings import Setup
 
 
 # Class catches individual words as they are typed
@@ -11,6 +12,9 @@ class WordCatcher:
 
         # Creates instance wide log variable
         self.log = log.log
+
+        # Creates instance wide Setup
+        self.s = Setup(log)
 
         # Creates instance wide keyboard variable
         self.keyboard = keyboard
@@ -172,6 +176,9 @@ class WordCatcher:
 
             # Deletes the typed out shortcut
             self.keyboard.delete_shortcut(self.current_word)
+
+            # Update history
+            self.s.update_history(self.current_word, self.textblock)
 
             # Passes the textbox to the keyboard
             self.keyboard.paste_block(self.textblock)
