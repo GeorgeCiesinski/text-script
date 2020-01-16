@@ -79,9 +79,6 @@ class WordCatcher:
         self.keydata = str(self.key)
         self.keydata = self.keydata.strip("'")
 
-        # Prints typed letter to console
-        print(self.keydata)
-
     def check_delimiter(self):
         """
         Checks if delimiter has been entered. Either starts self.current_word or restarts it.
@@ -187,7 +184,6 @@ class WordCatcher:
         # Searches self.file_dir_list by index for the directory
         textblock_directory = self.file_dir_list[index]
         self.log.debug(f"Successfully found the textblock directory: {textblock_directory}")
-        print(textblock_directory)
 
         # Reads the textblock file
         self.read_textblock(textblock_directory)

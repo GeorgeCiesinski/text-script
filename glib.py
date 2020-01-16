@@ -11,7 +11,8 @@ def list_subdirectories(directory):
     Lists all subdirectories.
 
     :param directory:
-    :return:
+    :return directory_list:
+    :rtype list:
     """
 
     directory_list = list()
@@ -20,7 +21,7 @@ def list_subdirectories(directory):
         for name in dirs:
             directory_list.append(os.path.join(root, name))
 
-    print(directory_list)
+    return directory_list
 
 
 def list_files(directory):
@@ -28,7 +29,7 @@ def list_files(directory):
     Lists all files and subdirectories in the directory. Returns list
 
     :param directory:
-    :return file_list:
+    :return file_list, file_dir_list:
     :rtype list:
     """
 
@@ -40,12 +41,17 @@ def list_files(directory):
             file_list.append(name)
             file_dir_list.append(os.path.join(root, name))
 
-    print(file_dir_list)
-
     return file_list, file_dir_list
 
 
 def list_shortcuts(file_list):
+    """
+    list_shortcuts creates a list of the raw shortcut strings the user would be typing in
+
+    :param file_list:
+    :return shortcut_list:
+    :rtype list:
+    """
 
     shortcut_list = list()
 
@@ -54,6 +60,13 @@ def list_shortcuts(file_list):
         shortcut_list.append(f[0])
 
     return shortcut_list
+
+
+def print_shortcuts(file_dir_list, shortcut_list):
+
+    for file_dir in file_dir_list:
+        index = file_dir_list.index(file_dir)
+        print(f"Shortcut: {shortcut_list[index]}   - - -    Directory: {file_dir}")
 
 
 if __name__ == "__main__":
