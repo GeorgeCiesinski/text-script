@@ -6,6 +6,9 @@ from TextController import WordCatcher, KeyboardEmulator
 
 if __name__ == "__main__":
 
+    # Current app version / / Ensure this is correct during updates
+    text_script_version = "1.1.0"
+
     """
     Initialize Logger
     """
@@ -13,18 +16,20 @@ if __name__ == "__main__":
     # Initialize Logger
     L = Logger()
 
-    L.log.debug("Program started from App.py.")
+    L.log.debug(f"Program started from App.py. Version: {text_script_version}")
 
     """
     Configure Settings
     """
 
-    s = Setup(L)
+    # Initialize setup
+    setup = Setup(L, text_script_version)
 
-    s.config_exists()
+    # Check if config file exists
+    setup.config_exists()
 
     # Gets file_list and file_dir_list
-    textblock_dir = s.find_directories()
+    textblock_dir = setup.find_directories()
 
     """
     Initialize Text Controller

@@ -2,7 +2,7 @@ import sys
 from pynput.keyboard import Controller, Key, Listener
 import pyperclip
 from Logger import Logger
-from Settings import Setup
+from Settings import UpdateConfig
 
 
 # Class catches individual words as they are typed
@@ -10,11 +10,11 @@ class WordCatcher:
 
     def __init__(self, log, keyboard, shortcut_list, file_dir_list):
 
-        # Creates instance wide log variable
+        # Creates instance wide log object
         self.log = log.log
 
-        # Creates instance wide Setup
-        self.s = Setup(log)
+        # Creates instance wide UpdateConfig object
+        self.update = UpdateConfig(log)
 
         # Creates instance wide keyboard variable
         self.keyboard = keyboard
@@ -178,7 +178,7 @@ class WordCatcher:
             self.keyboard.delete_shortcut(self.current_word)
 
             # Update history
-            self.s.update_history(self.current_word, self.textblock)
+            self.update.update_history(self.current_word, self.textblock)
 
             # Passes the textbox to the keyboard
             self.keyboard.paste_block(self.textblock)
@@ -275,9 +275,14 @@ class KeyboardEmulator:
         paste_block copies the textblock into the clipboard and pastes it using pyinput controller.
         """
 
+        # TODO: Determine why pyperclip can't save clipboard item and paste back into clipboard later
+
         try:
             pyperclip.copy(textblock)
 
+            # TODO: Look up Pyperclip documentation for OSX & Linux implementation
+
+            # TODO: Test pyperclip.paste()
             self.c.press(Key.ctrl_l)
             self.c.press('v')
             self.c.release(Key.ctrl_l)
