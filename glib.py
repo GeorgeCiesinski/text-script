@@ -1,6 +1,5 @@
 """
-George's Library
-Contains non-class methods for this program.
+Contains non-class or miscellaneous methods
 """
 
 import os

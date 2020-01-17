@@ -2,6 +2,7 @@ import sys
 from pynput.keyboard import Controller, Key, Listener
 import pyperclip
 from Logger import Logger
+from Settings import UpdateConfig
 
 
 # Class catches individual words as they are typed
@@ -9,11 +10,21 @@ class WordCatcher:
 
     def __init__(self, log, keyboard, shortcut_list, file_dir_list):
 
-        # Creates instance wide log variable
+        # Creates instance wide log object
         self.log = log.log
+
+        # Creates instance wide UpdateConfig object
+        self.update = UpdateConfig(log)
 
         # Creates instance wide keyboard variable
         self.keyboard = keyboard
+
+        # List of Text-Script commands
+        self.commands = [
+            "#help",
+            "#exit",
+            "#reload"
+        ]
 
         # Creates instance wide shortcut_list & file_dir_list
         self.shortcut_list = shortcut_list
@@ -35,6 +46,7 @@ class WordCatcher:
 
         self.log.debug("WordCatcher initialized.")
 
+        # TODO: Look into self.listener.join and why this is even working. Might need to be changed.
         # Start self.listener
         with Listener(on_press=self.word_builder) as self.listener:
             self.listener.join()
@@ -148,20 +160,12 @@ class WordCatcher:
         Checks list of shortcuts for a match. Sets text block if match is found.
         """
 
-        # Exit program if user typed in #exit
-        if self.current_word == "#exit":
+        # If shortcut is in command list, determine which command was used
+        if self.current_word in self.commands:
 
-            exit_text = "Text-Script exited."
+            self.determine_command()
 
-            self.keyboard.delete_shortcut(self.current_word)
-
-            self.keyboard.paste_block(exit_text)
-
-            self.log.debug("The user has typed #exit. Exiting program.")
-
-            # Close the program with no error
-            sys.exit(0)
-
+        # If shortcut is in shortcut_list, determine which shortcut was used
         if self.current_word in self.shortcut_list:
 
             # Finds index of self.current_word on shortcut list
@@ -173,8 +177,70 @@ class WordCatcher:
             # Deletes the typed out shortcut
             self.keyboard.delete_shortcut(self.current_word)
 
+            # Update history
+            self.update.update_history(self.current_word, self.textblock)
+
             # Passes the textbox to the keyboard
             self.keyboard.paste_block(self.textblock)
+
+    def determine_command(self):
+
+        # Exit program if user typed in #exit
+        if self.current_word == "#exit":
+
+            self.log.debug("The user has typed #exit. Exiting program.")
+            self.exit_program()
+
+        # Paste help menu if user typed in #help
+        elif self.current_word == "#help":
+
+            self.log.debug("The user has typed in #help. Pasting help menu.")
+            self.help_menu()
+
+        elif self.current_word == "#reload":
+
+            self.log.debug("The user has typed in #reload. Reloading shortcut_list and file_dir_list.")
+            pass
+
+    def exit_program(self):
+        """
+        Exits the program
+        """
+
+        exit_text = "Text-Script exited."
+
+        self.keyboard.delete_shortcut(self.current_word)
+
+        self.keyboard.paste_block(exit_text)
+
+        # Close the program with no error
+        sys.exit(0)
+
+    def help_menu(self):
+
+        help_text = """Help Menu:
+
+How to make a shortcut:
+
+1. Navigate to the program folder, and go to the Textblocks folder
+2. Either navigate to an existing folder in Textblocks, or create a new one
+3. Create a new text file here. The naming convention is #____.txt where ____ is the shortcut you will type
+4. Open the text file and put your text block / signature / template in here
+5. Click "Save As" and select the same text file, but change encoding to unicode
+
+Note: Other formats may still work, but this is designed to read unicode text files.
+
+To exit Text-Script, type: #exit
+"""
+
+        self.keyboard.delete_shortcut(self.current_word)
+
+        self.keyboard.paste_block(help_text)
+
+    def update_shortcuts(self):
+
+        # TODO: Create update_shortcuts method
+        pass
 
     def find_file_directory(self, index):
         """
@@ -268,9 +334,14 @@ class KeyboardEmulator:
         paste_block copies the textblock into the clipboard and pastes it using pyinput controller.
         """
 
+        # TODO: Determine why pyperclip can't save clipboard item and paste back into clipboard later
+
         try:
             pyperclip.copy(textblock)
 
+            # TODO: Look up Pyperclip documentation for OSX & Linux implementation
+
+            # TODO: Test pyperclip.paste()
             self.c.press(Key.ctrl_l)
             self.c.press('v')
             self.c.release(Key.ctrl_l)
