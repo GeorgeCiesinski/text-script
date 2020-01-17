@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - 2020-01-17
 ### Added
 - Statistics tracking for shortcuts used, total shortcut characters typed, and total textblock characters pasted
+- Help and Exit commands have been added
 
 ## [1.0.0] - 2020-01-16
 ### Added
