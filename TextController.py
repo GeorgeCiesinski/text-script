@@ -19,6 +19,13 @@ class WordCatcher:
         # Creates instance wide keyboard variable
         self.keyboard = keyboard
 
+        # List of Text-Script commands
+        self.commands = [
+            "help",
+            "#exit",
+            "reload"
+        ]
+
         # Creates instance wide shortcut_list & file_dir_list
         self.shortcut_list = shortcut_list
         self.file_dir_list = file_dir_list

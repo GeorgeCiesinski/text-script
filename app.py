@@ -4,6 +4,21 @@ from Logger import Logger
 from TextController import WordCatcher, KeyboardEmulator
 
 
+def shortcut_setup():
+    """
+    Creates shortcut_list and file_dir_list
+    """
+
+    file_list, file_dir_list = glib.list_files(textblock_dir)
+
+    # Creates shortcut list with the same index
+    shortcut_list = glib.list_shortcuts(file_list)
+
+    glib.print_shortcuts(file_dir_list, shortcut_list)
+
+    return shortcut_list, file_dir_list
+
+
 if __name__ == "__main__":
 
     # Current app version / / Ensure this is correct during updates
@@ -35,12 +50,7 @@ if __name__ == "__main__":
     Initialize Text Controller
     """
 
-    file_list, file_dir_list = glib.list_files(textblock_dir)
-
-    # Creates shortcut list with the same index
-    shortcut_list = glib.list_shortcuts(file_list)
-
-    glib.print_shortcuts(file_dir_list, shortcut_list)
+    shortcut_list, file_dir_list = shortcut_setup()
 
     # Initializes KeyboardEmulator instance
     k = KeyboardEmulator(L)
