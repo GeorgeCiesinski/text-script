@@ -5,18 +5,53 @@ from TextController import WordCatcher, KeyboardEmulator
 
 
 def shortcut_setup(directories):
+
+    shortcut_list = None
+    file_dir_list = None
+
+    # For each directory in directories
+    for directory in directories:
+
+        # Appends shortcuts only if directory is not None
+        if directory is not None:
+
+            # Get shortcuts and file_dirs
+            shortcuts, file_dirs = append_directories(directory)
+
+            # Print shortcut title
+            if directory is directories[0]:
+                print("Default Directory: \n")
+            elif directory is directories[1]:
+                print(f"Local Directory: {directory}\n")
+            elif directory is directories[2]:
+                print(f"Remote Directory: {directory}\n")
+
+            # Print shortcuts
+
+
+            # append shortcuts to shortcut_list
+            # append file_dirs to file_dir_list
+
+
+
+
+    return shortcut_list
+    return file_dir_list
+
+
+def append_directories(directory):
     """
-    Creates shortcut_list and file_dir_list
+    Creates shortcuts and file_dirs
     """
 
-    file_list, file_dir_list = glib.list_files(directories)
+    files, file_dirs = glib.list_files(directories)
 
     # Creates shortcut list with the same index
-    shortcut_list = glib.list_shortcuts(file_list)
+    shortcuts = glib.list_shortcuts(files)
 
-    glib.print_shortcuts(file_dir_list, shortcut_list)
+    glib.print_shortcuts(file_dirs, shortcuts)
 
-    return shortcut_list, file_dir_list
+    return shortcuts, file_dirs
 
 
 if __name__ == "__main__":
