@@ -74,8 +74,12 @@ class Setup:
 
         self.config.read(self.config_dir)
         default_directory = self.config['DIRECTORIES']['defaultdirectory']
+        local_directory = self.config['DIRECTORIES']['localdirectory']
+        remote_directory = self.config['DIRECTORIES']['remotedirectory']
 
-        return default_directory
+        directories = [default_directory, local_directory, remote_directory]
+
+        return directories
 
 
 class UpdateConfig:
