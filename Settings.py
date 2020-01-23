@@ -1,6 +1,8 @@
 import configparser
 from Logger import Logger
+import glib
 from os import path
+import datetime
 
 
 class Setup:
@@ -67,6 +69,92 @@ class Setup:
 
         self.log.debug(f"{self.config_dir} file created successfully.")
 
+    def get_stats(self):
+        """
+        Gets the current usage stats from the config file.
+        """
+
+        try:
+
+            self.config.read(self.config_dir)
+
+            shortcuts_used = self.config['HISTORY']['shortcutsused']
+            shortcut_chars = self.config['HISTORY']['shortcutchars']
+            textblock_chars = self.config['HISTORY']['textblockchars']
+
+            self.print_stats(shortcuts_used, shortcut_chars, textblock_chars)
+
+        except:
+
+            self.log.exception("Unable to get stats from config file.")
+            raise
+
+    @staticmethod
+    def print_stats(shortcuts_used, shortcut_chars, textblock_chars):
+        """
+        Prints the usage stats to console.
+        """
+
+        saved_keystrokes = str(int(textblock_chars) - int(shortcut_chars))
+        seconds_to_paste = 5
+        saved_seconds = int(shortcuts_used) * seconds_to_paste
+        time_saved = datetime.timedelta(seconds=saved_seconds)
+
+        print(f"""Your stats:
+
+- Shortcuts used: {shortcuts_used}
+- You typed a total of {shortcut_chars} characters
+- Text-Script pasted a total of {textblock_chars} characters
+- You saved {saved_keystrokes} keystrokes
+- If it takes {seconds_to_paste} seconds to copt & paste an item, you saved {time_saved}""")
+
+    def shortcut_setup(self, directories):
+        """
+        Extends shortcut_list and file_dir_list from the shortcuts and file_dirs lists.
+        """
+
+        shortcut_list = []
+        file_dir_list = []
+
+        # For each directory in directories
+        for directory in directories:
+
+            # Appends shortcuts only if directory is not None
+            if directory is not None:
+
+                # Get shortcuts and file_dirs
+                shortcuts, file_dirs = self.append_directories(directory)
+
+                # Print shortcut title
+                if directory is directories[0]:
+                    print("\nDefault Directory: \n")
+                    self.log.debug("Appending shortcuts from default directory.")
+                elif directory is directories[1]:
+                    print(f"\nLocal Directory: {directory}\n")
+                    self.log.debug(f"Appending shortcuts from {directory} directory.")
+                elif directory is directories[2]:
+                    print(f"\nRemote Directory: {directory}\n")
+                    self.log.debug(f"Appending shortcuts from {directory} directory.")
+
+                # Print shortcuts
+                glib.print_shortcuts(file_dirs, shortcuts)
+
+                # extends shortcut_list with values in shortcuts
+                try:
+                    shortcut_list.extend(shortcuts)
+                except:
+                    self.log.exception("Failed to extend shortcut_list.")
+                    raise
+                else:
+                    self.log.debug("Successfully extended shortcut_list")
+
+                # append file_dirs to file_dir_list
+                file_dir_list.extend(file_dirs)
+
+                self.log.debug("Successfully appended shortcuts and file_dirs.")
+
+        return shortcut_list, file_dir_list
+
     def find_directories(self):
         """
         Finds the directories in the config file
@@ -74,8 +162,36 @@ class Setup:
 
         self.config.read(self.config_dir)
         default_directory = self.config['DIRECTORIES']['defaultdirectory']
+        local_directory = self.config['DIRECTORIES']['localdirectory']
+        remote_directory = self.config['DIRECTORIES']['remotedirectory']
 
-        return default_directory
+        if default_directory == "None" or default_directory == "":
+            default_directory = None
+            self.log.debug("Default directory is set to None.")
+        if local_directory == "None" or local_directory == "":
+            local_directory = None
+            self.log.debug("Local directory is set to None.")
+        if remote_directory == "None" or remote_directory == "":
+            remote_directory = None
+            self.log.debug("Remote directory is set to None.")
+
+        directories = [default_directory, local_directory, remote_directory]
+        self.log.debug(f"Retrieved the following directories from config: {directories}")
+
+        return directories
+
+    @staticmethod
+    def append_directories(directory):
+        """
+        Creates shortcuts and file_dirs
+        """
+
+        files, file_dirs = glib.list_files(directory)
+
+        # Creates shortcut list with the same index
+        shortcuts = glib.list_shortcuts(files)
+
+        return shortcuts, file_dirs
 
 
 class UpdateConfig:

@@ -61,11 +61,11 @@ def list_shortcuts(file_list):
     return shortcut_list
 
 
-def print_shortcuts(file_dir_list, shortcut_list):
+def print_shortcuts(file_dirs, shortcuts):
 
-    for file_dir in file_dir_list:
-        index = file_dir_list.index(file_dir)
-        print(f"Shortcut: {shortcut_list[index]}   - - -    Directory: {file_dir}")
+    for file_dir in file_dirs:
+        index = file_dirs.index(file_dir)
+        print(f"Shortcut: {shortcuts[index]}   - - -    Directory: {file_dir}")
 
 
 if __name__ == "__main__":
