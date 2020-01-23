@@ -102,11 +102,11 @@ class Setup:
 
         print(f"""Your stats:
 
-- Shortcuts used: {shortcuts_used}
-- You typed a total of {shortcut_chars} characters
+- Number of shortcuts used: {shortcuts_used}
+- You typed a total of {shortcut_chars} shortcut characters
 - Text-Script pasted a total of {textblock_chars} characters
 - You saved {saved_keystrokes} keystrokes
-- If it takes {seconds_to_paste} seconds to copt & paste an item, you saved {time_saved}""")
+- If it takes {seconds_to_paste} seconds to copy & paste an item, you saved {time_saved}""")
 
     def shortcut_setup(self, directories):
         """
