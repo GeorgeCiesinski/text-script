@@ -4,10 +4,12 @@ from Logger import Logger
 from TextController import WordCatcher, KeyboardEmulator
 
 
-def shortcut_setup(directories):
+def shortcut_setup(log, directories):
 
-    shortcut_list = None
-    file_dir_list = None
+    log = log.log
+
+    shortcut_list = []
+    file_dir_list = []
 
     # For each directory in directories
     for directory in directories:
@@ -20,23 +22,43 @@ def shortcut_setup(directories):
 
             # Print shortcut title
             if directory is directories[0]:
-                print("Default Directory: \n")
+                print("\nDefault Directory: \n")
+                log.debug("Appending shortcuts from default directory.")
             elif directory is directories[1]:
-                print(f"Local Directory: {directory}\n")
+                print(f"\nLocal Directory: {directory}\n")
+                log.debug(f"Appending shortcuts from {directory} directory.")
             elif directory is directories[2]:
-                print(f"Remote Directory: {directory}\n")
+                print(f"\nRemote Directory: {directory}\n")
+                log.debug(f"Appending shortcuts from {directory} directory.")
 
             # Print shortcuts
+            glib.print_shortcuts(file_dirs, shortcuts)
 
+            # extends shortcut_list with values in shortcuts
+            try:
+                shortcut_list.extend(shortcuts)
+            except:
+                log.exception("Failed to extend shortcut_list.")
+                raise
+            else:
+                log.debug("Successfully extended shortcut_list")
 
-            # append shortcuts to shortcut_list
             # append file_dirs to file_dir_list
+            file_dir_list.extend(file_dirs)
 
+            log.debug("Successfully appended shortcuts and file_dirs.")
 
+        elif directory is None:
 
+            # Update Log
+            if directory is directories[0]:
+                log.debug("Default directory set to None.")
+            elif directory is directories[1]:
+                log.debug("Local directory set to None.")
+            elif directory is directories[2]:
+                log.debug("Remote directory set to None.")
 
-    return shortcut_list
-    return file_dir_list
+    return shortcut_list, file_dir_list
 
 
 def append_directories(directory):
@@ -44,12 +66,10 @@ def append_directories(directory):
     Creates shortcuts and file_dirs
     """
 
-    files, file_dirs = glib.list_files(directories)
+    files, file_dirs = glib.list_files(directory)
 
     # Creates shortcut list with the same index
     shortcuts = glib.list_shortcuts(files)
-
-    glib.print_shortcuts(file_dirs, shortcuts)
 
     return shortcuts, file_dirs
 
@@ -85,7 +105,7 @@ if __name__ == "__main__":
     Initialize Text Controller
     """
 
-    shortcut_list, file_dir_list = shortcut_setup(directories)
+    shortcut_list, file_dir_list = shortcut_setup(L, directories)
 
     # Initializes KeyboardEmulator instance
     k = KeyboardEmulator(L)

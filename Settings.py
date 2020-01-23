@@ -77,7 +77,15 @@ class Setup:
         local_directory = self.config['DIRECTORIES']['localdirectory']
         remote_directory = self.config['DIRECTORIES']['remotedirectory']
 
+        if default_directory == "None":
+            default_directory = None
+        if local_directory == "None":
+            local_directory = None
+        if remote_directory == "None":
+            remote_directory = None
+
         directories = [default_directory, local_directory, remote_directory]
+        self.log.debug(f"Retrieved the following directories from config: {directories}")
 
         return directories
 
