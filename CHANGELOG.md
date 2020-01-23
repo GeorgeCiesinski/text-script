@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.2.0] - TBA
 ### Added
 - Support for three directories: default, local, and remote
+- Usage statistic printout during program start
 
 ## [1.1.0] - 2020-01-17
 ### Added
