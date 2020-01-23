@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - TBA
+### Added
+- Support for three directories: default, local, and remote
+
 ## [1.1.0] - 2020-01-17
 ### Added
 - Statistics tracking for shortcuts used, total shortcut characters typed, and total textblock characters pasted
@@ -13,8 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2020-01-16
 ### Added
-- Debugging print lines removed
 - App prints all of the shortcuts and directories during start
+### Changed
+- Debugging print lines removed
 - Better logging to track potential issues
 
 ## [0.0.1] - 2020-01-14
