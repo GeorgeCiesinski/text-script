@@ -41,16 +41,16 @@ class Setup:
             self.log.debug("No config file exists. Creating new config file.")
 
             # Creates new config file
-            self.create_config()
+            self._create_config()
 
-    def create_config(self):
+    def _create_config(self):
         """
         Creates a new config file
         """
 
-        self.config['TEXTSCRIPT'] = {
-            'version': self.version
-        }
+        self.config['TEXTSCRIPT'] = {}
+        self.config.set('TEXTSCRIPT', '; Config file version')
+        self.config.set('TEXTSCRIPT', 'version', self.version)
 
         self.config['HISTORY'] = {}
         self.config.set('HISTORY', '; Tracks key strokes saved history')
@@ -58,11 +58,11 @@ class Setup:
         self.config.set('HISTORY', 'shortcutchars', 0)
         self.config.set('HISTORY', 'textblockchars', 0)
 
-        self.config['DIRECTORIES'] = {
-            'defaultdirectory': 'Textblocks/',
-            'localdirectory': 'None',
-            'remotedirectory': 'None'
-        }
+        self.config['DIRECTORIES'] = {}
+        self.config.set('DIRECTORIES', '; the default directory included with app, local directory, and network directory')
+        self.config.set('DIRECTORIES', 'defaultdirectory', 'Textblocks/')
+        self.config.set('DIRECTORIES', 'localdirectory', 'None')
+        self.config.set('DIRECTORIES', 'remotedirectory', 'None')
 
         with open(self.config_dir, 'w') as configfile:
             self.config.write(configfile)
@@ -78,11 +78,11 @@ class Setup:
 
             self.config.read(self.config_dir)
 
-            shortcuts_used = self.config['HISTORY']['shortcutsused']
-            shortcut_chars = self.config['HISTORY']['shortcutchars']
-            textblock_chars = self.config['HISTORY']['textblockchars']
+            _shortcuts_used = self.config['HISTORY']['shortcutsused']
+            _shortcut_chars = self.config['HISTORY']['shortcutchars']
+            _textblock_chars = self.config['HISTORY']['textblockchars']
 
-            self.print_stats(shortcuts_used, shortcut_chars, textblock_chars)
+            self._print_stats(_shortcuts_used, _shortcut_chars, _textblock_chars)
 
         except:
 
@@ -90,23 +90,23 @@ class Setup:
             raise
 
     @staticmethod
-    def print_stats(shortcuts_used, shortcut_chars, textblock_chars):
+    def _print_stats(_shortcuts_used, _shortcut_chars, _textblock_chars):
         """
         Prints the usage stats to console.
         """
 
-        saved_keystrokes = str(int(textblock_chars) - int(shortcut_chars))
-        seconds_to_paste = 5
-        saved_seconds = int(shortcuts_used) * seconds_to_paste
-        time_saved = datetime.timedelta(seconds=saved_seconds)
+        _saved_keystrokes = str(int(_textblock_chars) - int(_shortcut_chars))
+        _seconds_to_paste = 5
+        _saved_seconds = int(_shortcuts_used) * _seconds_to_paste
+        _time_saved = datetime.timedelta(seconds=_saved_seconds)
 
         print(f"""Your stats:
 
-- Number of shortcuts used: {shortcuts_used}
-- You typed a total of {shortcut_chars} shortcut characters
-- Text-Script pasted a total of {textblock_chars} characters
-- You saved {saved_keystrokes} keystrokes
-- If it takes {seconds_to_paste} seconds to copy & paste an item, you saved {time_saved}""")
+- Number of shortcuts used: {_shortcuts_used}
+- You typed a total of {_shortcut_chars} shortcut characters
+- Text-Script pasted a total of {_textblock_chars} characters
+- You saved {_saved_keystrokes} keystrokes
+- If it takes {_seconds_to_paste} seconds to copy & paste an item, you saved {_time_saved}""")
 
     def shortcut_setup(self, directories):
         """
