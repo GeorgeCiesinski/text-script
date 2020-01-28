@@ -194,7 +194,7 @@ class Setup:
         return _shortcuts, _file_dirs
 
 
-class UpdateConfig:
+class Update:
 
     def __init__(self, log):
 
@@ -235,7 +235,7 @@ class UpdateConfig:
         self._config.set('HISTORY', 'textblockchars', str(textblock_chars))
 
         # Write to the config file
-        with open(self.config_dir, 'w') as configfile:
+        with open(self._config_dir, 'w') as configfile:
             self._config.write(configfile)
 
 
@@ -244,7 +244,7 @@ if __name__ == "__main__":
     # Initialize Logger
     L = Logger()
 
-    L.log.debug("Program started from Settings.py.")
+    L.log.debug("Program started from ConfigUtils.py.")
 
     s = Setup(L)
 

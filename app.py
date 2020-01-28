@@ -1,5 +1,5 @@
 import glib
-from Settings import Setup
+from ConfigUtils import Setup
 from Logger import Logger
 from TextController import WordCatcher, KeyboardEmulator
 

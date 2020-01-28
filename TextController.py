@@ -2,47 +2,47 @@ import sys
 from pynput.keyboard import Controller, Key, Listener
 import pyperclip
 from Logger import Logger
-from Settings import UpdateConfig
+from ConfigUtils import Update
 
 
 # Class catches individual words as they are typed
 class WordCatcher:
 
-    def __init__(self, log, keyboard, shortcut_list, file_dir_list):
+    def __init__(self, log, _keyboard, _shortcut_list, _file_dir_list):
 
         # Creates instance wide log object
         self.log = log.log
 
         # Creates instance wide UpdateConfig object
-        self.update = UpdateConfig(log)
+        self.update = Update(log)
 
         # Creates instance wide keyboard variable
-        self.keyboard = keyboard
+        self._keyboard = _keyboard
 
         # List of Text-Script commands
-        self.commands = [
+        self._commands = [
             "#help",
             "#exit",
             "#reload"
         ]
 
         # Creates instance wide shortcut_list & file_dir_list
-        self.shortcut_list = shortcut_list
-        self.file_dir_list = file_dir_list
+        self._shortcut_list = _shortcut_list
+        self._file_dir_list = _file_dir_list
 
         # Temporary word variable
-        self.word_in_progress = False
-        self.current_word = ""
+        self._word_in_progress = False
+        self._current_word = ""
 
         # Current key and KeyData
-        self.key = None
-        self.keydata = None
+        self._key = None
+        self._keydata = None
 
         # Delimiter
-        self.delimiter = "#"
+        self._delimiter = "#"
 
         # Textblock Variable
-        self.textblock = ""
+        self._textblock = ""
 
         self.log.debug("WordCatcher initialized.")
 
@@ -65,7 +65,7 @@ class WordCatcher:
         """
 
         # Sets keypress to instance key value
-        self.key = key
+        self._key = key
 
         # Converts to raw value string
         self.keycode_to_keydata()
@@ -88,8 +88,8 @@ class WordCatcher:
         """
 
         # Converts KeyData to string, strips ' from result
-        self.keydata = str(self.key)
-        self.keydata = self.keydata.strip("'")
+        self._keydata = str(self._key)
+        self._keydata = self._keydata.strip("'")
 
     def check_delimiter(self):
         """
@@ -97,19 +97,19 @@ class WordCatcher:
         """
 
         # If delimiter is entered but there is a word in progress, clear the word and start a new word
-        if self.keydata == self.delimiter and self.word_in_progress is True:
+        if self._keydata == self._delimiter and self._word_in_progress is True:
 
             self.clear_current_word()
 
             # Sets word_in_progress to True as new word has been started
-            self.word_in_progress = True
+            self._word_in_progress = True
 
             self.log.debug("Delimiter detected while word in progress. Restarting word.")
 
         # If delimiter is entered and there is no word in progress, start a new word
-        elif self.keydata == self.delimiter and self.word_in_progress is False:
+        elif self._keydata == self._delimiter and self._word_in_progress is False:
 
-            self.word_in_progress = True
+            self._word_in_progress = True
 
             self.log.debug("Delimiter detected. Starting new word.")
 
@@ -118,14 +118,14 @@ class WordCatcher:
         Checks if Key.tab, Key.space, or Key.enter is pressed. Prints word if pressed.
         """
 
-        if self.keydata == "Key.tab" or self.keydata == "Key.space" or self.keydata == "Key.enter":
+        if self._keydata == "Key.tab" or self._keydata == "Key.space" or self._keydata == "Key.enter":
 
             # Checks if there is a word in progress, clears it if true
-            if self.word_in_progress is True:
+            if self._word_in_progress is True:
 
                 self.check_shortcut()
 
-                self.log.debug(f"Word ended by {self.keydata}: {self.current_word}")
+                self.log.debug(f"Word ended by {self._keydata}: {self._current_word}")
 
                 # Clears current word
                 self.clear_current_word()
@@ -135,25 +135,25 @@ class WordCatcher:
         Checks if backspace was pressed. Erases last letter if pressed.
         """
 
-        if self.keydata == "Key.backspace":
+        if self._keydata == "Key.backspace":
 
             # Removes last letter from word
-            self.current_word = self.current_word[:-1]
+            self._current_word = self._current_word[:-1]
 
             self.log.debug("Key.backspace entered, removing last letter from word. The current word is:")
-            self.log.debug(self.current_word)
+            self.log.debug(self._current_word)
 
     def append_letter(self):
         """
         Appends the letter to self.current_word if self.word_in_progress is true
         """
 
-        if self.word_in_progress is True and len(self.keydata) == 1:
+        if self._word_in_progress is True and len(self._keydata) == 1:
 
             # Adds letter to the word
-            self.current_word += self.keydata
+            self._current_word += self._keydata
 
-            self.log.debug(f"Appended {self.keydata} to the current word.")
+            self.log.debug(f"Appended {self._keydata} to the current word.")
 
     def check_shortcut(self):
         """
@@ -161,43 +161,43 @@ class WordCatcher:
         """
 
         # If shortcut is in command list, determine which command was used
-        if self.current_word in self.commands:
+        if self._current_word in self._commands:
 
             self.determine_command()
 
         # If shortcut is in shortcut_list, determine which shortcut was used
-        if self.current_word in self.shortcut_list:
+        if self._current_word in self._shortcut_list:
 
             # Finds index of self.current_word on shortcut list
-            shortcut_index = self.shortcut_list.index(self.current_word)
+            shortcut_index = self._shortcut_list.index(self._current_word)
 
             # Passes the above index to self.read_textblock
             self.find_file_directory(shortcut_index)
 
             # Deletes the typed out shortcut
-            self.keyboard.delete_shortcut(self.current_word)
+            self._keyboard.delete_shortcut(self._current_word)
 
             # Update history
-            self.update.update_history(self.current_word, self.textblock)
+            self.update.update_history(self._current_word, self._textblock)
 
             # Passes the textbox to the keyboard
-            self.keyboard.paste_block(self.textblock)
+            self._keyboard.paste_block(self._textblock)
 
     def determine_command(self):
 
         # Exit program if user typed in #exit
-        if self.current_word == "#exit":
+        if self._current_word == "#exit":
 
             self.log.debug("The user has typed #exit. Exiting program.")
             self.exit_program()
 
         # Paste help menu if user typed in #help
-        elif self.current_word == "#help":
+        elif self._current_word == "#help":
 
             self.log.debug("The user has typed in #help. Pasting help menu.")
             self.help_menu()
 
-        elif self.current_word == "#reload":
+        elif self._current_word == "#reload":
 
             self.log.debug("The user has typed in #reload. Reloading shortcut_list and file_dir_list.")
             pass
@@ -209,9 +209,9 @@ class WordCatcher:
 
         exit_text = "Text-Script exited."
 
-        self.keyboard.delete_shortcut(self.current_word)
+        self._keyboard.delete_shortcut(self._current_word)
 
-        self.keyboard.paste_block(exit_text)
+        self._keyboard.paste_block(exit_text)
 
         # Close the program with no error
         sys.exit(0)
@@ -233,9 +233,9 @@ Note: Other formats may still work, but this is designed to read unicode text fi
 To exit Text-Script, type: #exit
 """
 
-        self.keyboard.delete_shortcut(self.current_word)
+        self._keyboard.delete_shortcut(self._current_word)
 
-        self.keyboard.paste_block(help_text)
+        self._keyboard.paste_block(help_text)
 
     def update_shortcuts(self):
 
@@ -248,7 +248,7 @@ To exit Text-Script, type: #exit
         """
 
         # Searches self.file_dir_list by index for the directory
-        textblock_directory = self.file_dir_list[index]
+        textblock_directory = self._file_dir_list[index]
         self.log.debug(f"Successfully found the textblock directory: {textblock_directory}")
 
         # Reads the textblock file
@@ -267,7 +267,7 @@ To exit Text-Script, type: #exit
             with open(textblock_directory, mode="r", encoding="UTF-16") as f:
 
                 # Assigns textblock content to the variable
-                self.textblock = f.read()
+                self._textblock = f.read()
         except:
             self.log.exception("Attempted to open file in UTF-16. Unsuccessful.")
         else:
@@ -280,7 +280,7 @@ To exit Text-Script, type: #exit
             with open(textblock_directory, mode="r", encoding="UTF-8") as f:
 
                 # Assigns textblock content to the variable
-                self.textblock = f.read()
+                self._textblock = f.read()
         except:
             self.log.exception("Attempted to open file in UTF-8. Unsuccessful.")
         else:
@@ -294,8 +294,8 @@ To exit Text-Script, type: #exit
         Replaces self.current_word with empty string, and sets self.word_in_progress to False
         """
 
-        self.current_word = ""
-        self.word_in_progress = False
+        self._current_word = ""
+        self._word_in_progress = False
 
         self.log.debug("Cleared current word & self.current_word changed to False.")
 
