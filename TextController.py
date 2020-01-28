@@ -270,7 +270,7 @@ To exit Text-Script, type: #exit"""
                 self._textblock = f.read()
         except FileNotFoundError:
             self._log.exception("Unable to open textblock as the file is missing.")
-        except:
+        except UnicodeDecodeError:
             self._log.exception("Attempted to open file in UTF-16. Unsuccessful.")
         else:
             self._log.debug("Successfully read the textblock using UTF-16.")
@@ -285,13 +285,13 @@ To exit Text-Script, type: #exit"""
                 self._textblock = f.read()
         except FileNotFoundError:
             self._log.exception("Unable to open textblock as the file is missing.")
-        except:
+        except UnicodeDecodeError:
             self._log.exception("Attempted to open file in UTF-8. Unsuccessful.")
         else:
             self._log.debug("Successfully read the textblock using UTF-8.")
             return
 
-        # Todo: Attempt to load file in local encoding (ANSI)
+        # Todo: Ansi appears to work, but loads in UTF-8 on this computer. Is a third check required, or should error be raised?
 
     def _clear_current_word(self):
         """
