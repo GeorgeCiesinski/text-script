@@ -9,7 +9,7 @@ class Setup:
 
     # TODO: Create check to ensure config file has the right categories and values
 
-    def __init__(self, log, text_script_version):
+    def __init__(self, _log, text_script_version):
 
         # Creates instance of current version variable
         self.version = text_script_version
@@ -17,7 +17,7 @@ class Setup:
         # TODO: Check if version has changed, update config
 
         # Creates instance wide log object
-        self.log = log.log
+        self._log = _log.log
 
         # Creates instance of ConfigParser object
         self._config = configparser.ConfigParser(allow_no_value=True)
@@ -25,7 +25,7 @@ class Setup:
         # Config Directory
         self._config_dir = 'Config/config.ini'
 
-        self.log.debug("Setup initialized successfully.")
+        self._log.debug("Setup initialized successfully.")
 
     def config_exists(self):
         """
@@ -34,11 +34,11 @@ class Setup:
 
         if path.exists("Config/config.ini"):
 
-            self.log.debug("Config file found.")
+            self._log.debug("Config file found.")
 
         else:
 
-            self.log.debug("No config file exists. Creating new config file.")
+            self._log.debug("No config file exists. Creating new config file.")
 
             # Creates new config file
             self._create_config()
@@ -67,7 +67,7 @@ class Setup:
         with open(self._config_dir, 'w') as configfile:
             self._config.write(configfile)
 
-        self.log.debug(f"{self._config_dir} file created successfully.")
+        self._log.debug(f"{self._config_dir} file created successfully.")
 
     def get_stats(self):
         """
@@ -86,7 +86,7 @@ class Setup:
 
         except:
 
-            self.log.exception("Unable to get stats from config file.")
+            self._log.exception("Unable to get stats from config file.")
             raise
 
     @staticmethod
@@ -120,16 +120,16 @@ class Setup:
 
         if _default_directory == "None" or _default_directory == "":
             _default_directory = None
-            self.log.debug("Default directory is set to None.")
+            self._log.debug("Default directory is set to None.")
         if _local_directory == "None" or _local_directory == "":
             _local_directory = None
-            self.log.debug("Local directory is set to None.")
+            self._log.debug("Local directory is set to None.")
         if _remote_directory == "None" or _remote_directory == "":
             _remote_directory = None
-            self.log.debug("Remote directory is set to None.")
+            self._log.debug("Remote directory is set to None.")
 
         _directories = [_default_directory, _local_directory, _remote_directory]
-        self.log.debug(f"Retrieved the following directories from config: {_directories}")
+        self._log.debug(f"Retrieved the following directories from config: {_directories}")
 
         return _directories
 
@@ -153,13 +153,13 @@ class Setup:
                 # Print shortcut title
                 if _directory is _directories[0]:
                     print("\nDefault Directory: \n")
-                    self.log.debug("Appending shortcuts from default directory.")
+                    self._log.debug("Appending shortcuts from default directory.")
                 elif _directory is _directories[1]:
                     print(f"\nLocal Directory: {_directory}\n")
-                    self.log.debug(f"Appending shortcuts from {_directory} directory.")
+                    self._log.debug(f"Appending shortcuts from {_directory} directory.")
                 elif _directory is _directories[2]:
                     print(f"\nRemote Directory: {_directory}\n")
-                    self.log.debug(f"Appending shortcuts from {_directory} directory.")
+                    self._log.debug(f"Appending shortcuts from {_directory} directory.")
 
                 # Print shortcuts
                 glib.print_shortcuts(_file_dirs, _shortcuts)
@@ -168,15 +168,15 @@ class Setup:
                 try:
                     _shortcut_list.extend(_shortcuts)
                 except:
-                    self.log.exception("Failed to extend shortcut_list.")
+                    self._log.exception("Failed to extend shortcut_list.")
                     raise
                 else:
-                    self.log.debug("Successfully extended shortcut_list")
+                    self._log.debug("Successfully extended shortcut_list")
 
                 # append file_dirs to file_dir_list
                 _file_dir_list.extend(_file_dirs)
 
-                self.log.debug("Successfully appended shortcuts and file_dirs.")
+                self._log.debug("Successfully appended shortcuts and file_dirs.")
 
         return _shortcut_list, _file_dir_list
 
