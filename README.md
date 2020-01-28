@@ -1,4 +1,4 @@
-# \>text-script
+# text-script
 An app that allows users to save shortcuts and textblocks. Typing a shortcut automatically replaces said shortcut with the content of the saved textblock. This app runs in the background and improves typing efficiency.
 
 ## Motivation
