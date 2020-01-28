@@ -259,6 +259,8 @@ To exit Text-Script, type: #exit"""
 
         #TODO: Guess file encoding
 
+        #TODO: Determine whether to end the program if exception, or output exception type to GUI
+
         # Attempt to open file in UTF-16
         try:
             # Opens the textblock directory
@@ -266,6 +268,8 @@ To exit Text-Script, type: #exit"""
 
                 # Assigns textblock content to the variable
                 self._textblock = f.read()
+        except FileNotFoundError:
+            self._log.exception("Unable to open textblock as the file is missing.")
         except:
             self._log.exception("Attempted to open file in UTF-16. Unsuccessful.")
         else:
@@ -279,6 +283,8 @@ To exit Text-Script, type: #exit"""
 
                 # Assigns textblock content to the variable
                 self._textblock = f.read()
+        except FileNotFoundError:
+            self._log.exception("Unable to open textblock as the file is missing.")
         except:
             self._log.exception("Attempted to open file in UTF-8. Unsuccessful.")
         else:
