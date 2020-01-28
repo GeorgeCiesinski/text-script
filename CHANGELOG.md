@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [1.3.0] - TBA
+# Changed
 - Reorganized classes so that methods make more sense
 - Renamed internal use methods according to PEP-8
 - Renamed Settings.py as ConfigUtils.py as this is more accurate
