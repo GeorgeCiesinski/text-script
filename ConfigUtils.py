@@ -54,27 +54,36 @@ class Setup:
             glib.create_folder(self._config_dir)
             self._log.debug("No Config directory found. Creating directory.")
 
-        # Create config file
-        self._config['TEXTSCRIPT'] = {}
-        self._config.set('TEXTSCRIPT', '; Config file version')
-        self._config.set('TEXTSCRIPT', 'version', self.version)
+        try:
 
-        self._config['HISTORY'] = {}
-        self._config.set('HISTORY', '; Tracks key strokes saved history')
-        self._config.set('HISTORY', 'shortcutsused', 0)
-        self._config.set('HISTORY', 'shortcutchars', 0)
-        self._config.set('HISTORY', 'textblockchars', 0)
+            # Create config file
+            self._config['TEXTSCRIPT'] = {}
+            self._config.set('TEXTSCRIPT', '; Config file version')
+            self._config.set('TEXTSCRIPT', 'version', self.version)
 
-        self._config['DIRECTORIES'] = {}
-        self._config.set('DIRECTORIES', '; the default directory included with app, local directory, and network directory')
-        self._config.set('DIRECTORIES', 'defaultdirectory', 'Textblocks/')
-        self._config.set('DIRECTORIES', 'localdirectory', 'None')
-        self._config.set('DIRECTORIES', 'remotedirectory', 'None')
+            self._config['HISTORY'] = {}
+            self._config.set('HISTORY', '; Tracks key strokes saved history')
+            self._config.set('HISTORY', 'shortcutsused', 0)
+            self._config.set('HISTORY', 'shortcutchars', 0)
+            self._config.set('HISTORY', 'textblockchars', 0)
 
-        with open(self._config_file_dir, 'w') as configfile:
-            self._config.write(configfile)
+            self._config['DIRECTORIES'] = {}
+            self._config.set('DIRECTORIES', '; the default directory included with app, local directory, and network directory')
+            self._config.set('DIRECTORIES', 'defaultdirectory', 'Textblocks/')
+            self._config.set('DIRECTORIES', 'localdirectory', 'None')
+            self._config.set('DIRECTORIES', 'remotedirectory', 'None')
 
-        self._log.debug(f"{self._config_file_dir} file created successfully.")
+            with open(self._config_file_dir, 'w') as configfile:
+                self._config.write(configfile)
+
+        except configparser.Error:
+            self._log.exception("Failed to create config file due to configparser error.")
+            raise
+        except Exception:
+            self._log.exception("Failed to create config file due to unexpected error.")
+            raise
+        else:
+            self._log.debug(f"{self._config_file_dir} file created successfully.")
 
     def get_stats(self):
         """
@@ -91,9 +100,9 @@ class Setup:
 
             self._print_stats(_shortcuts_used, _shortcut_chars, _textblock_chars)
 
-        except:
+        except configparser.NoSectionError:
 
-            self._log.exception("Unable to get stats from config file.")
+            self._log.exception("Unable to get stats from config file: NoSectionError.")
             raise
 
     @staticmethod
@@ -203,10 +212,10 @@ class Setup:
 
 class Update:
 
-    def __init__(self, log):
+    def __init__(self, _log):
 
         # Creates instance wide log variable
-        self.log = log.log
+        self._log = _log.log
 
         # Creates instance of ConfigParser
         self._config = configparser.ConfigParser(allow_no_value=True)
@@ -214,36 +223,47 @@ class Update:
         # Config Directory
         self._config_file_dir = 'Config/config.ini'
 
-        self.log.debug("Setup initialized successfully.")
+        self._log.debug("Setup initialized successfully.")
 
     def update_history(self, shortcut, textblock):
         """
         Updates the shortcuts used, total shortcut characters typed, and total textblock characters pasted
         """
 
-        # Read config file for the shortcuts used, shortcut characters, and textblock characters
-        self._config.read(self._config_file_dir)
-        shortcuts_used = int(self._config['HISTORY']['shortcutsused'])
-        shortcut_chars = int(self._config['HISTORY']['shortcutchars'])
-        textblock_chars = int(self._config['HISTORY']['textblockchars'])
+        try:
 
-        # Increase shortcuts used by 1
-        shortcuts_used += 1
+            # Read config file for the shortcuts used, shortcut characters, and textblock characters
+            self._config.read(self._config_file_dir)
+            shortcuts_used = int(self._config['HISTORY']['shortcutsused'])
+            shortcut_chars = int(self._config['HISTORY']['shortcutchars'])
+            textblock_chars = int(self._config['HISTORY']['textblockchars'])
 
-        # Increase shortcut characters by the length of the current shortcut
-        shortcut_chars += len(shortcut)
+            # Increase shortcuts used by 1
+            shortcuts_used += 1
 
-        # Increase textblock characters by the length of the current textblock
-        textblock_chars += len(textblock)
+            # Increase shortcut characters by the length of the current shortcut
+            shortcut_chars += len(shortcut)
 
-        # Update the config categories with the updated data
-        self._config.set('HISTORY', 'shortcutsused', str(shortcuts_used))
-        self._config.set('HISTORY', 'shortcutchars', str(shortcut_chars))
-        self._config.set('HISTORY', 'textblockchars', str(textblock_chars))
+            # Increase textblock characters by the length of the current textblock
+            textblock_chars += len(textblock)
 
-        # Write to the config file
-        with open(self._config_file_dir, 'w') as configfile:
-            self._config.write(configfile)
+            # Update the config categories with the updated data
+            self._config.set('HISTORY', 'shortcutsused', str(shortcuts_used))
+            self._config.set('HISTORY', 'shortcutchars', str(shortcut_chars))
+            self._config.set('HISTORY', 'textblockchars', str(textblock_chars))
+
+            # Write to the config file
+            with open(self._config_file_dir, 'w') as configfile:
+                self._config.write(configfile)
+
+        except configparser.Error:
+            self._log.exception("Failed to update config file due to configparser Error.")
+            raise
+        except Exception:
+            self._log.exception("Failed to update config file due to unexpected Error.")
+            raise
+        else:
+            self._log.debug("Successfully updated config file with updated stats.")
 
 
 if __name__ == "__main__":
