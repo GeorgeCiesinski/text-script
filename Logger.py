@@ -22,6 +22,7 @@ class Logger:
 		# Create directory if doesn't exist
 		if not glib.check_directory(self.log_dir):
 			glib.create_folder(self.log_dir)
+			print("Created Logs directory as it did not exist.")
 
 		# Check if logs exist
 		self._rollover_check = path.exists('Logs/logs.log')

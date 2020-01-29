@@ -39,7 +39,7 @@ class Setup:
 
         else:
 
-            self._log.debug("No config file exists. Creating new config file.")
+            self._log.debug("Config file not found. Creating new config file.")
 
             # Creates new config file
             self._create_config()
@@ -52,6 +52,7 @@ class Setup:
         # Create directory if doesn't exist
         if not glib.check_directory(self._config_dir):
             glib.create_folder(self._config_dir)
+            self._log.debug("No Config directory found. Creating directory.")
 
         # Create config file
         self._config['TEXTSCRIPT'] = {}
