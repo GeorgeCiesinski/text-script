@@ -54,27 +54,34 @@ class Setup:
             glib.create_folder(self._config_dir)
             self._log.debug("No Config directory found. Creating directory.")
 
-        # Create config file
-        self._config['TEXTSCRIPT'] = {}
-        self._config.set('TEXTSCRIPT', '; Config file version')
-        self._config.set('TEXTSCRIPT', 'version', self.version)
+        try:
 
-        self._config['HISTORY'] = {}
-        self._config.set('HISTORY', '; Tracks key strokes saved history')
-        self._config.set('HISTORY', 'shortcutsused', 0)
-        self._config.set('HISTORY', 'shortcutchars', 0)
-        self._config.set('HISTORY', 'textblockchars', 0)
+            # Create config file
+            self._config['TEXTSCRIPT'] = {}
+            self._config.set('TEXTSCRIPT', '; Config file version')
+            self._config.set('TEXTSCRIPT', 'version', self.version)
 
-        self._config['DIRECTORIES'] = {}
-        self._config.set('DIRECTORIES', '; the default directory included with app, local directory, and network directory')
-        self._config.set('DIRECTORIES', 'defaultdirectory', 'Textblocks/')
-        self._config.set('DIRECTORIES', 'localdirectory', 'None')
-        self._config.set('DIRECTORIES', 'remotedirectory', 'None')
+            self._config['HISTORY'] = {}
+            self._config.set('HISTORY', '; Tracks key strokes saved history')
+            self._config.set('HISTORY', 'shortcutsused', 0)
+            self._config.set('HISTORY', 'shortcutchars', 0)
+            self._config.set('HISTORY', 'textblockchars', 0)
 
-        with open(self._config_file_dir, 'w') as configfile:
-            self._config.write(configfile)
+            self._config['DIRECTORIES'] = {}
+            self._config.set('DIRECTORIES', '; the default directory included with app, local directory, and network directory')
+            self._config.set('DIRECTORIES', 'defaultdirectory', 'Textblocks/')
+            self._config.set('DIRECTORIES', 'localdirectory', 'None')
+            self._config.set('DIRECTORIES', 'remotedirectory', 'None')
 
-        self._log.debug(f"{self._config_file_dir} file created successfully.")
+            with open(self._config_file_dir, 'w') as configfile:
+                self._config.write(configfile)
+
+        except configparser.Error:
+            self._log.exception("Failed to create config file due to configparser error.")
+        except:
+            self._log.exception("Failed to create config file due to unexpected error.")
+        else:
+            self._log.debug(f"{self._config_file_dir} file created successfully.")
 
     def get_stats(self):
         """
