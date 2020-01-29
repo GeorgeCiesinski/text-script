@@ -22,8 +22,9 @@ class Setup:
         # Creates instance of ConfigParser object
         self._config = configparser.ConfigParser(allow_no_value=True)
 
-        # Config Directory
-        self._config_dir = 'Config/config.ini'
+        # Config Directories
+        self._config_dir = "Config/"
+        self._config_file_dir = "Config/config.ini"
 
         self._log.debug("Setup initialized successfully.")
 
@@ -32,7 +33,7 @@ class Setup:
         Checks if Config file exists
         """
 
-        if path.exists("Config/config.ini"):
+        if path.exists(self._config_file_dir):
 
             self._log.debug("Config file found.")
 
@@ -48,6 +49,11 @@ class Setup:
         Creates a new config file
         """
 
+        # Create directory if doesn't exist
+        if not glib.check_directory(self._config_dir):
+            glib.create_folder(self._config_dir)
+
+        # Create config file
         self._config['TEXTSCRIPT'] = {}
         self._config.set('TEXTSCRIPT', '; Config file version')
         self._config.set('TEXTSCRIPT', 'version', self.version)
@@ -64,10 +70,10 @@ class Setup:
         self._config.set('DIRECTORIES', 'localdirectory', 'None')
         self._config.set('DIRECTORIES', 'remotedirectory', 'None')
 
-        with open(self._config_dir, 'w') as configfile:
+        with open(self._config_file_dir, 'w') as configfile:
             self._config.write(configfile)
 
-        self._log.debug(f"{self._config_dir} file created successfully.")
+        self._log.debug(f"{self._config_file_dir} file created successfully.")
 
     def get_stats(self):
         """
@@ -76,7 +82,7 @@ class Setup:
 
         try:
 
-            self._config.read(self._config_dir)
+            self._config.read(self._config_file_dir)
 
             _shortcuts_used = self._config['HISTORY']['shortcutsused']
             _shortcut_chars = self._config['HISTORY']['shortcutchars']
@@ -113,7 +119,7 @@ class Setup:
         Finds the directories in the config file
         """
 
-        self._config.read(self._config_dir)
+        self._config.read(self._config_file_dir)
         _default_directory = self._config['DIRECTORIES']['defaultdirectory']
         _local_directory = self._config['DIRECTORIES']['localdirectory']
         _remote_directory = self._config['DIRECTORIES']['remotedirectory']
@@ -205,7 +211,7 @@ class Update:
         self._config = configparser.ConfigParser(allow_no_value=True)
 
         # Config Directory
-        self._config_dir = 'Config/config.ini'
+        self._config_file_dir = 'Config/config.ini'
 
         self.log.debug("Setup initialized successfully.")
 
@@ -215,7 +221,7 @@ class Update:
         """
 
         # Read config file for the shortcuts used, shortcut characters, and textblock characters
-        self._config.read(self._config_dir)
+        self._config.read(self._config_file_dir)
         shortcuts_used = int(self._config['HISTORY']['shortcutsused'])
         shortcut_chars = int(self._config['HISTORY']['shortcutchars'])
         textblock_chars = int(self._config['HISTORY']['textblockchars'])
@@ -235,7 +241,7 @@ class Update:
         self._config.set('HISTORY', 'textblockchars', str(textblock_chars))
 
         # Write to the config file
-        with open(self._config_dir, 'w') as configfile:
+        with open(self._config_file_dir, 'w') as configfile:
             self._config.write(configfile)
 
 
