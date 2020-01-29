@@ -5,6 +5,34 @@ Contains non-class or miscellaneous methods
 import os
 
 
+def check_directory(directory):
+    """
+    Checks directory to see if folder exists
+    """
+
+    # Return true if directory exists
+    if os.path.isdir(directory):
+        return True
+    else:
+        return False
+        print("Missing log directory.")
+
+
+def create_folder(directory):
+    """
+    Creates directory in project folder
+    """
+
+    parent_dir = os.getcwd()
+    folder_dir = os.path.join(parent_dir, directory)
+
+    try:
+        os.mkdir(folder_dir)
+    except OSError as error:
+        print("Unable to create Log directory in project folder due to the following error:")
+        print(error)
+
+
 def list_subdirectories(_directory):
     """
     Lists all subdirectories.
