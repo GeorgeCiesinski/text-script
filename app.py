@@ -27,6 +27,9 @@ if __name__ == "__main__":
     # Check if config file exists
     setup.config_exists()
 
+    # Check if history file exists
+    setup.history_exists()
+
     # Print stats to console
     setup.get_stats()
 
@@ -39,6 +42,9 @@ if __name__ == "__main__":
 
     # Load shortcuts and file directories
     shortcut_list, file_dir_list = setup.shortcut_setup(directories)
+
+    # Check if new shortcuts have been added
+    setup.new_shortcut_check(shortcut_list)
 
     # Initializes KeyboardEmulator instance
     k = KeyboardEmulator(L)
