@@ -27,9 +27,6 @@ if __name__ == "__main__":
     # Check if config file exists
     setup.config_exists()
 
-    # Check if history file exists
-    setup.history_exists()
-
     # Print stats to console
     setup.get_stats()
 

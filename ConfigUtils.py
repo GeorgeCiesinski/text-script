@@ -30,7 +30,6 @@ class Setup:
         # Config Directories
         self._config_dir = "Config/"
         self._config_file_dir = "Config/config.ini"
-        self._shortcut_history_file_dir = "Config/shortcuts.ini"
 
         self._log.debug("Setup initialized successfully.")
 
@@ -95,6 +94,9 @@ class Setup:
             self._config.set('DIRECTORIES', 'localdirectory', 'None')
             self._config.set('DIRECTORIES', 'remotedirectory', 'None')
 
+            self._config['SHORTCUTS'] = {}
+            self._config.set('SHORTCUTS', 'lastshortcuts', "")
+
             with open(self._config_file_dir, 'w') as configfile:
                 self._config.write(configfile)
 
@@ -106,31 +108,6 @@ class Setup:
             raise
         else:
             self._log.debug(f"{self._config_file_dir} file created successfully.")
-
-    def _create_history(self):
-
-        # Create directory if doesn't exist
-        if not glib.check_directory(self._config_dir):
-            glib.create_folder(self._config_dir)
-            self._log.debug("No Config directory found. Creating directory.")
-
-        try:
-
-            # Create config file
-            self._config['SHORTCUTS'] = {}
-            self._config.set('SHORTCUTS', 'lastshortcuts', "")
-
-            with open(self._shortcut_history_file_dir, 'w') as configfile:
-                self._config.write(configfile)
-
-        except configparser.Error:
-            self._log.exception("Failed to create shortcut history file due to configparser error.")
-            raise
-        except Exception:
-            self._log.exception("Failed to create shortcut history file due to unexpected error.")
-            raise
-        else:
-            self._log.debug(f"{self._shortcut_history_file_dir} file created successfully.")
 
     def new_shortcut_check(self, _shortcut_list):
 
@@ -192,7 +169,7 @@ class Setup:
     def _read_shortcuts(self):
 
         # Read shortcut history config file
-        self._config.read(self._shortcut_history_file_dir)
+        self._config.read(self._config_file_dir)
 
         self._last_shortcuts = (self._config['SHORTCUTS']['lastshortcuts']).split(', ')
 
@@ -204,7 +181,7 @@ class Setup:
             self._config.set('SHORTCUTS', 'lastshortcuts', _shortcut_string)
 
             # Write to the config file
-            with open(self._shortcut_history_file_dir, 'w') as configfile:
+            with open(self._config_file_dir, 'w') as configfile:
                 self._config.write(configfile)
 
         except configparser.Error:
