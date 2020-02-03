@@ -22,6 +22,11 @@ class Setup:
         # Creates instance of ConfigParser object
         self._config = configparser.ConfigParser(allow_no_value=True)
 
+        # Shortcut notification variables
+        self._last_shortcuts = []
+        self._new_shortcuts = []
+        self._removed_shortcuts = []
+
         # Config Directories
         self._config_dir = "Config/"
         self._config_file_dir = "Config/config.ini"
@@ -39,10 +44,26 @@ class Setup:
 
         else:
 
-            self._log.debug("Config file not found. Creating new config file.")
+            self._log.debug("Config file not found. Creating new file.")
 
             # Creates new config file
             self._create_config()
+
+    def history_exists(self):
+        """
+        Checks if History file exists
+        """
+
+        if path.exists(self._shortcut_history_file_dir):
+
+            self._log.debug("Shortcut history file found.")
+
+        else:
+
+            self._log.debug("Shortcut history file not found. Creating new file.")
+
+            # Creates a new shortcut history file
+            self._create_history()
 
     def _create_config(self):
         """
@@ -73,6 +94,9 @@ class Setup:
             self._config.set('DIRECTORIES', 'localdirectory', 'None')
             self._config.set('DIRECTORIES', 'remotedirectory', 'None')
 
+            self._config['SHORTCUTS'] = {}
+            self._config.set('SHORTCUTS', 'lastshortcuts', "")
+
             with open(self._config_file_dir, 'w') as configfile:
                 self._config.write(configfile)
 
@@ -84,6 +108,90 @@ class Setup:
             raise
         else:
             self._log.debug(f"{self._config_file_dir} file created successfully.")
+
+    def new_shortcut_check(self, _shortcut_list):
+
+        # Reads the shortcuts from the shortcuts.ini file
+        self._read_shortcuts()
+
+        """
+        New shortcut check
+        """
+
+        print("\nNew shortcut check: \n")
+
+        for shortcut in _shortcut_list:
+
+            # If shortcut isn't in the _last_shortcuts list, add it to _new_shortcuts
+            if shortcut not in self._last_shortcuts:
+
+                self._new_shortcuts.append(shortcut)
+
+        # If there are more than zero new shortcuts, print the new shortcuts
+        if len(self._new_shortcuts) == 0:
+            print("No new shortcuts have been added.")
+        else:
+            print("The following shortcuts have been added:")
+            print(self._new_shortcuts)
+
+        """
+        Removed shortcut check
+        """
+
+        print("\nRemoved shortcut check: \n")
+
+        for shortcut in self._last_shortcuts:
+
+            # If shortcut is not in _shortcut_list, add it to the _removed_shortcuts list
+            if shortcut not in _shortcut_list:
+
+                self._removed_shortcuts.append(shortcut)
+
+        # If there are more than 0 removed shortcuts, print the removed shortcuts
+        if len(self._removed_shortcuts) == 1 and self._removed_shortcuts[0] == "":
+
+            print("No shortcuts have been removed.")
+
+        elif len(self._removed_shortcuts) > 0:
+
+            print("The following shortcuts have been removed:")
+            print(self._removed_shortcuts)
+
+        elif len(self._removed_shortcuts) == 0:
+
+            print("No shortcuts have been removed.")
+
+        # Replace self._last_shortcuts if list has changed
+        if _shortcut_list != self._last_shortcuts:
+
+            self._replace_last_shortcuts(_shortcut_list)
+
+    def _read_shortcuts(self):
+
+        # Read shortcut history config file
+        self._config.read(self._config_file_dir)
+
+        self._last_shortcuts = (self._config['SHORTCUTS']['lastshortcuts']).split(', ')
+
+    def _replace_last_shortcuts(self, _shortcut_list):
+
+        _shortcut_string = ', '.join(_shortcut_list)
+
+        try:
+            self._config.set('SHORTCUTS', 'lastshortcuts', _shortcut_string)
+
+            # Write to the config file
+            with open(self._config_file_dir, 'w') as configfile:
+                self._config.write(configfile)
+
+        except configparser.Error:
+            self._log.exception("Failed to update shortcut history file due to configparser Error.")
+            raise
+        except Exception:
+            self._log.exception("Failed to update shortcut history file due to unexpected Error.")
+            raise
+        else:
+            self._log.debug("Successfully updated shortcut history file with updated stats.")
 
     def get_stats(self):
         """

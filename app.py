@@ -40,6 +40,9 @@ if __name__ == "__main__":
     # Load shortcuts and file directories
     shortcut_list, file_dir_list = setup.shortcut_setup(directories)
 
+    # Check if new shortcuts have been added
+    setup.new_shortcut_check(shortcut_list)
+
     # Initializes KeyboardEmulator instance
     k = KeyboardEmulator(L)
 
