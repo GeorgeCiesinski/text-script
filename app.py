@@ -1,12 +1,12 @@
 import glib
-from Settings import Setup
+from ConfigUtils import Setup
 from Logger import Logger
 from TextController import WordCatcher, KeyboardEmulator
 
 if __name__ == "__main__":
 
     # Current app version / / Ensure this is correct during updates
-    text_script_version = "1.1.0"
+    text_script_version = "1.3.0"
 
     """
     Initialize Logger
@@ -39,6 +39,9 @@ if __name__ == "__main__":
 
     # Load shortcuts and file directories
     shortcut_list, file_dir_list = setup.shortcut_setup(directories)
+
+    # Check if new shortcuts have been added
+    setup.new_shortcut_check(shortcut_list)
 
     # Initializes KeyboardEmulator instance
     k = KeyboardEmulator(L)

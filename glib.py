@@ -5,67 +5,95 @@ Contains non-class or miscellaneous methods
 import os
 
 
-def list_subdirectories(directory):
+def check_directory(directory):
+    """
+    Checks directory to see if folder exists
+    """
+
+    # Return true if directory exists
+    if os.path.isdir(directory):
+        return True
+    else:
+        return False
+        print("Missing log directory.")
+
+
+def create_folder(directory):
+    """
+    Creates directory in project folder
+    """
+
+    parent_dir = os.getcwd()
+    folder_dir = os.path.join(parent_dir, directory)
+
+    try:
+        os.mkdir(folder_dir)
+    except OSError as error:
+        print("Unable to create Log directory in project folder due to the following error:")
+        print(error)
+
+
+def list_subdirectories(_directory):
     """
     Lists all subdirectories.
 
-    :param directory:
+    :param _directory:
     :return directory_list:
     :rtype list:
     """
 
     directory_list = list()
 
-    for root, dirs, files in os.walk(directory, topdown=False):
-        for name in dirs:
-            directory_list.append(os.path.join(root, name))
+    for _root, _dirs, _files in os.walk(_directory, topdown=False):
+        for name in _dirs:
+            directory_list.append(os.path.join(_root, name))
 
     return directory_list
 
 
-def list_files(directory):
+def list_files(_directory):
     """
     Lists all files and subdirectories in the directory. Returns list
 
-    :param directory:
-    :return file_list, file_dir_list:
+    :param _directory:
+    :return _file_list, _file_dir_list:
     :rtype list:
     """
 
-    file_list = list()
-    file_dir_list = list()
+    _file_list = list()
+    _file_dir_list = list()
 
-    for root, dirs, files in os.walk(directory, topdown=False):
+    for root, dirs, files in os.walk(_directory, topdown=False):
         for name in files:
-            file_list.append(name)
-            file_dir_list.append(os.path.join(root, name))
+            _file_list.append(name)
+            _file_dir_list.append(os.path.join(root, name))
 
-    return file_list, file_dir_list
+    return _file_list, _file_dir_list
 
 
-def list_shortcuts(file_list):
+def list_shortcuts(_file_list):
     """
     list_shortcuts creates a list of the raw shortcut strings the user would be typing in
 
-    :param file_list:
-    :return shortcut_list:
+    :param _file_list:
+    :return _shortcut_list:
     :rtype list:
     """
 
-    shortcut_list = list()
+    _shortcut_list = list()
 
-    for f in file_list:
+    for f in _file_list:
         f = f.split(".")
-        shortcut_list.append(f[0])
+        _shortcut_list.append(f[0])
 
-    return shortcut_list
+    return _shortcut_list
 
 
-def print_shortcuts(file_dirs, shortcuts):
+def print_shortcuts(_file_dirs, _shortcuts):
 
-    for file_dir in file_dirs:
-        index = file_dirs.index(file_dir)
-        print(f"Shortcut: {shortcuts[index]}   - - -    Directory: {file_dir}")
+    for _file_dir in _file_dirs:
+        index = _file_dirs.index(_file_dir)
+        print(f"Shortcut: {_shortcuts[index]}   - - -    Directory: {_file_dir}")
 
 
 if __name__ == "__main__":
