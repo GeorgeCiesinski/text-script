@@ -1,4 +1,11 @@
-# text-script
+# >text-script
+
+![Python Version](https://img.shields.io/badge/Python-3.7-blue)
+![License Information](https://img.shields.io/github/license/GeorgeCiesinski/text-script)
+
+![Dependencies](https://img.shields.io/requires/github/GeorgeCiesinski/text-script)
+![Open Issues](https://img.shields.io/github/issues/GeorgeCiesinski/text-script)
+
 An app that allows users to save shortcuts and textblocks. Typing a shortcut automatically replaces said shortcut with the content of the saved textblock. This app runs in the background and improves typing efficiency.
 
 ## Motivation
