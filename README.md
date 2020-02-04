@@ -1,4 +1,4 @@
-# text-script
+# text-script 1.3.0
 An app that allows users to save shortcuts and textblocks. Typing a shortcut automatically replaces said shortcut with the content of the saved textblock. This app runs in the background and improves typing efficiency.
 
 ## Motivation
@@ -9,7 +9,7 @@ I came up with this idea when I discovered there was a lack of quality open sour
 - Pyperclip
 
 ## Prerequisites
-- Python 3.7
+- Python 3.8 (I do not know if versions below 3.6 will work)
 - Dependencies from requirements.txt
 
 ## Installing
