@@ -16,7 +16,7 @@ I came up with this idea when I discovered there was a lack of quality open sour
 - Pyperclip
 
 ## Prerequisites
-- Python 3.7
+- Python 3.8 (I do not know if versions below 3.6 will work)
 - Dependencies from requirements.txt
 
 ## Installing
