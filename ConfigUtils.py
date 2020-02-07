@@ -28,8 +28,8 @@ class Setup:
         self._removed_shortcuts = []
 
         # Config Directories
-        self._config_dir = "Config/"
-        self._config_file_dir = "Config/config.ini"
+        self._config_dir = "config/"
+        self._config_file_dir = "config/config.ini"
 
         self._log.debug("Setup initialized successfully.")
 
@@ -329,7 +329,7 @@ class Update:
         self._config = configparser.ConfigParser(allow_no_value=True)
 
         # Config Directory
-        self._config_file_dir = 'Config/config.ini'
+        self._config_file_dir = 'config/config.ini'
 
         self._log.debug("Setup initialized successfully.")
 

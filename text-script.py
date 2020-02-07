@@ -1,4 +1,3 @@
-import glib
 from ConfigUtils import Setup
 from Logger import Logger
 from TextController import WordCatcher, KeyboardEmulator
