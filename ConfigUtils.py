@@ -89,8 +89,11 @@ class Setup:
             self._config.set('HISTORY', 'textblockchars', 0)
 
             self._config['DIRECTORIES'] = {}
-            self._config.set('DIRECTORIES', '; the default directory included with app, local directory, and network directory')
-            self._config.set('DIRECTORIES', 'defaultdirectory', 'Textblocks/')
+            self._config.set(
+                'DIRECTORIES',
+                '; the default directory included with app, local directory, and network directory'
+            )
+            self._config.set('DIRECTORIES', 'defaultdirectory', 'textblocks/')
             self._config.set('DIRECTORIES', 'localdirectory', 'None')
             self._config.set('DIRECTORIES', 'remotedirectory', 'None')
 
@@ -291,7 +294,7 @@ class Setup:
                 # extends shortcut_list with values in shortcuts
                 try:
                     _shortcut_list.extend(_shortcuts)
-                except:
+                except Exception:
                     self._log.exception("Failed to extend shortcut_list.")
                     raise
                 else:
