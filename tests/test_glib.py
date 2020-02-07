@@ -26,7 +26,6 @@ class TestGlib(unittest.TestCase):
         # Delete test_directory
         parent_dir = os.getcwd()
         delete_dir = os.path.join(parent_dir, test_directory)
-
         os.removedirs(delete_dir)
 
     def test_list_subdirectories(self):
