@@ -332,7 +332,7 @@ class Update:
         self._config = configparser.ConfigParser(allow_no_value=True)
 
         # Config Directory
-        self._config_file_dir = '../config/config.ini'
+        self._config_file_dir = './config/config.ini'
 
         self._log.debug("Setup initialized successfully.")
 
