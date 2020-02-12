@@ -1,5 +1,5 @@
 import tkinter
-from Logger import Logger
+from textscript.Logger import Logger
 
 
 class Gui:

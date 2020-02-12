@@ -1,5 +1,5 @@
 import unittest
-from glib import *
+from textscript.glib import *
 
 
 class TestGlib(unittest.TestCase):
