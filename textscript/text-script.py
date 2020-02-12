@@ -1,6 +1,6 @@
-from ConfigUtils import Setup
-from Logger import Logger
-from TextController import WordCatcher, KeyboardEmulator
+from textscript.ConfigUtils import Setup
+from textscript.Logger import Logger
+from textscript.TextController import WordCatcher, KeyboardEmulator
 
 if __name__ == "__main__":
 
