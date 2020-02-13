@@ -1,8 +1,8 @@
 import sys
 from pynput.keyboard import Controller, Key, Listener
 import pyperclip
-from textscript.Logger import Logger
-from textscript.ConfigUtils import Update
+from Logger import Logger
+from ConfigUtils import Update
 
 
 # Class catches individual words as they are typed

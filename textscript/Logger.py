@@ -1,7 +1,7 @@
 import logging
 from logging import handlers
 from os import path
-from textscript import glib
+import glib
 
 
 class Logger:

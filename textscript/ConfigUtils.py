@@ -1,6 +1,6 @@
 import configparser
-from textscript.Logger import Logger
-from textscript import glib
+from Logger import Logger
+import glib
 from os import path
 import datetime
 

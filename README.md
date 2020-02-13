@@ -36,8 +36,9 @@ At this time, the program is still in early development, so I recommend always d
 
 1. Download or clone the repository.
 2. Install the dependencies from requirements.txt (virtual environment is recommended).
-3. Run the app.py file. 
-4. Optionally, follow steps 4 & 5 from teh Executable Installation Steps to configure text-script.
+3. Ensure your CWD is text-script (root folder). If using pycharm, mark textscript as sources root.
+4. Run the textscript/text-script.py file
+5. Optionally, follow steps 4 & 5 from teh Executable Installation Steps to configure text-script.
 
 ## Screenshots
 TBA
