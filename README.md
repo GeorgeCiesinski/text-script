@@ -1,6 +1,6 @@
 # >text-script
 
-![Python Version](https://img.shields.io/badge/Python-3.7-blue)
+![Python Version](https://img.shields.io/badge/Python-3.8-blue)
 ![License Information](https://img.shields.io/github/license/GeorgeCiesinski/text-script)
 
 ![Dependencies](https://img.shields.io/requires/github/GeorgeCiesinski/text-script)
