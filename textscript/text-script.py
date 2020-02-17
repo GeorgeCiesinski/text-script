@@ -14,7 +14,7 @@ if __name__ == "__main__":
     # Initialize Logger
     L = Logger()
 
-    L.log.debug(f"Program started from App.py. Version: {text_script_version}")
+    L.log.debug(f"Program started from text-script. Version: {text_script_version}")
 
     """
     Configure Settings
@@ -23,8 +23,8 @@ if __name__ == "__main__":
     # Initialize setup
     setup = Setup(L, text_script_version)
 
-    # Check if config file exists
-    setup.config_exists()
+    # Check if config file is compatible or is missing data
+    setup.check_config()
 
     # Print stats to console
     setup.get_stats()
@@ -38,6 +38,8 @@ if __name__ == "__main__":
 
     # Load shortcuts and file directories
     shortcut_list, file_dir_list = setup.shortcut_setup(directories)
+
+    L.log.debug("Retrieved shortcut_list, file_dir_list:")
 
     # Check if new shortcuts have been added
     setup.new_shortcut_check(shortcut_list)

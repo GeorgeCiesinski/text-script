@@ -33,6 +33,14 @@ class Setup:
 
         self._log.debug("Setup initialized successfully.")
 
+    def check_config(self):
+
+        # Check if config exists, create if not
+        self.config_exists()
+
+        # Check if any sections or options are missing from the config
+        self.check_config_contents()
+
     def config_exists(self):
         """
         Checks if Config file exists
@@ -49,21 +57,19 @@ class Setup:
             # Creates new config file
             self._create_config()
 
-    def history_exists(self):
-        """
-        Checks if History file exists
-        """
+    def check_config_contents(self):
 
-        if path.exists(self._shortcut_history_file_dir):
+        # Read config
 
-            self._log.debug("Shortcut history file found.")
+        # Check version number
+        # If Version is outdated, update version
 
-        else:
+        # Check which sections exist
+        # If any sections are missing, add section
 
-            self._log.debug("Shortcut history file not found. Creating new file.")
+        # Check
 
-            # Creates a new shortcut history file
-            self._create_history()
+        pass
 
     def _create_config(self):
         """
@@ -104,15 +110,81 @@ class Setup:
                 self._config.write(configfile)
 
         except configparser.Error:
+
             self._log.exception("Failed to create config file due to configparser error.")
             raise
+
         except Exception:
+
             self._log.exception("Failed to create config file due to unexpected error.")
             raise
+
         else:
+
             self._log.debug(f"{self._config_file_dir} file created successfully.")
 
+    def shortcut_setup(self, _directories):
+        """
+        Extends _shortcut_list and _file_dir_list from the _shortcuts and _file_dirs lists.
+        """
+
+        _shortcut_list = []
+        _file_dir_list = []
+
+        # For each directory in directories
+        for _directory in _directories:
+
+            # Appends shortcuts only if directory is not None
+            if _directory is not None:
+
+                # Get shortcuts and file_dirs
+                _shortcuts, _file_dirs = self._append_directories(_directory)
+
+                # Print shortcut title
+                if _directory is _directories[0]:
+
+                    print("\nDefault Directory: \n")
+                    self._log.debug("Appending shortcuts from default directory.")
+
+                elif _directory is _directories[1]:
+
+                    print(f"\nLocal Directory: {_directory}\n")
+                    self._log.debug(f"Appending shortcuts from local directory: {_directory}")
+
+                elif _directory is _directories[2]:
+
+                    print(f"\nRemote Directory: {_directory}\n")
+                    self._log.debug(f"Appending shortcuts from remote directory: {_directory}")
+
+                # Print shortcuts
+                self._log.info(_shortcuts)
+                glib.print_shortcuts(_file_dirs, _shortcuts)
+
+                # extends shortcut_list with values in shortcuts
+                try:
+
+                    _shortcut_list.extend(_shortcuts)
+
+                except Exception:
+
+                    self._log.exception("Failed to extend shortcut_list.")
+                    raise
+
+                else:
+
+                    self._log.debug("Successfully extended shortcut_list")
+
+                # append file_dirs to file_dir_list
+                _file_dir_list.extend(_file_dirs)
+
+                self._log.debug("Successfully appended shortcuts and file_dirs.")
+                self._log.info(f"Shortcuts: {_shortcut_list}")
+
+        return _shortcut_list, _file_dir_list
+
     def new_shortcut_check(self, _shortcut_list):
+
+        self._log.info("Initializing new shortcut check.")
 
         # Reads the shortcuts from the shortcuts.ini file
         self._read_shortcuts()
@@ -132,8 +204,13 @@ class Setup:
 
         # If there are more than zero new shortcuts, print the new shortcuts
         if len(self._new_shortcuts) == 0:
+
+            self._log.info("No new shortcuts have been added.")
             print("No new shortcuts have been added.")
+
         else:
+
+            self._log.info(f"The following shortcuts have been added:{self._new_shortcuts}")
             print("The following shortcuts have been added:")
             print(self._new_shortcuts)
 
@@ -153,15 +230,18 @@ class Setup:
         # If there are more than 0 removed shortcuts, print the removed shortcuts
         if len(self._removed_shortcuts) == 1 and self._removed_shortcuts[0] == "":
 
+            self._log.info("No shortcuts have been removed.")
             print("No shortcuts have been removed.")
 
         elif len(self._removed_shortcuts) > 0:
 
+            self._log.info(f"The following shortcuts have been removed: {self._removed_shortcuts}")
             print("The following shortcuts have been removed:")
             print(self._removed_shortcuts)
 
         elif len(self._removed_shortcuts) == 0:
 
+            self._log.info("No shortcuts have been removed.")
             print("No shortcuts have been removed.")
 
         # Replace self._last_shortcuts if list has changed
@@ -169,12 +249,31 @@ class Setup:
 
             self._replace_last_shortcuts(_shortcut_list)
 
+        self._log.info("Completed new shortcut check.")
+
     def _read_shortcuts(self):
 
-        # Read shortcut history config file
-        self._config.read(self._config_file_dir)
+        try:
+            # Read shortcut history config file
+            self._config.read(self._config_file_dir)
 
-        self._last_shortcuts = (self._config['SHORTCUTS']['lastshortcuts']).split(', ')
+            self._last_shortcuts = (self._config['SHORTCUTS']['lastshortcuts']).split(', ')
+
+        except configparser.Error:
+            self._log.exception("Failed to read lastshortcuts from config file due to configparser.error.")
+            raise
+
+        except configparser.NoSectionError:
+
+            self._log.exception("Failed to read lastshortcuts due to NoSectionError.")
+            raise
+
+        except Exception:
+            self._log.exception("Failed to read lastshortcuts due to unexpected error.")
+            raise
+
+        else:
+            self._log.info("Successfully read lastshortcuts from config file.")
 
     def _replace_last_shortcuts(self, _shortcut_list):
 
@@ -190,9 +289,11 @@ class Setup:
         except configparser.Error:
             self._log.exception("Failed to update shortcut history file due to configparser Error.")
             raise
+
         except Exception:
             self._log.exception("Failed to update shortcut history file due to unexpected Error.")
             raise
+
         else:
             self._log.debug("Successfully updated shortcut history file with updated stats.")
 
@@ -209,15 +310,17 @@ class Setup:
             _shortcut_chars = self._config['HISTORY']['shortcutchars']
             _textblock_chars = self._config['HISTORY']['textblockchars']
 
-            self._print_stats(_shortcuts_used, _shortcut_chars, _textblock_chars)
-
         except configparser.NoSectionError:
 
             self._log.exception("Unable to get stats from config file: NoSectionError.")
             raise
 
-    @staticmethod
-    def _print_stats(_shortcuts_used, _shortcut_chars, _textblock_chars):
+        else:
+
+            self._log.debug("Stats retrieved successfully.")
+            self._print_stats(_shortcuts_used, _shortcut_chars, _textblock_chars)
+
+    def _print_stats(self, _shortcuts_used, _shortcut_chars, _textblock_chars):
         """
         Prints the usage stats to console.
         """
@@ -227,13 +330,17 @@ class Setup:
         _saved_seconds = int(_shortcuts_used) * _seconds_to_paste
         _time_saved = datetime.timedelta(seconds=_saved_seconds)
 
-        print(f"""Your stats:
+        _stats = f"""Your stats:
 
 - Number of shortcuts used: {_shortcuts_used}
 - You typed a total of {_shortcut_chars} shortcut characters
 - Text-Script pasted a total of {_textblock_chars} characters
 - You saved {_saved_keystrokes} keystrokes
-- If it takes {_seconds_to_paste} seconds to copy & paste an item, you saved {_time_saved}""")
+- If it takes {_seconds_to_paste} seconds to copy & paste an item, you saved {_time_saved}"""
+
+        print(_stats)
+
+        self._log.debug(_stats)
 
     def find_directories(self):
         """
@@ -259,53 +366,6 @@ class Setup:
         self._log.debug(f"Retrieved the following directories from config: {_directories}")
 
         return _directories
-
-    def shortcut_setup(self, _directories):
-        """
-        Extends _shortcut_list and _file_dir_list from the _shortcuts and _file_dirs lists.
-        """
-
-        _shortcut_list = []
-        _file_dir_list = []
-
-        # For each directory in directories
-        for _directory in _directories:
-
-            # Appends shortcuts only if directory is not None
-            if _directory is not None:
-
-                # Get shortcuts and file_dirs
-                _shortcuts, _file_dirs = self._append_directories(_directory)
-
-                # Print shortcut title
-                if _directory is _directories[0]:
-                    print("\nDefault Directory: \n")
-                    self._log.debug("Appending shortcuts from default directory.")
-                elif _directory is _directories[1]:
-                    print(f"\nLocal Directory: {_directory}\n")
-                    self._log.debug(f"Appending shortcuts from {_directory} directory.")
-                elif _directory is _directories[2]:
-                    print(f"\nRemote Directory: {_directory}\n")
-                    self._log.debug(f"Appending shortcuts from {_directory} directory.")
-
-                # Print shortcuts
-                glib.print_shortcuts(_file_dirs, _shortcuts)
-
-                # extends shortcut_list with values in shortcuts
-                try:
-                    _shortcut_list.extend(_shortcuts)
-                except Exception:
-                    self._log.exception("Failed to extend shortcut_list.")
-                    raise
-                else:
-                    self._log.debug("Successfully extended shortcut_list")
-
-                # append file_dirs to file_dir_list
-                _file_dir_list.extend(_file_dirs)
-
-                self._log.debug("Successfully appended shortcuts and file_dirs.")
-
-        return _shortcut_list, _file_dir_list
 
     @staticmethod
     def _append_directories(_directory):
