@@ -34,6 +34,9 @@ class Setup:
         self._log.debug("Setup initialized successfully.")
 
     def check_config(self):
+        """
+        Checks if config file is compatible with program version. Updates old config files.
+        """
 
         # Check if config exists, create if not
         self.config_exists()
@@ -59,15 +62,35 @@ class Setup:
 
     def check_config_contents(self):
 
-        # Read config
+        _config_sections = ['TEXTSCRIPT', 'HISTORY', 'DIRECTORIES', 'SHORTCUTS']
+        _textscript_options = ['version']
+        _history_options = ['shortcutsused', 'shortcutchars', 'textblockchars']
+        _directories_options = ['defaultdirectory', 'localdirectory', 'remotedirectory']
+        _shortcuts_options = ['lastshortcuts']
+
+        # Read the config file
+        self._config.read(self._config_file_dir)
+
+        # Check which sections exist in config file
+        _current_sections = self._config.sections()
+
+        # If any sections are missing, add section
+        for _section in _config_sections:
+            if _section in _current_sections:
+                self._log.info(f"The section {_section} found in config file.")
+            else:
+                # Todo: Consider moving into a new function
+                self._log.info(f"The section {_section} is missing from config file.")
+                self._config.add_section(_section)
+                self._log.info(f"The section {_section} successfully added to config file.")
+
+            # For each section, check if all options exist
+            
+
+            # If any options are missing, add option
 
         # Check version number
         # If Version is outdated, update version
-
-        # Check which sections exist
-        # If any sections are missing, add section
-
-        # Check
 
         pass
 
@@ -183,6 +206,8 @@ class Setup:
         return _shortcut_list, _file_dir_list
 
     def new_shortcut_check(self, _shortcut_list):
+
+        # Todo: Split this into smaller functions
 
         self._log.info("Initializing new shortcut check.")
 
