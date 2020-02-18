@@ -62,11 +62,13 @@ class Setup:
 
     def check_config_contents(self):
 
-        _config_sections = ['TEXTSCRIPT', 'HISTORY', 'DIRECTORIES', 'SHORTCUTS']
-        _textscript_options = ['version']
-        _history_options = ['shortcutsused', 'shortcutchars', 'textblockchars']
-        _directories_options = ['defaultdirectory', 'localdirectory', 'remotedirectory']
-        _shortcuts_options = ['lastshortcuts']
+        # Dictionary containing Sections (key) and Options (value) in config file
+        _config_sections = {
+            'TEXTSCRIPT': ['version'],
+            'HISTORY': ['shortcutsused', 'shortcutchars', 'textblockchars'],
+            'DIRECTORIES': ['defaultdirectory', 'localdirectory', 'remotedirectory'],
+            'SHORTCUTS': ['lastshortcuts']
+        }
 
         # Read the config file
         self._config.read(self._config_file_dir)
@@ -76,21 +78,34 @@ class Setup:
 
         # If any sections are missing, add section
         for _section in _config_sections:
+
             if _section in _current_sections:
+
                 self._log.info(f"The section {_section} found in config file.")
+
             else:
+
                 # Todo: Consider moving into a new function
                 self._log.info(f"The section {_section} is missing from config file.")
                 self._config.add_section(_section)
                 self._log.info(f"The section {_section} successfully added to config file.")
 
-            # For each section, check if all options exist
-            
+            for _option in _config_sections[_section]:  # For each option in this section
 
-            # If any options are missing, add option
+                _current_options = self._config.options(_section)
 
-        # Check version number
-        # If Version is outdated, update version
+                if _option in _current_options:
+
+                    self._log.info(f"The option {_option} found in config file.")
+
+                else:
+
+                    self._log.info(f"The option {_option} is missing from the config file.")
+                    # Todo: Create option. Stuck currently as the option needs a default value. The entire
+                    # Todo: system to create and udpate config needs to be cleaned up
+
+        # Todo: Check version number
+        # Todo: If Version is outdated, update version
 
         pass
 
