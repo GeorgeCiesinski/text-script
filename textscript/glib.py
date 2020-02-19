@@ -98,7 +98,7 @@ def print_shortcuts(_file_dirs, _shortcuts):
 
 if __name__ == "__main__":
 
-    text_block_dir = '../textblocks/'
+    text_block_dir = 'textblocks/'
 
     file_list = list_files(text_block_dir)
 
