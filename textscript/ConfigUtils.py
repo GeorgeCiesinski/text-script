@@ -5,21 +5,34 @@ from os import path
 import datetime
 
 
+# Config file object
 class Config:
 
-    def __init__(self):
+    def __init__(self, version):
+        """
+        This init function creates two lists, one containing the sections and options, and the other containing the
+        default values for those sections
+        """
 
-        _config_sections = {
-            'TEXTSCRIPT': ['version'],  # Default version should be current version
-            'HISTORY': ['shortcutsused', 'shortcutchars', 'textblockchars'],  # Default is 0
-            'DIRECTORIES': ['defaultdirectory', 'localdirectory', 'remotedirectory'],  # Default is none
+        # Key is the sections, Value is a list of options
+        self.config_sections = {
+            'TEXTSCRIPT': ['version'],
+            'HISTORY': ['shortcutsused', 'shortcutchars', 'textblockchars'],
+            'DIRECTORIES': ['defaultdirectory', 'localdirectory', 'remotedirectory'],
             'SHORTCUTS': ['lastshortcuts']  # Default is empty string
         }
 
-        _config_values = {
-            'TEXTSCRIPT': [self.version],  # Default version should be current version
-            'HISTORY': ['0'],  # Default is 0
-            'DIRECTORIES': ['None'],  # Default is none
+        self.section_comments = {
+            'TEXTSCRIPT': '; Config file version',
+            'HISTORY': '; Keeps a record of the number of keystrokes, and used shortcuts',
+            'DIRECTORIES': '; The default directory included with app, local directory, and network directory',
+            'SHORTCUTS': '; Keeps a record of previously loaded shortcuts'  # Default is empty string
+        }
+
+        self.config_values = {
+            'TEXTSCRIPT': [version],  # Default version should be current version
+            'HISTORY': ['0', '0', '0'],  # Default is 0
+            'DIRECTORIES': ['textblocks/', 'None', 'None'],  # Default is none
             'SHORTCUTS': ['']  # Default is empty string
         }
 
@@ -32,8 +45,6 @@ class Setup:
 
         # Creates instance of current version variable
         self.version = text_script_version
-
-        # TODO: Check if version has changed, update config
 
         # Creates instance wide log object
         self._log = _log.log
@@ -57,6 +68,9 @@ class Setup:
         Checks if Config file exists.
         """
 
+        # Create a default config
+        _default_config = Config(self.version)
+
         if path.exists(self._config_file_dir):
 
             self._log.debug(f"Config file found at: {self._config_file_dir}")
@@ -67,8 +81,66 @@ class Setup:
 
             self._log.debug("Config file not found. Creating new file.")
 
-            # Todo: Create a default config
-            self._create_config()
+            # Call create config, send default config
+            self._create_config(_default_config)
+
+    def _create_config(self, _config_template):
+        """
+        Takes the dictionary values in the _config_template and creates a new config file based on this. Accepts
+        either a default config or a config with modified values.
+
+        :param _config_template:
+        """
+
+        # Create directory if doesn't exist
+        if not glib.check_directory(self._config_dir):
+            glib.create_folder(self._config_dir)
+            self._log.debug("No Config directory found. Creating directory.")
+
+        # Create a _sections list
+        _sections = _config_template.config_sections.keys()
+
+        try:
+
+            for _section in _sections:
+
+                # List of options for this section
+                _options = _config_template.config_sections[_section]
+
+                # Finds the section comment
+                _section_comment = _config_template.section_comments[_section]
+
+                # Creates this section
+                self._config[_section] = {}
+
+                # Writes the config comment for the section
+                self._config.set(_section, _section_comment)
+
+                for _option in _options:  # For each of the options in the list of options
+
+                    # Find the option value at the same index
+                    _option_value = _config_template.config_values[_section][_options.index(_option)]
+
+                    # Create the option under the section and set the value
+                    self._config.set(_section, _option, _option_value)
+
+        except configparser.Error:
+
+            self._log.exception("Failed to create config file due to configparser error.")
+            raise
+
+        except Exception:
+
+            self._log.exception("Failed to create config file due to unexpected error.")
+            raise
+
+        else:
+
+            self._log.debug(f"{self._config_file_dir} file created successfully.")
+
+        # Write the config file (overwrites existing)
+        with open(self._config_file_dir, 'w') as configfile:
+            self._config.write(configfile)
 
     def _temp_check_config_contents(self):
 
@@ -119,58 +191,6 @@ class Setup:
 
         #with open(self._config_file_dir, 'a') as configfile:
             #self._config.write(configfile)
-
-    def _create_config(self):
-        """
-        Creates a new config file
-        """
-
-        # Create directory if doesn't exist
-        if not glib.check_directory(self._config_dir):
-            glib.create_folder(self._config_dir)
-            self._log.debug("No Config directory found. Creating directory.")
-
-        try:
-
-            # Create config file
-            self._config['TEXTSCRIPT'] = {}
-            self._config.set('TEXTSCRIPT', '; Config file version')
-            self._config.set('TEXTSCRIPT', 'version', self.version)
-
-            self._config['HISTORY'] = {}
-            self._config.set('HISTORY', '; Tracks key strokes saved history')
-            self._config.set('HISTORY', 'shortcutsused', 0)
-            self._config.set('HISTORY', 'shortcutchars', 0)
-            self._config.set('HISTORY', 'textblockchars', 0)
-
-            self._config['DIRECTORIES'] = {}
-            self._config.set(
-                'DIRECTORIES',
-                '; the default directory included with app, local directory, and network directory'
-            )
-            self._config.set('DIRECTORIES', 'defaultdirectory', 'textblocks/')
-            self._config.set('DIRECTORIES', 'localdirectory', 'None')
-            self._config.set('DIRECTORIES', 'remotedirectory', 'None')
-
-            self._config['SHORTCUTS'] = {}
-            self._config.set('SHORTCUTS', 'lastshortcuts', "")
-
-            with open(self._config_file_dir, 'w') as configfile:
-                self._config.write(configfile)
-
-        except configparser.Error:
-
-            self._log.exception("Failed to create config file due to configparser error.")
-            raise
-
-        except Exception:
-
-            self._log.exception("Failed to create config file due to unexpected error.")
-            raise
-
-        else:
-
-            self._log.debug(f"{self._config_file_dir} file created successfully.")
 
     def shortcut_setup(self, _directories):
         """
