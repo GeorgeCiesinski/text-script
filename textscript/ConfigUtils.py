@@ -39,8 +39,6 @@ class Config:
 
 class Setup:
 
-    # TODO: Create check to ensure config file has the right categories and values
-
     def __init__(self, _log, text_script_version):
 
         # Creates instance of current version variable
@@ -280,6 +278,11 @@ class Setup:
         return _shortcut_list, _file_dir_list
 
     def new_shortcut_check(self, _shortcut_list):
+        """
+        Checks if any shortcuts have been added or removed since the last time program was run.
+
+        :param _shortcut_list:
+        """
 
         # Todo: Split this into smaller functions
 
@@ -351,6 +354,9 @@ class Setup:
         self._log.info("Completed new shortcut check.")
 
     def _read_shortcuts(self):
+        """
+        Reads the lastshortcuts option from config file to determine the shortcuts last loaded by program.
+        """
 
         try:
             # Read shortcut history config file
@@ -375,6 +381,11 @@ class Setup:
             self._log.info("Successfully read lastshortcuts from config file.")
 
     def _replace_last_shortcuts(self, _shortcut_list):
+        """
+        Updates lastshortcuts with currently loaded shortcuts
+
+        :param _shortcut_list:
+        """
 
         _shortcut_string = ', '.join(_shortcut_list)
 
