@@ -39,7 +39,7 @@ if __name__ == "__main__":
     # Load shortcuts and file directories
     shortcut_list, file_dir_list = setup.shortcut_setup(directories)
 
-    L.log.debug("Retrieved shortcut_list, file_dir_list:")
+    L.log.debug("text-script retrieved shortcut_list, file_dir_list:")
 
     # Check if new shortcuts have been added
     setup.new_shortcut_check(shortcut_list)

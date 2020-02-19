@@ -32,7 +32,7 @@ class Config:
         self.config_values = {
             'TEXTSCRIPT': [version],  # Default version should be current version
             'HISTORY': ['0', '0', '0'],  # Default is 0
-            'DIRECTORIES': ['textblocks/', 'None', 'None'],  # Default is none
+            'DIRECTORIES': ['./textblocks/', 'None', 'None'],  # Default is none
             'SHORTCUTS': ['']  # Default is empty string
         }
 
@@ -75,7 +75,8 @@ class Setup:
 
             self._log.debug(f"Config file found at: {self._config_file_dir}")
 
-            # Todo: Check if config is up to date or not
+            # Checks if the config is up to date or not, stores values from existing config
+            self._check_config(_default_config)
 
         else:
 
@@ -83,6 +84,83 @@ class Setup:
 
             # Call create config, send default config
             self._create_config(_default_config)
+
+    def _check_config(self, _config_template):
+        """
+        Checks if config file is outdated. Updates outdated config files.
+
+        :param _config_template:
+        """
+
+        _modified_config_template = Config(self.version)  # Create a new config template to save existing config values
+
+        _config_outdated = False  # True if any values have been modified in _modified_config_template
+
+        _config_template_sections = _config_template.config_sections.keys()  # Get config template sections
+
+        self._config.read(self._config_file_dir)  # Read the config file
+
+        _current_sections = self._config.sections()  # Get config file sections
+
+        _config_version = self._config["TEXTSCRIPT"]["version"]
+
+        # For sections in the config template
+        for _section in _config_template_sections:
+
+            # If section is in the config file
+            if _section in _current_sections:
+
+                self._log.info(f"The section {_section} found in config file.")
+
+                _current_options = self._config.options(_section)  # Get options for current section from config file
+
+                # Check options. Save data from existing config
+                for _option in _config_template.config_sections[_section]:
+
+                    if _option in _current_options:
+
+                        self._log.info(f"The option {_option} found in config file. Saving value.")
+
+                        _current_value = self._config[_section][_option]  # Gets the value of the option
+
+                        # Sets this value in the _modified_config_template
+                        _modified_config_template.config_values[_section][_current_options.index(_option)] = _current_value
+
+                    else:
+
+                        self._log.info(f"The option {_option} is missing from the config file. Config is outdated.")
+
+                        _config_outdated = True
+
+            # If section is not in config file
+            else:
+
+                # No action required as the template contains default values
+
+                self._log.info(f"The section {_section} is missing from config file. Config is outdated.")
+
+                _config_outdated = True
+
+            if _config_version != self.version:
+
+                self._log.info(f"The config file is set to version {_config_version}. Updating to {self.version}")
+
+                _modified_config_template.config_values["TEXTSCRIPT"][0] = self.version
+
+                _config_outdated = True
+
+        # If config file is outdated, update config file
+        if _config_outdated is True:
+
+            self._log.info("A section or option was missing, updating the config file.")
+
+            self._create_config(_modified_config_template)
+
+            self._log.info(f"Config file successfully updated to version {self.version}.")
+
+        else:
+
+            self._log.info(f"Config file is up to date.")
 
     def _create_config(self, _config_template):
         """
@@ -141,56 +219,6 @@ class Setup:
         # Write the config file (overwrites existing)
         with open(self._config_file_dir, 'w') as configfile:
             self._config.write(configfile)
-
-    def _temp_check_config_contents(self):
-
-        # Dictionary containing Sections (key) and a list containing [a list of Options(value), and default value]
-        _config_sections = {
-            'TEXTSCRIPT': [['version'], [self.version]],  # Default version should be current version
-            'HISTORY': [['shortcutsused', 'shortcutchars', 'textblockchars'], ['0']],  # Default is 0
-            'DIRECTORIES': [['defaultdirectory', 'localdirectory', 'remotedirectory'], ['None']],  # Default is none
-            'SHORTCUTS': [['lastshortcuts'], ['']]  # Default is empty string
-        }
-
-        # Read the config file
-        self._config.read(self._config_file_dir)
-
-        # Check which sections exist in config file
-        _current_sections = self._config.sections()
-
-        # If any sections are missing, add section
-        for _section in _config_sections:
-
-            if _section in _current_sections:
-
-                self._log.info(f"The section {_section} found in config file.")
-
-            else:
-
-                # Todo: Consider moving into a new function
-                self._log.info(f"The section {_section} is missing from config file.")
-                self._config.add_section(_section)
-                self._log.info(f"The section {_section} successfully added to config file.")
-
-            _current_options = self._config.options(_section)  # Get the options for this section
-
-            for _option in _config_sections[_section][0]:  # For each option in this section
-
-                if _option in _current_options:
-
-                    self._log.info(f"The option {_option} found in config file.")
-
-                else:
-
-                    self._log.info(f"The option {_option} is missing from the config file.")
-                    self._config[_section][_option] = _config_sections[_section][1][0]  # Set option to default value
-                    self._log.info(f"The option {_option} successfully added to the config file.")
-
-        # Todo: Check version number
-        # Todo: If Version is outdated, update version
-
-        #with open(self._config_file_dir, 'a') as configfile:
-            #self._config.write(configfile)
 
     def shortcut_setup(self, _directories):
         """
@@ -255,7 +283,7 @@ class Setup:
 
         # Todo: Split this into smaller functions
 
-        self._log.info("Initializing new shortcut check.")
+        self._log.info("Starting new shortcut check.")
 
         # Reads the shortcuts from the shortcuts.ini file
         self._read_shortcuts()
@@ -426,12 +454,18 @@ class Setup:
         if _default_directory == "None" or _default_directory == "":
             _default_directory = None
             self._log.debug("Default directory is set to None.")
+        else:
+            self._log.debug(f"Default directory is set to {_default_directory}")
         if _local_directory == "None" or _local_directory == "":
             _local_directory = None
             self._log.debug("Local directory is set to None.")
+        else:
+            self._log.debug(f"Local directory is set to {_local_directory}")
         if _remote_directory == "None" or _remote_directory == "":
             _remote_directory = None
             self._log.debug("Remote directory is set to None.")
+        else:
+            self._log.debug(f"Remote directory is set to {_remote_directory}")
 
         _directories = [_default_directory, _local_directory, _remote_directory]
         self._log.debug(f"Retrieved the following directories from config: {_directories}")
@@ -465,7 +499,7 @@ class Update:
         # Config Directory
         self._config_file_dir = './config/config.ini'
 
-        self._log.debug("Setup initialized successfully.")
+        self._log.debug("Update initialized successfully.")
 
     def update_history(self, shortcut, textblock):
         """
