@@ -23,8 +23,8 @@ if __name__ == "__main__":
     # Initialize setup
     setup = Setup(L, text_script_version)
 
-    # Check if config file is compatible or is missing data
-    setup.check_config()
+    # Check if config file exists, and is up to date
+    setup.config_exists()
 
     # Print stats to console
     setup.get_stats()

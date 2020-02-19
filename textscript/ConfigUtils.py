@@ -5,6 +5,25 @@ from os import path
 import datetime
 
 
+class Config:
+
+    def __init__(self):
+
+        _config_sections = {
+            'TEXTSCRIPT': ['version'],  # Default version should be current version
+            'HISTORY': ['shortcutsused', 'shortcutchars', 'textblockchars'],  # Default is 0
+            'DIRECTORIES': ['defaultdirectory', 'localdirectory', 'remotedirectory'],  # Default is none
+            'SHORTCUTS': ['lastshortcuts']  # Default is empty string
+        }
+
+        _config_values = {
+            'TEXTSCRIPT': [self.version],  # Default version should be current version
+            'HISTORY': ['0'],  # Default is 0
+            'DIRECTORIES': ['None'],  # Default is none
+            'SHORTCUTS': ['']  # Default is empty string
+        }
+
+
 class Setup:
 
     # TODO: Create check to ensure config file has the right categories and values
@@ -33,34 +52,25 @@ class Setup:
 
         self._log.debug("Setup initialized successfully.")
 
-    def check_config(self):
-        """
-        Checks if config file is compatible with program version. Updates old config files.
-        """
-
-        # Check if config exists, create if not
-        self.config_exists()
-
-        # Check if any sections or options are missing from the config
-        self.check_config_contents()
-
     def config_exists(self):
         """
-        Checks if Config file exists
+        Checks if Config file exists.
         """
 
         if path.exists(self._config_file_dir):
 
             self._log.debug(f"Config file found at: {self._config_file_dir}")
 
+            # Todo: Check if config is up to date or not
+
         else:
 
             self._log.debug("Config file not found. Creating new file.")
 
-            # Creates new config file
+            # Todo: Create a default config
             self._create_config()
 
-    def check_config_contents(self):
+    def _temp_check_config_contents(self):
 
         # Dictionary containing Sections (key) and a list containing [a list of Options(value), and default value]
         _config_sections = {
