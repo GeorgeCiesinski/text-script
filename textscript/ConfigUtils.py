@@ -51,7 +51,7 @@ class Setup:
 
         if path.exists(self._config_file_dir):
 
-            self._log.debug("Config file found.")
+            self._log.debug(f"Config file found at: {self._config_file_dir}")
 
         else:
 
@@ -62,12 +62,12 @@ class Setup:
 
     def check_config_contents(self):
 
-        # Dictionary containing Sections (key) and Options (value) in config file
+        # Dictionary containing Sections (key) and a list containing [a list of Options(value), and default value]
         _config_sections = {
-            'TEXTSCRIPT': ['version'],
-            'HISTORY': ['shortcutsused', 'shortcutchars', 'textblockchars'],
-            'DIRECTORIES': ['defaultdirectory', 'localdirectory', 'remotedirectory'],
-            'SHORTCUTS': ['lastshortcuts']
+            'TEXTSCRIPT': [['version'], [self.version]],  # Default version should be current version
+            'HISTORY': [['shortcutsused', 'shortcutchars', 'textblockchars'], ['0']],  # Default is 0
+            'DIRECTORIES': [['defaultdirectory', 'localdirectory', 'remotedirectory'], ['None']],  # Default is none
+            'SHORTCUTS': [['lastshortcuts'], ['']]  # Default is empty string
         }
 
         # Read the config file
@@ -90,9 +90,9 @@ class Setup:
                 self._config.add_section(_section)
                 self._log.info(f"The section {_section} successfully added to config file.")
 
-            for _option in _config_sections[_section]:  # For each option in this section
+            _current_options = self._config.options(_section)  # Get the options for this section
 
-                _current_options = self._config.options(_section)
+            for _option in _config_sections[_section][0]:  # For each option in this section
 
                 if _option in _current_options:
 
@@ -101,13 +101,14 @@ class Setup:
                 else:
 
                     self._log.info(f"The option {_option} is missing from the config file.")
-                    # Todo: Create option. Stuck currently as the option needs a default value. The entire
-                    # Todo: system to create and udpate config needs to be cleaned up
+                    self._config[_section][_option] = _config_sections[_section][1][0]  # Set option to default value
+                    self._log.info(f"The option {_option} successfully added to the config file.")
 
         # Todo: Check version number
         # Todo: If Version is outdated, update version
 
-        pass
+        #with open(self._config_file_dir, 'a') as configfile:
+            #self._config.write(configfile)
 
     def _create_config(self):
         """
