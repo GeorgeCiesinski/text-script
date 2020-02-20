@@ -7,6 +7,9 @@ if __name__ == "__main__":
     # Current app version / / Ensure this is correct during updates
     text_script_version = "1.3.0"
 
+    # Output version
+    print(f"Running text-script version {text_script_version}.\n")
+
     """
     Initialize Logger
     """
