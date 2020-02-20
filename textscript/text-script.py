@@ -51,4 +51,4 @@ if __name__ == "__main__":
     k = KeyboardEmulator(L)
 
     # Initialize WordCatcher
-    w = WordCatcher(L, k, shortcut_list, file_dir_list)
+    w = WordCatcher(L, k, shortcut_list, file_dir_list, text_script_version)

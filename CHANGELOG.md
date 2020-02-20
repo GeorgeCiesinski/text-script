@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.3.0] - TBA
 # Changed
+- Added reload function which adds shortcuts without restarting the program
 - Added mechanism to update config file and repair broken sections
 - Added better exception handling for issues in config file
 - Added contributions file
