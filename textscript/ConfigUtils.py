@@ -447,7 +447,12 @@ class Setup:
 
             # Todo: Rebuild config with corrected history section.
 
-            print("Stats failed to calculate due to a value error. Rebuilding HISTORY. Please restart text-script.")
+            _value_error_message = """Stats failed to calculate due to a value error. Your stats have been reset to 0 
+to correct the error."""
+
+            print(_value_error_message)
+
+            # Todo: Print stats again. Rebuild else section to save lines.
 
         else:
 
@@ -461,15 +466,9 @@ class Setup:
 - You saved {_saved_keystrokes} keystrokes
 - If it takes {_seconds_to_paste} seconds to copy & paste an item, you saved {_time_saved}"""
 
-            self._print_stats(_stats)
+            print(_stats)
 
-
-
-    def _print_stats(self, _stats):
-
-        print(_stats)
-
-        self._log.debug(_stats)
+            self._log.debug(_stats)
 
     def find_directories(self):
         """
