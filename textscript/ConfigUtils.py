@@ -428,25 +428,44 @@ class Setup:
         else:
 
             self._log.debug("Stats retrieved successfully.")
-            self._print_stats(_shortcuts_used, _shortcut_chars, _textblock_chars)
+            self._calculate_stats(_shortcuts_used, _shortcut_chars, _textblock_chars)
 
-    def _print_stats(self, _shortcuts_used, _shortcut_chars, _textblock_chars):
+    def _calculate_stats(self, _shortcuts_used, _shortcut_chars, _textblock_chars):
         """
         Prints the usage stats to console.
         """
+        try:
 
-        _saved_keystrokes = str(int(_textblock_chars) - int(_shortcut_chars))
-        _seconds_to_paste = 5
-        _saved_seconds = int(_shortcuts_used) * _seconds_to_paste
-        _time_saved = datetime.timedelta(seconds=_saved_seconds)
+            _saved_keystrokes = str(int(_textblock_chars) - int(_shortcut_chars))
+            _seconds_to_paste = 5
+            _saved_seconds = int(_shortcuts_used) * _seconds_to_paste
+            _time_saved = datetime.timedelta(seconds=_saved_seconds)
 
-        _stats = f"""Your stats:
+        except ValueError:
+
+            self._log.exception("The config file contains invalid values in the HISTORY section.")
+
+            # Todo: Rebuild config with corrected history section.
+
+            print("Stats failed to calculate due to a value error. Rebuilding HISTORY. Please restart text-script.")
+
+        else:
+
+            self._log.info("The stats were calculated successfully.")
+
+            _stats = f"""Your stats:
 
 - Number of shortcuts used: {_shortcuts_used}
 - You typed a total of {_shortcut_chars} shortcut characters
 - Text-Script pasted a total of {_textblock_chars} characters
 - You saved {_saved_keystrokes} keystrokes
 - If it takes {_seconds_to_paste} seconds to copy & paste an item, you saved {_time_saved}"""
+
+            self._print_stats(_stats)
+
+
+
+    def _print_stats(self, _stats):
 
         print(_stats)
 
