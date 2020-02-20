@@ -78,7 +78,11 @@ class Setup:
 
         else:
 
-            self._log.debug("Config file not found. Creating new file.")
+            _not_found = "Config file not found. Creating new file."
+
+            self._log.debug(_not_found)
+
+            print(_not_found, "\n")
 
             # Call create config, send default config
             self._create_config(_default_config)
@@ -434,6 +438,7 @@ class Setup:
         """
         Prints the usage stats to console.
         """
+
         try:
 
             _saved_keystrokes = str(int(_textblock_chars) - int(_shortcut_chars))
@@ -445,14 +450,13 @@ class Setup:
 
             self._log.exception("The config file contains invalid values in the HISTORY section.")
 
-            # Todo: Rebuild config with corrected history section.
-
             _value_error_message = """Stats failed to calculate due to a value error. Your stats have been reset to 0 
 to correct the error."""
 
-            print(_value_error_message)
+            print(_value_error_message, "\n")
 
-            # Todo: Print stats again. Rebuild else section to save lines.
+            # Repairs history
+            self._repair_history()
 
         else:
 
@@ -469,6 +473,26 @@ to correct the error."""
             print(_stats)
 
             self._log.debug(_stats)
+
+    def _repair_history(self):
+        """
+        Repairs history section if an invalid value is found there.
+        """
+
+        # Open the config file
+        self._config.read(self._config_file_dir)
+
+        # Reset HISTORY values to 0
+        self._config.set('HISTORY', 'shortcutsused', "0")
+        self._config.set('HISTORY', 'shortcutchars', "0")
+        self._config.set('HISTORY', 'textblockchars', "0")
+
+        # Write to the config file
+        with open(self._config_file_dir, 'w') as configfile:
+            self._config.write(configfile)
+
+        # Run get_stats again after repair
+        self.get_stats()
 
     def find_directories(self):
         """
