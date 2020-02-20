@@ -206,6 +206,9 @@ class WordCatcher:
             self._reload_shortcuts()
 
     def _reload_shortcuts(self):
+        """
+        Reloads the shortcuts without restarting the program.
+        """
 
         # Gets a list with default, local, and remote directories
         directories = self._setup.find_directories()
@@ -250,6 +253,7 @@ How to make a shortcut:
 
 Note: Other formats may still work, but this is designed to read unicode text files.
 
+To reload shortcuts, type: #reload
 To exit Text-Script, type: #exit"""
 
         self._keyboard.delete_shortcut(self._current_word)
