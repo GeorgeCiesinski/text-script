@@ -78,7 +78,11 @@ class Setup:
 
         else:
 
-            self._log.debug("Config file not found. Creating new file.")
+            _not_found = "Config file not found. Creating new file."
+
+            self._log.debug(_not_found)
+
+            print(_not_found, "\n")
 
             # Call create config, send default config
             self._create_config(_default_config)
@@ -428,19 +432,37 @@ class Setup:
         else:
 
             self._log.debug("Stats retrieved successfully.")
-            self._print_stats(_shortcuts_used, _shortcut_chars, _textblock_chars)
+            self._calculate_stats(_shortcuts_used, _shortcut_chars, _textblock_chars)
 
-    def _print_stats(self, _shortcuts_used, _shortcut_chars, _textblock_chars):
+    def _calculate_stats(self, _shortcuts_used, _shortcut_chars, _textblock_chars):
         """
         Prints the usage stats to console.
         """
 
-        _saved_keystrokes = str(int(_textblock_chars) - int(_shortcut_chars))
-        _seconds_to_paste = 5
-        _saved_seconds = int(_shortcuts_used) * _seconds_to_paste
-        _time_saved = datetime.timedelta(seconds=_saved_seconds)
+        try:
 
-        _stats = f"""Your stats:
+            _saved_keystrokes = str(int(_textblock_chars) - int(_shortcut_chars))
+            _seconds_to_paste = 5
+            _saved_seconds = int(_shortcuts_used) * _seconds_to_paste
+            _time_saved = datetime.timedelta(seconds=_saved_seconds)
+
+        except ValueError:
+
+            self._log.exception("The config file contains invalid values in the HISTORY section.")
+
+            _value_error_message = """Stats failed to calculate due to a value error. Your stats have been reset to 0 
+to correct the error."""
+
+            print(_value_error_message, "\n")
+
+            # Repairs history
+            self._repair_history()
+
+        else:
+
+            self._log.info("The stats were calculated successfully.")
+
+            _stats = f"""Your stats:
 
 - Number of shortcuts used: {_shortcuts_used}
 - You typed a total of {_shortcut_chars} shortcut characters
@@ -448,9 +470,29 @@ class Setup:
 - You saved {_saved_keystrokes} keystrokes
 - If it takes {_seconds_to_paste} seconds to copy & paste an item, you saved {_time_saved}"""
 
-        print(_stats)
+            print(_stats)
 
-        self._log.debug(_stats)
+            self._log.debug(_stats)
+
+    def _repair_history(self):
+        """
+        Repairs history section if an invalid value is found there.
+        """
+
+        # Open the config file
+        self._config.read(self._config_file_dir)
+
+        # Reset HISTORY values to 0
+        self._config.set('HISTORY', 'shortcutsused', "0")
+        self._config.set('HISTORY', 'shortcutchars', "0")
+        self._config.set('HISTORY', 'textblockchars', "0")
+
+        # Write to the config file
+        with open(self._config_file_dir, 'w') as configfile:
+            self._config.write(configfile)
+
+        # Run get_stats again after repair
+        self.get_stats()
 
     def find_directories(self):
         """

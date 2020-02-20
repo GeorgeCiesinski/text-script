@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.3.0] - TBA
 # Changed
+- Added mechanism to update config file and repair broken sections
+- Added better exception handling for issues in config file
 - Added contributions file
 - Moved source files into textscript subdirectory and refactored code
 - Added notifications for added or removed textblocks
