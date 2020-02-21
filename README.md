@@ -25,7 +25,7 @@ At this time, the program is still in early development, so I recommend always d
 
 ### Executable installation steps
 
-1. Go to the releases section of this repository.
+1. Go to the [releases section](https://github.com/GeorgeCiesinski/text-script/releases) of this repository.
 2. Download the top file in the latest release.
 3. Extract the text-script folder within this zip file. The whole folder is needed for the installation.
 4. Open the Config folder, and the config.ini file within this. Here, you can link the local or remote directories you will use to store your textblocks. 
