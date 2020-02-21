@@ -8,6 +8,8 @@
 
 An app that allows users to save shortcuts and textblocks. Typing a shortcut automatically replaces said shortcut with the content of the saved textblock. This app runs in the background and improves typing efficiency.
 
+![Usage Example](assets/gifs/email.gif)
+
 ## Motivation
 I came up with this idea when I discovered there was a lack of quality open source applications to fulfill this function. As a tech support agent, I find myself repeatedly copying the same blocks of text, such as signatures, instructions, and templates, and pasting them into emails. This is a common task in any tech support role, so I wanted to write an app to help my colleagues, and anybody else working in a similar role. 
 
@@ -25,7 +27,7 @@ At this time, the program is still in early development, so I recommend always d
 
 ### Executable installation steps
 
-1. Go to the releases section of this repository.
+1. Go to the [releases section](https://github.com/GeorgeCiesinski/text-script/releases) of this repository.
 2. Download the top file in the latest release.
 3. Extract the text-script folder within this zip file. The whole folder is needed for the installation.
 4. Open the Config folder, and the config.ini file within this. Here, you can link the local or remote directories you will use to store your textblocks. 
@@ -50,18 +52,13 @@ there, or replacing it with None. There are also options to set the local direct
 on your computer containing textblocks, and the remote directory is for any folder located on a network drive. Having all three is optional, and only one is
 necessary to store and load textblocks.
 
-## Screenshots and Gifs
+## Screenshots
 
 ### The main console window
 At this stage in the project, text-script runs out of a console window. This outputs your stats, the loaded directories and shortcuts, and any shortcuts that
 were added or removed since the program was last ran.
 
 ![Main Console Window](assets/screenshots/ConsoleWindow.PNG)
-
-### Usage Example
-As you can see, creating templates makes replying to customers quick and easy. text-script can be used in any text field.
-
-![Usage Example](assets/gifs/email.gif)
 
 ## Planned future updates
 - GUI to configure app and add new textblocks.
