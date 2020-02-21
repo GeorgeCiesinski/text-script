@@ -16,7 +16,7 @@ I came up with this idea when I discovered there was a lack of quality open sour
 - Pyperclip
 
 ## Prerequisites
-- Python 3.8 (I do not know if versions below 3.6 will work)
+- Python 3.8
 - Dependencies from requirements.txt
 
 ## Installing
@@ -36,18 +36,27 @@ At this time, the program is still in early development, so I recommend always d
 
 1. Download or clone the repository.
 2. Install the dependencies from requirements.txt (virtual environment is recommended).
-3. Ensure your CWD is text-script (root folder). If using pycharm, mark textscript as sources root.
-4. Run the textscript/text-script.py file
+3. Ensure your CWD and sources root is textscript.
+4. Run the text-script.py file.
 5. Optionally, follow steps 4 & 5 from teh Executable Installation Steps to configure text-script.
+
+### Configuration
+
+The configuration for this app is stored in the textscript/config/ directory. As this program has to be manually configured until the GUI is complete, 
+please take care to only modify options in the DIRECTORIES section. The other sections are managed by the program. 
+
+The DIRECTORIES section contains options which refer to a default directory (textscript/textblocks/) which can be disabled by erasing the directory listed
+there, or replacing it with None. There are also options to set the local directory and the remote directory. The local directory is any folder 
+on your computer containing textblocks, and the remote directory is for any folder located on a network drive. Having all three is optional, and only one is
+necessary to store and load textblocks.
 
 ## Screenshots
 TBA
 
 ## Planned future updates
-- Save whatever the latest clipboard item is and replace it after shortcut is used. Currently the last textblock used fills the last clipboard spot
-- Create #reload command which reloads the shortcut list with all the latest updates
-- A notification should advise users of any added or removed textblocks every time the app is ran
-- Optional usage tracking to advise the user which textblocks see the most use and which do not
+- GUI to configure app and add new textblocks.
+- Save whatever the latest clipboard item is and replace it after shortcut is used. Currently the last textblock used fills the last clipboard spot.
+- Optional usage tracking to advise the user which textblocks see the most use and which do not.
 
 ## Features
 
@@ -56,6 +65,19 @@ text-script lets you create shortcuts which are used to quickly and easily recal
 
 ### Supports Local and Remote Shortcuts
 text-script allows both local and remote shortcuts to be used. Remote shortcuts can be created by a manager or supervisor and can be shared with the whole team on the network drive. While using these remote shortcuts, you can also create your own local shortcuts that only you can see and use.
+
+### Built-in Commands
+text-script has several commands built in to streamline usage. These can be typed anywhere, ideally in a text field, although this is not necessary. 
+
+**\#help** - Typing this command followed by space, tab, or enter pastes the help text, which shows how to use the program. As it pastes text, some kind of textfield is required.
+
+**\#reload** - Typing this command after adding new textblocks loads them into text-script without having to restart the app.
+
+**\#exit** - Typing this command exits the program.
+
+### Saves your statistics
+As you use shortcuts, text-script saves the number of shortcuts you use, and the keystrokes you save. Each time the program starts, you are
+presented with an estimated amount of time you saved by using text-script.
 
 ### Runs in the background
 This application runs in the background and does not need to be maximized or in focus. Simply starting the app and minimizing it is enough for it to recognize your shortcuts. 
@@ -79,4 +101,4 @@ The logs are manually created and have to be manually provided when bugs are enc
 George Ciesinski (Lead Developer)
 
 ## License
-TBA
+Please see LICENSE.md

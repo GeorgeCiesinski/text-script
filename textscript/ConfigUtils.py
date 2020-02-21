@@ -290,6 +290,9 @@ class Setup:
 
         # Todo: Split this into smaller functions
 
+        self._log.info("Reading lastshortcuts.")
+        self._read_shortcuts
+
         self._log.info("Starting new shortcut check.")
 
         # Reads the shortcuts from the shortcuts.ini file
