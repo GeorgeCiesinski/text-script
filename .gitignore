@@ -1,8 +1,10 @@
 .idea/
 __pycache__/
-Logs/*
-!Logs/.logfolder.txt
+textscript/Logs/*
+!textscript/Logs/.logfolder.txt
 venv/
 build/*
 dist/*
+textscript/build/*
+textscript/dist/*
 app.spec

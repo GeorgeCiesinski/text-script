@@ -1,12 +1,14 @@
-import glib
-from Settings import Setup
+from ConfigUtils import Setup
 from Logger import Logger
 from TextController import WordCatcher, KeyboardEmulator
 
 if __name__ == "__main__":
 
     # Current app version / / Ensure this is correct during updates
-    text_script_version = "1.1.0"
+    text_script_version = "1.3.0"
+
+    # Output version
+    print(f"Running text-script version {text_script_version}.\n")
 
     """
     Initialize Logger
@@ -15,7 +17,7 @@ if __name__ == "__main__":
     # Initialize Logger
     L = Logger()
 
-    L.log.debug(f"Program started from App.py. Version: {text_script_version}")
+    L.log.debug(f"Program started from text-script. Version: {text_script_version}")
 
     """
     Configure Settings
@@ -24,7 +26,7 @@ if __name__ == "__main__":
     # Initialize setup
     setup = Setup(L, text_script_version)
 
-    # Check if config file exists
+    # Check if config file exists, and is up to date
     setup.config_exists()
 
     # Print stats to console
@@ -40,8 +42,13 @@ if __name__ == "__main__":
     # Load shortcuts and file directories
     shortcut_list, file_dir_list = setup.shortcut_setup(directories)
 
+    L.log.debug("text-script retrieved shortcut_list, file_dir_list:")
+
+    # Check if new shortcuts have been added
+    setup.new_shortcut_check(shortcut_list)
+
     # Initializes KeyboardEmulator instance
     k = KeyboardEmulator(L)
 
     # Initialize WordCatcher
-    w = WordCatcher(L, k, shortcut_list, file_dir_list)
+    w = WordCatcher(L, k, shortcut_list, file_dir_list, text_script_version)
