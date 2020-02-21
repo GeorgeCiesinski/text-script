@@ -12,7 +12,7 @@ class Logger:
 		"""
 
 		# Logs directory
-		self.log_dir = "Logs/"
+		self.log_dir = "./Logs/"
 
 		# Basic Settings
 		self.log = logging.getLogger(__name__)
@@ -22,13 +22,13 @@ class Logger:
 		# Create directory if doesn't exist
 		if not glib.check_directory(self.log_dir):
 			glib.create_folder(self.log_dir)
-			print("Created Logs directory as it did not exist.")
+			print(f"Created Logs directory as it did not exist: {self.log_dir}")
 
 		# Check if logs exist
-		self._rollover_check = path.exists('Logs/logs.log')
+		self._rollover_check = path.exists('./Logs/logs.log')
 
 		# Rotating File Handler (5 backups)
-		self._file_handler = handlers.RotatingFileHandler('Logs/logs.log', mode='w', maxBytes=10000, backupCount=5)
+		self._file_handler = handlers.RotatingFileHandler('./Logs/logs.log', mode='w', maxBytes=10000, backupCount=5)
 		self._file_handler.setFormatter(formatter)
 		self.log.addHandler(self._file_handler)
 

@@ -2,18 +2,22 @@ import sys
 from pynput.keyboard import Controller, Key, Listener
 import pyperclip
 from Logger import Logger
+from ConfigUtils import Setup
 from ConfigUtils import Update
 
 
 # Class catches individual words as they are typed
 class WordCatcher:
 
-    def __init__(self, _log, _keyboard, _shortcut_list, _file_dir_list):
+    def __init__(self, _log, _keyboard, _shortcut_list, _file_dir_list, _version):
 
         # Creates instance wide log object
         self._log = _log.log
 
-        # Creates instance wide UpdateConfig object
+        # Creates instance wide Setup object
+        self._setup = Setup(_log, _version)
+
+        # Creates instance wide Update object
         self._update = Update(_log)
 
         # Creates instance wide keyboard variable
@@ -199,7 +203,27 @@ class WordCatcher:
         elif self._current_word == "#reload":
 
             self._log.debug("The user has typed in #reload. Reloading shortcut_list and file_dir_list.")
-            pass
+            self._reload_shortcuts()
+
+    def _reload_shortcuts(self):
+        """
+        Reloads the shortcuts without restarting the program.
+        """
+
+        # Gets a list with default, local, and remote directories
+        directories = self._setup.find_directories()
+
+        # Load shortcuts and file directories
+        self._shortcut_list, self._file_dir_list = self._setup.shortcut_setup(directories)
+
+        # Check if new shortcuts have been added
+        self._setup.new_shortcut_check(self._shortcut_list)
+
+        reload_text = "Shortcuts Reloaded."
+
+        self._keyboard.delete_shortcut(self._current_word)
+
+        self._keyboard.paste_block(reload_text)
 
     def _exit_program(self):
         """
@@ -229,6 +253,7 @@ How to make a shortcut:
 
 Note: Other formats may still work, but this is designed to read unicode text files.
 
+To reload shortcuts, type: #reload
 To exit Text-Script, type: #exit"""
 
         self._keyboard.delete_shortcut(self._current_word)
