@@ -23,27 +23,29 @@ class WordCatcher:
         # Creates instance wide keyboard variable
         self._keyboard = _keyboard
 
+        # Delimiter
+        self._shortcut_delimiter = "#"
+        self._command_delimiter = "!"
+
         # List of Text-Script commands
         self._commands = [
-            "#help",
-            "#exit",
-            "#reload"
+            "!help",
+            "!exit",
+            "!reload"
         ]
 
         # Creates instance wide shortcut_list & file_dir_list
         self._shortcut_list = _shortcut_list
         self._file_dir_list = _file_dir_list
 
-        # Temporary word variable
-        self._word_in_progress = False
-        self._current_word = ""
+        # Temporary word variables
+        self._word_in_progress = False  # There is a word currently being built
+        self._current_word = ""  # The current word
+        self._is_command = False  # Is this word a command
 
         # Current key and KeyData
         self._key = None
         self._keydata = None
-
-        # Delimiter
-        self._delimiter = "#"
 
         # Textblock Variable
         self._textblock = ""
@@ -97,25 +99,26 @@ class WordCatcher:
 
     def _check_delimiter(self):
         """
-        Checks if delimiter has been entered. Either starts self.current_word or restarts it.
+        Checks if shortcut or command delimiter has been entered. Either starts self.current_word or restarts it.
         """
 
-        # If delimiter is entered but there is a word in progress, clear the word and start a new word
-        if self._keydata == self._delimiter and self._word_in_progress is True:
+        if self._keydata == self._shortcut_delimiter or self._keydata == self._command_delimiter:
+
+            self._is_command = False  # Words are not commands by default
+
+            if self._word_in_progress is True:
+                self._log.debug("Delimiter detected while word in progress. Restarting word.")
+            else:
+                self._log.debug("Delimiter detected. Starting new word.")
 
             self._clear_current_word()
 
             # Sets word_in_progress to True as new word has been started
             self._word_in_progress = True
 
-            self._log.debug("Delimiter detected while word in progress. Restarting word.")
-
-        # If delimiter is entered and there is no word in progress, start a new word
-        elif self._keydata == self._delimiter and self._word_in_progress is False:
-
-            self._word_in_progress = True
-
-            self._log.debug("Delimiter detected. Starting new word.")
+            # Sets _is_command to true if _command_delimiter is detected.
+            if self._keydata == self._command_delimiter:
+                self._is_command = True
 
     def _check_word_end(self):
         """
@@ -189,18 +192,18 @@ class WordCatcher:
     def _determine_command(self):
 
         # Exit program if user typed in #exit
-        if self._current_word == "#exit":
+        if self._current_word == "!exit":
 
             self._log.debug("The user has typed #exit. Exiting program.")
             self._exit_program()
 
         # Paste help menu if user typed in #help
-        elif self._current_word == "#help":
+        if self._current_word == "!help":
 
             self._log.debug("The user has typed in #help. Pasting help menu.")
             self._help_menu()
 
-        elif self._current_word == "#reload":
+        if self._current_word == "!reload":
 
             self._log.debug("The user has typed in #reload. Reloading shortcut_list and file_dir_list.")
             self._reload_shortcuts()
@@ -253,8 +256,8 @@ How to make a shortcut:
 
 Note: Other formats may still work, but this is designed to read unicode text files.
 
-To reload shortcuts, type: #reload
-To exit Text-Script, type: #exit"""
+To reload shortcuts, type: !reload
+To exit Text-Script, type: !exit"""
 
         self._keyboard.delete_shortcut(self._current_word)
 
