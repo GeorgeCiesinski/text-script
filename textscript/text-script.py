@@ -7,9 +7,6 @@ if __name__ == "__main__":
     # Current app version / / Ensure this is correct during updates
     text_script_version = "1.3.0"
 
-    # Output version
-    print(f"Running text-script version {text_script_version}.\n")
-
     """
     Initialize Logger
     """
@@ -18,6 +15,9 @@ if __name__ == "__main__":
     L = Logger()
 
     L.log.debug(f"Program started from text-script. Version: {text_script_version}")
+
+    # Output version
+    print(f"Running text-script version {text_script_version}.\n")
 
     """
     Configure Settings
@@ -42,6 +42,7 @@ if __name__ == "__main__":
     # Load shortcuts and file directories
     shortcut_list, file_dir_list = setup.shortcut_setup(directories)
 
+    # Todo: Check if this log is required.
     L.log.debug("text-script retrieved shortcut_list, file_dir_list:")
 
     # Check if new shortcuts have been added
