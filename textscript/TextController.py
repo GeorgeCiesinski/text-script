@@ -355,7 +355,7 @@ class KeyboardEmulator:
             for i in range(word_length + 1):
                 self._controller.press(Key.backspace)
                 self._controller.release(Key.backspace)
-        except:
+        except Exception:
             self.log.exception(f"Failed to delete the shortcut.{current_word}")
             raise
         else:
@@ -380,11 +380,12 @@ class KeyboardEmulator:
             self._controller.release(Key.ctrl_l)
             self._controller.release('v')
 
-        except:
-            self.log.exception(f"Failed to paste the textblock: {textblock}")
+        except Exception:
+            self.log.exception("Failed to paste the textblock.")
+            print("An error has occurred while pasting the textblock. Please see the logs for more detail.")
 
         else:
-            self.log.debug(f"Successfully pasted the textblock: {textblock}")
+            self.log.debug("Successfully pasted the textblock.")
 
 
 if __name__ == "__main__":
