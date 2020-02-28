@@ -41,13 +41,13 @@ class Setup:
 
     def __init__(self, _log, text_script_version):
 
+        # Creates instance wide log object
+        self._log = _log.log
+
         self._log.debug("ConfigUtils: Starting Setup initialization.")
 
         # Creates instance of current version variable
         self.version = text_script_version
-
-        # Creates instance wide log object
-        self._log = _log.log
 
         # Creates instance of ConfigParser object and allows empty values so comments are valid
         self._config = configparser.ConfigParser(allow_no_value=True)
