@@ -307,8 +307,6 @@ class Setup:
         self._log.info("Reading lastshortcuts.")
         self._read_shortcuts
 
-        self._log.info("Starting new shortcut check.")
-
         # Reads the shortcuts from the shortcuts.ini file
         self._read_shortcuts()
 
