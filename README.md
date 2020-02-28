@@ -123,6 +123,12 @@ you will type to recall the textblock.
 5. If you are currently running Text-Script, typing #reload (version 1.3.0) or !reload (version 1.3.1 +) will automatically reload the shortcuts into the
 program including any new shortcuts that have been added. 
 
+### Pasting the textblocks
+
+While Text-Script is running, it can be minimized, and listens for the shortcuts you made when creating your textblocks. You can type these shortcuts into any text input field, such as an email, or a notepad, and Text-Script will replace your shortcuts with the textblock. 
+
+Text-Script works by copying the contents of your textblock into your clipboard, and then emulates a keyboard clicking CTRL+V. This works on Windows and Linux for the time being, but support for Mac is also planned, where the program will utilize CMND+V instead. As this program saves the text to the clipboard, it overwrites previous copied text, so ensure you paste any important text that is not backed up elsewhere. 
+
 ## Credits
 George Ciesinski (Lead Developer)
 
