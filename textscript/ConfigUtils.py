@@ -153,13 +153,13 @@ class Setup:
 
                 _config_outdated = True
 
-            if _config_version != self.version:
+        if _config_version != self.version:
 
-                self._log.info(f"The config file is set to version {_config_version}. Updating to {self.version}")
+            self._log.info(f"The config file is set to version {_config_version}. Updating to {self.version}")
 
-                _modified_config_template.config_values["TEXTSCRIPT"][0] = self.version
+            _modified_config_template.config_values["TEXTSCRIPT"][0] = self.version
 
-                _config_outdated = True
+            _config_outdated = True
 
         # If config file is outdated, update config file
         if _config_outdated is True:

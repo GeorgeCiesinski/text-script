@@ -5,7 +5,7 @@ from TextController import WordCatcher, KeyboardEmulator
 if __name__ == "__main__":
 
     # Current app version / / Ensure this is correct during updates
-    text_script_version = "1.3.0"
+    text_script_version = "1.3.1"
 
     """
     Initialize Logger
