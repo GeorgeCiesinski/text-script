@@ -1,4 +1,5 @@
 import sys
+import chardet
 from pynput.keyboard import Controller, Key, Listener
 import pyperclip
 from Logger import Logger
@@ -190,11 +191,11 @@ class WordCatcher:
             # Passes the above index to self.read_textblock
             self._find_file_directory(shortcut_index)
 
-            # Deletes the typed out shortcut
-            self._keyboard.delete_shortcut(self._current_word)
-
             # Update history
             self._update.update_history(self._current_word, self._textblock)
+
+            # Deletes the typed out shortcut
+            self._keyboard.delete_shortcut(self._current_word)
 
             # Passes the textbox to the keyboard
             self._keyboard.paste_block(self._textblock)
@@ -292,41 +293,37 @@ To exit Text-Script, type: !exit"""
         Reads the file located in textblock_directory.
         """
 
-        #TODO: Guess file encoding
-
-        #TODO: Determine whether to end the program if exception, or output exception type to GUI
-
-        # Attempt to open file in UTF-16
+        # Chardet attempts to guess the file encoding
         try:
-            # Opens the textblock directory
-            with open(_textblock_directory, mode="r", encoding="UTF-16") as f:
+            _chardet_result = chardet.detect(open(_textblock_directory, "rb").read())
+            self._log.debug(f"TextController: Chardet encoding guess: {_chardet_result}")
 
-                # Assigns textblock content to the variable
-                self._textblock = f.read()
-        except FileNotFoundError:
-            self._log.exception("Unable to open textblock as the file is missing.")
-        except UnicodeDecodeError:
-            self._log.exception("Attempted to open file in UTF-16. Unsuccessful.")
+            _encoding = _chardet_result['encoding']
+
+        except Exception:
+            self._log.debug("TextController: Failed to guess the encoding using Chardet.")
+            raise
+
         else:
-            self._log.debug("Successfully read the textblock using UTF-16.")
-            return
 
-        # Attempt to open file in UTF-8
-        try:
-            # Opens the textblock directory
-            with open(_textblock_directory, mode="r", encoding="UTF-8") as f:
+            self._log.debug("TextController: Successfully guessed the textblock encoding.")
 
-                # Assigns textblock content to the variable
-                self._textblock = f.read()
-        except FileNotFoundError:
-            self._log.exception("Unable to open textblock as the file is missing.")
-        except UnicodeDecodeError:
-            self._log.exception("Attempted to open file in UTF-8. Unsuccessful.")
-        else:
-            self._log.debug("Successfully read the textblock using UTF-8.")
-            return
+            # Attempt to open file in UTF-16
+            try:
+                # Opens the textblock directory
+                with open(_textblock_directory, mode="r", encoding=_encoding) as t:
 
-        # Todo: Ansi appears to work, but loads in UTF-8 on this computer. Is a third check required, or should error be raised?
+                    # Assigns textblock content to the variable
+                    self._textblock = t.read()
+            except FileNotFoundError:
+                self._log.exception("Unable to open textblock as the file is missing.")
+                raise
+            except UnicodeDecodeError:
+                self._log.exception(f"Failed to open file in {_encoding} encoding.")
+                raise
+            else:
+                self._log.debug(f"Successfully opened the file in {_encoding} encoding.")
+                return
 
     def _clear_current_word(self):
         """
