@@ -10,8 +10,12 @@ class Config:
 
     def __init__(self, version):
         """
-        This init function creates two lists, one containing the sections and options, and the other containing the
-        default values for those sections
+        This init function creates three lists:
+        - config_sections contains the sections and options
+        - section_comments contains the comments for each section
+        - config_values contains the default values for those sections
+        Ensure that this is updated whenever a new section or option is needed in the config as this generates and
+        repairs the existing config file.
         """
 
         # Key is the sections, Value is a list of options
@@ -41,13 +45,15 @@ class Setup:
 
     def __init__(self, _log, text_script_version):
 
-        # Creates instance of current version variable
-        self.version = text_script_version
-
         # Creates instance wide log object
         self._log = _log.log
 
-        # Creates instance of ConfigParser object
+        self._log.debug("ConfigUtils: Starting Setup initialization.")
+
+        # Creates instance of current version variable
+        self.version = text_script_version
+
+        # Creates instance of ConfigParser object and allows empty values so comments are valid
         self._config = configparser.ConfigParser(allow_no_value=True)
 
         # Shortcut notification variables
@@ -65,6 +71,8 @@ class Setup:
         """
         Checks if Config file exists.
         """
+
+        self._log.debug("ConfigUtils: Starting config_exists.")
 
         # Create a default config
         _default_config = Config(self.version)
@@ -93,6 +101,8 @@ class Setup:
 
         :param _config_template:
         """
+
+        self._log.debug("ConfigUtils: Starting _check_config.")
 
         _modified_config_template = Config(self.version)  # Create a new config template to save existing config values
 
@@ -143,13 +153,13 @@ class Setup:
 
                 _config_outdated = True
 
-            if _config_version != self.version:
+        if _config_version != self.version:
 
-                self._log.info(f"The config file is set to version {_config_version}. Updating to {self.version}")
+            self._log.info(f"The config file is set to version {_config_version}. Updating to {self.version}")
 
-                _modified_config_template.config_values["TEXTSCRIPT"][0] = self.version
+            _modified_config_template.config_values["TEXTSCRIPT"][0] = self.version
 
-                _config_outdated = True
+            _config_outdated = True
 
         # If config file is outdated, update config file
         if _config_outdated is True:
@@ -171,6 +181,8 @@ class Setup:
 
         :param _config_template:
         """
+
+        self._log.debug("ConfigUtils: Starting _create_config.")
 
         # Create directory if doesn't exist
         if not glib.check_directory(self._config_dir):
@@ -226,6 +238,10 @@ class Setup:
         """
         Extends _shortcut_list and _file_dir_list from the _shortcuts and _file_dirs lists.
         """
+
+        self._log.debug("ConfigUtils: Starting shortcut_setup.")
+
+        # Todo: Check if exception handling is required here.
 
         _shortcut_list = []
         _file_dir_list = []
@@ -288,12 +304,12 @@ class Setup:
         :param _shortcut_list:
         """
 
+        self._log.debug("ConfigUtils: Starting new_shortcut_check.")
+
         # Todo: Split this into smaller functions
 
         self._log.info("Reading lastshortcuts.")
         self._read_shortcuts
-
-        self._log.info("Starting new shortcut check.")
 
         # Reads the shortcuts from the shortcuts.ini file
         self._read_shortcuts()
@@ -358,7 +374,7 @@ class Setup:
 
             self._replace_last_shortcuts(_shortcut_list)
 
-        self._log.info("Completed new shortcut check.")
+        self._log.debug("Completed new shortcut check.")
 
     def _read_shortcuts(self):
         """
@@ -419,6 +435,8 @@ class Setup:
         Gets the current usage stats from the config file.
         """
 
+        self._log.debug("ConfigUtils: Starting get_stats.")
+
         try:
 
             self._config.read(self._config_file_dir)
@@ -441,6 +459,8 @@ class Setup:
         """
         Prints the usage stats to console.
         """
+
+        self._log.debug("ConfigUtils: Starting _calculate_stats.")
 
         try:
 
@@ -482,6 +502,8 @@ to correct the error."""
         Repairs history section if an invalid value is found there.
         """
 
+        self._log.debug("ConfigUtils: Starting _repair_history.")
+
         # Open the config file
         self._config.read(self._config_file_dir)
 
@@ -490,9 +512,12 @@ to correct the error."""
         self._config.set('HISTORY', 'shortcutchars', "0")
         self._config.set('HISTORY', 'textblockchars', "0")
 
+        # Todo: Add exception handling
+
         # Write to the config file
         with open(self._config_file_dir, 'w') as configfile:
             self._config.write(configfile)
+            self._log.debug("Successfully repaired HISTORY.")
 
         # Run get_stats again after repair
         self.get_stats()
@@ -501,6 +526,8 @@ to correct the error."""
         """
         Finds the directories in the config file
         """
+
+        self._log.debug("ConfigUtils: Starting find_directories.")
 
         self._config.read(self._config_file_dir)
         _default_directory = self._config['DIRECTORIES']['defaultdirectory']

@@ -9,8 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ability to correct shortcut typos using arrow keys instead of just backspace
 
 ## [Unreleased]
+- Updated logging to better capture errors which occur during textblock decoding
+- Moved commands from shortcut delimiter (#) to command delimiter (!)
+- Added command delimiter (!)
 
-## [1.3.0] - TBA
+## [1.3.0] - 2020-02-21
 # Changed
 - Added reload function which adds shortcuts without restarting the program
 - Added mechanism to update config file and repair broken sections
