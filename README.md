@@ -109,8 +109,7 @@ necessary to store and load textblocks.
 
 ### Manually creating textblocks
 
-At this time, Text-Script does not have a GUI and textblocks must be created manually. Although support for ANSI and other encodings is planned, Text-Script 
-only supports Unicode (UTF-16 & UTF-8) text files at this time. Using other encodings may work, but has caused the program to crash for some users.
+At this time, Text-Script does not have a GUI and textblocks must be created manually. 
 
 I recommend either using notepad, or another application that allows you to specify encoding when saving the file. Below are the instructions to create the 
 textblock using notepad:
@@ -127,7 +126,11 @@ program including any new shortcuts that have been added.
 
 While Text-Script is running, it can be minimized, and listens for the shortcuts you made when creating your textblocks. You can type these shortcuts into any text input field, such as an email, or a notepad, and Text-Script will replace your shortcuts with the textblock. 
 
-Text-Script works by copying the contents of your textblock into your clipboard, and then emulates a keyboard clicking CTRL+V. This works on Windows and Linux for the time being, but support for Mac is also planned, where the program will utilize CMND+V instead. As this program saves the text to the clipboard, it overwrites previous copied text, so ensure you paste any important text that is not backed up elsewhere. 
+Text-Script works by copying the contents of your textblock into your clipboard, and then emulates a keyboard clicking CTRL+V. This works on Windows and Linux for the time being, but support for Mac is also planned, where the program will utilize CMD+V instead. As this program saves the text to the clipboard, it overwrites previous copied text, so ensure you paste any important text that is not backed up elsewhere. 
+
+### Textblocks are formatted wrong or cause Text-Script to crash
+
+Text-Script now attempts to determine the encoding of the Text-Block using the Chardet library. Despite this, encoding is notoriously difficult to determine with perfect accuracy. If the textblocks are formatted wrong when they are pasted, or if the program crashes, try changing the encoding to unicode. You can do this by opening the file in notepad or another text editor that lets you set the encoding, and overwriting the original file. 
 
 ## Credits
 George Ciesinski (Lead Developer)

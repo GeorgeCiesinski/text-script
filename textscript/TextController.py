@@ -319,7 +319,7 @@ To exit Text-Script, type: !exit"""
                 self._log.exception("Unable to open textblock as the file is missing.")
                 raise
             except UnicodeDecodeError:
-                self._log.exception(f"Failed to open file in {_encoding} encoding.")
+                self._log.exception(f"Failed to open file in {_encoding} encoding. Try changing the textblock encoding to Unicode.")
                 raise
             else:
                 self._log.debug(f"Successfully opened the file in {_encoding} encoding.")
