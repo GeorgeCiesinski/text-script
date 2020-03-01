@@ -10,8 +10,12 @@ class Config:
 
     def __init__(self, version):
         """
-        This init function creates two lists, one containing the sections and options, and the other containing the
-        default values for those sections
+        This init function creates three lists:
+        - config_sections contains the sections and options
+        - section_comments contains the comments for each section
+        - config_values contains the default values for those sections
+        Ensure that this is updated whenever a new section or option is needed in the config as this generates and
+        repairs the existing config file.
         """
 
         # Key is the sections, Value is a list of options

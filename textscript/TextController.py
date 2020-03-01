@@ -14,11 +14,19 @@ class WordCatcher:
         # Creates instance wide log object
         self._log = _log.log
 
+        self._log.debug("TextController: Starting WordCatcher initialization.")
+
         # Creates instance wide Setup object
         self._setup = Setup(_log, _version)
 
+        self._log.debug("TextController: Successfully initialized new Setup object in WordCatcher.")
+        # Todo: Will passing the setup object work to save from new object being initialized?
+
         # Creates instance wide Update object
         self._update = Update(_log)
+
+        self._log.debug("TextController: Successfully initialized new Update object in WordCatcher.")
+        # Todo: Will passing the update object work to save from new object being initialized?
 
         # Creates instance wide keyboard variable
         self._keyboard = _keyboard
@@ -50,13 +58,13 @@ class WordCatcher:
         # Textblock Variable
         self._textblock = ""
 
-        self._log.debug("WordCatcher initialized.")
+        self._log.debug("WordCatcher initialized successfully.")
 
         # TODO: Look into self.listener.join and why this is even working. Might need to be changed.
         # Start self.listener
         with Listener(on_press=self.word_builder) as self._listener:
             self._listener.join()
-            self._log.debug("Listener started.")
+            self._log.debug("TextController: Listener started.")
 
     def word_builder(self, key):
         """
@@ -107,9 +115,9 @@ class WordCatcher:
             self._is_command = False  # Words are not commands by default
 
             if self._word_in_progress is True:
-                self._log.debug("Delimiter detected while word in progress. Restarting word.")
+                self._log.debug("TextController: Delimiter detected while word in progress. Restarting word.")
             else:
-                self._log.debug("Delimiter detected. Starting new word.")
+                self._log.debug("TextController: Delimiter detected. Starting new word.")
 
             self._clear_current_word()
 
@@ -130,7 +138,7 @@ class WordCatcher:
             # Checks if there is a word in progress, clears it if true
             if self._word_in_progress is True:
 
-                self._log.debug(f"Word ended by {self._keydata}: {self._current_word}")
+                self._log.debug(f"TextController: Word ended by {self._keydata}: {self._current_word}")
 
                 self._check_shortcut()
 
@@ -147,7 +155,7 @@ class WordCatcher:
             # Removes last letter from word
             self._current_word = self._current_word[:-1]
 
-            self._log.debug("Key.backspace entered.")
+            self._log.debug("TextController: Key.backspace detected.")
 
     def _append_letter(self):
         """
@@ -159,12 +167,14 @@ class WordCatcher:
             # Adds letter to the word
             self._current_word += self._keydata
 
-            self._log.debug(f"Appended {self._keydata} to the current word.")
+            self._log.debug(f"TextController: Appended {self._keydata} to the current word.")
 
     def _check_shortcut(self):
         """
         Checks list of shortcuts for a match. Sets text block if match is found.
         """
+
+        self._log.debug(f"TextController: Checking the shortcut {self._current_word}.")
 
         # If shortcut is in command list, determine which command was used
         if self._current_word in self._commands:
@@ -224,6 +234,8 @@ class WordCatcher:
 
         reload_text = "Shortcuts Reloaded."
 
+        self._log.info("TextController: Shortcuts Reloaded.")
+
         self._keyboard.delete_shortcut(self._current_word)
 
         self._keyboard.paste_block(reload_text)
@@ -263,11 +275,6 @@ To exit Text-Script, type: !exit"""
 
         self._keyboard.paste_block(_help_text)
 
-    def update_shortcuts(self):
-
-        # TODO: Create update_shortcuts method
-        pass
-
     def _find_file_directory(self, index):
         """
         Finds the directory of the Textblock file.
@@ -275,7 +282,7 @@ To exit Text-Script, type: !exit"""
 
         # Searches self.file_dir_list by index for the directory
         _textblock_directory = self._file_dir_list[index]
-        self._log.debug(f"Successfully found the textblock directory: {_textblock_directory}")
+        self._log.debug(f"TextController: Successfully found the textblock directory: {_textblock_directory}")
 
         # Reads the textblock file
         self._read_textblock(_textblock_directory)
@@ -329,7 +336,7 @@ To exit Text-Script, type: !exit"""
         self._current_word = ""
         self._word_in_progress = False
 
-        self._log.debug("Cleared current word & self.current_word changed to False.")
+        self._log.debug("TextController: Cleared current word & self.current_word changed to False.")
 
 
 class KeyboardEmulator:
