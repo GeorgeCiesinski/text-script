@@ -341,16 +341,17 @@ To exit Text-Script, type: !exit"""
 
 class KeyboardEmulator:
 
-    def __init__(self, log):
+    def __init__(self, _log):
 
-        self.log = log.log
+        self._log = _log.log
 
-        self.log.debug("KeyboardEmulator initialized.")
+        self._log.debug("TextController: Starting KeyboardEmulator initialization.")
 
         # Initializes controller
         self._controller = Controller()
 
-        self.log.debug("Controller initialized.")
+        self._log.debug("Controller initialized.")
+        self._log.debug("KeyboardEmulator initialized successfully.")
 
     def delete_shortcut(self, current_word):
         """
@@ -363,12 +364,12 @@ class KeyboardEmulator:
                 self._controller.press(Key.backspace)
                 self._controller.release(Key.backspace)
         except Exception:
-            self.log.exception(f"Failed to delete the shortcut.{current_word}")
+            self._log.exception(f"TextController: Failed to delete the shortcut.{current_word}")
             raise
         else:
-            self.log.debug(f"Successfully deleted the shortcut: {current_word}")
+            self._log.debug(f"TextController: Successfully deleted the shortcut: {current_word}")
 
-    def paste_block(self, textblock):
+    def paste_block(self, _textblock):
         """
         paste_block copies the textblock into the clipboard and pastes it using pyinput controller.
         """
@@ -377,7 +378,7 @@ class KeyboardEmulator:
 
         try:
 
-            pyperclip.copy(textblock)
+            pyperclip.copy(_textblock)
 
             # TODO: Look up Pyperclip documentation for OSX & Linux implementation
 
@@ -388,11 +389,11 @@ class KeyboardEmulator:
             self._controller.release('v')
 
         except Exception:
-            self.log.exception("Failed to paste the textblock.")
+            self._log.exception("TextController: Failed to paste the textblock.")
             print("An error has occurred while pasting the textblock. Please see the logs for more detail.")
-
+            # Todo: What is the behavior if we do not raise this?
         else:
-            self.log.debug("Successfully pasted the textblock.")
+            self._log.debug("TextController: Successfully pasted the textblock.")
 
 
 if __name__ == "__main__":

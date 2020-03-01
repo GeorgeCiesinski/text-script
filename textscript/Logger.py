@@ -28,7 +28,7 @@ class Logger:
 		self._rollover_check = path.exists('./Logs/logs.log')
 
 		# Rotating File Handler (5 backups)
-		self._file_handler = handlers.RotatingFileHandler('./Logs/logs.log', mode='w', maxBytes=10000, backupCount=5)
+		self._file_handler = handlers.RotatingFileHandler('./Logs/logs.log', mode='w', maxBytes=100000, backupCount=5)
 		self._file_handler.setFormatter(formatter)
 		self.log.addHandler(self._file_handler)
 
