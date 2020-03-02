@@ -558,31 +558,54 @@ to correct the error."""
 
         self._log.debug("ConfigUtils: Starting find_directories.")
 
-        self._config.read(self._config_file_dir)
-        _default_directory = self._config['DIRECTORIES']['defaultdirectory']
-        _local_directory = self._config['DIRECTORIES']['localdirectory']
-        _remote_directory = self._config['DIRECTORIES']['remotedirectory']
+        try:
 
-        if _default_directory == "None" or _default_directory == "":
-            _default_directory = None
-            self._log.debug("Default directory is set to None.")
-        else:
-            self._log.debug(f"Default directory is set to {_default_directory}")
-        if _local_directory == "None" or _local_directory == "":
-            _local_directory = None
-            self._log.debug("Local directory is set to None.")
-        else:
-            self._log.debug(f"Local directory is set to {_local_directory}")
-        if _remote_directory == "None" or _remote_directory == "":
-            _remote_directory = None
-            self._log.debug("Remote directory is set to None.")
-        else:
-            self._log.debug(f"Remote directory is set to {_remote_directory}")
+            self._config.read(self._config_file_dir)
 
-        _directories = [_default_directory, _local_directory, _remote_directory]
-        self._log.debug(f"Retrieved the following directories from config: {_directories}")
+        except configparser.Error:
 
-        return _directories
+            self._log.exception("Failed to read directories due to configparser Error.")
+            raise
+
+        except configparser.NoSectionError:
+
+            self._log.exception("Failed to read directories due to NoSectionError.")
+            raise
+
+        except Exception:
+
+            self._log.exception("Failed to read directories due to unexpected Error.")
+            raise
+
+        else:
+
+            # Assign the default, local, and remote directory with value from config file
+            _default_directory = self._config['DIRECTORIES']['defaultdirectory']
+            _local_directory = self._config['DIRECTORIES']['localdirectory']
+            _remote_directory = self._config['DIRECTORIES']['remotedirectory']
+
+            if _default_directory == "None" or _default_directory == "":
+                _default_directory = None
+                self._log.debug("Default directory is set to None.")
+            else:
+                self._log.debug(f"Default directory is set to {_default_directory}")
+
+            if _local_directory == "None" or _local_directory == "":
+                _local_directory = None
+                self._log.debug("Local directory is set to None.")
+            else:
+                self._log.debug(f"Local directory is set to {_local_directory}")
+
+            if _remote_directory == "None" or _remote_directory == "":
+                _remote_directory = None
+                self._log.debug("Remote directory is set to None.")
+            else:
+                self._log.debug(f"Remote directory is set to {_remote_directory}")
+
+            _directories = [_default_directory, _local_directory, _remote_directory]
+            self._log.debug(f"Retrieved the following directories from config: {_directories}")
+
+            return _directories
 
     @staticmethod
     def _append_directories(_directory):
