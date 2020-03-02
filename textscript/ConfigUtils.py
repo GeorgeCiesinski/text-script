@@ -97,7 +97,7 @@ class Setup:
 
     def _check_config(self, _config_template):
         """
-        Checks if config file is outdated. Updates outdated config files.
+        Checks if config file is outdated. Updates or adds outdated sections & options config files.
 
         :param _config_template:
         """
@@ -289,7 +289,7 @@ class Setup:
 
                     self._log.debug("Successfully extended shortcut_list")
 
-                # append file_dirs to file_dir_list
+                # extend file_dirs to file_dir_list
                 _file_dir_list.extend(_file_dirs)
 
                 self._log.debug("Successfully appended shortcuts and file_dirs.")
@@ -420,15 +420,20 @@ class Setup:
                 self._config.write(configfile)
 
         except configparser.Error:
-            self._log.exception("Failed to update shortcut history file due to configparser Error.")
+            self._log.exception("Failed to update lastshortcuts due to configparser Error.")
+            raise
+
+        except configparser.NoSectionError:
+
+            self._log.exception("Failed to update lastshortcuts due to NoSectionError.")
             raise
 
         except Exception:
-            self._log.exception("Failed to update shortcut history file due to unexpected Error.")
+            self._log.exception("Failed to update lastshortcuts due to unexpected Error.")
             raise
 
         else:
-            self._log.debug("Successfully updated shortcut history file with updated stats.")
+            self._log.debug("Successfully updated lastshortcuts with updated stats.")
 
     def get_stats(self):
         """
@@ -504,23 +509,47 @@ to correct the error."""
 
         self._log.debug("ConfigUtils: Starting _repair_history.")
 
-        # Open the config file
-        self._config.read(self._config_file_dir)
+        try:
 
-        # Reset HISTORY values to 0
-        self._config.set('HISTORY', 'shortcutsused', "0")
-        self._config.set('HISTORY', 'shortcutchars', "0")
-        self._config.set('HISTORY', 'textblockchars', "0")
+            # Open the config file
+            self._config.read(self._config_file_dir)
 
-        # Todo: Add exception handling
+            # Reset HISTORY values to 0
+            self._config.set('HISTORY', 'shortcutsused', "0")
+            self._config.set('HISTORY', 'shortcutchars', "0")
+            self._config.set('HISTORY', 'textblockchars', "0")
 
-        # Write to the config file
-        with open(self._config_file_dir, 'w') as configfile:
-            self._config.write(configfile)
-            self._log.debug("Successfully repaired HISTORY.")
+        except configparser.Error:
+            self._log.exception("Failed to read shortcut history due to configparser Error.")
+            raise
 
-        # Run get_stats again after repair
-        self.get_stats()
+        except configparser.NoSectionError:
+
+            self._log.exception("Failed to read shortcut history due to NoSectionError.")
+            raise
+
+        except Exception:
+            self._log.exception("Failed to read shortcut history due to unexpected Error.")
+            raise
+
+        else:
+            self._log.debug("Successfully read shortcut history.")
+
+        try:
+
+            # Write to the config file
+            with open(self._config_file_dir, 'w') as configfile:
+                self._config.write(configfile)
+                self._log.debug("Successfully repaired HISTORY.")
+
+        except OSError:
+
+            self._log.exception("Failed to repair history due to OSError.")
+
+        else:
+
+            # Run get_stats again after repair
+            self.get_stats()
 
     def find_directories(self):
         """
