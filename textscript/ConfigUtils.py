@@ -670,9 +670,15 @@ class Update:
         except configparser.Error:
             self._log.exception("Failed to update config file due to configparser Error.")
             raise
+
+        except OSError:
+            self._log.exception("Failed to update config file due to OSError.")
+            raise
+
         except Exception:
             self._log.exception("Failed to update config file due to unexpected Error.")
             raise
+
         else:
             self._log.debug("Successfully updated config file with updated stats.")
 
