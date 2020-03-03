@@ -500,7 +500,7 @@ to correct the error."""
 
             print(_stats)
 
-            self._log.debug(_stats)
+            self._log.info(_stats)
 
     def _repair_history(self):
         """

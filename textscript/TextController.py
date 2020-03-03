@@ -304,6 +304,10 @@ To exit Text-Script, type: !exit"""
             self._log.debug("TextController: Failed to guess the encoding using Chardet.")
             raise
 
+        except FileNotFoundError:
+            self._log.debug("TextController: Textblock location cannot be found. Please check if the shortcut still exists.")
+            raise
+
         else:
 
             self._log.debug("TextController: Successfully guessed the textblock encoding.")
@@ -386,9 +390,11 @@ class KeyboardEmulator:
             self._controller.release('v')
 
         except Exception:
+
             self._log.exception("TextController: Failed to paste the textblock.")
             print("An error has occurred while pasting the textblock. Please see the logs for more detail.")
             # Todo: What is the behavior if we do not raise this?
+
         else:
             self._log.debug("TextController: Successfully pasted the textblock.")
 
