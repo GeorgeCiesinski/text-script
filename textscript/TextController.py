@@ -92,6 +92,8 @@ class WordCatcher:
         # Converts to raw value string
         self._keycode_to_keydata()
 
+        print(self._keydata)
+
         # Checks delimiter
         self._check_delimiter()
 
