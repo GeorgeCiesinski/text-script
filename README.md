@@ -38,7 +38,7 @@ text-script lets you create shortcuts which are used to quickly and easily recal
 text-script allows both local and remote shortcuts to be used. Remote shortcuts can be created by a manager or supervisor and can be shared with the whole team on the network drive. While using these remote shortcuts, you can also create your own local shortcuts that only you can see and use.
 
 ### Built-in Commands
-text-script has several commands built in to streamline usage. These can be typed anywhere, ideally in a text field, although this is not necessary. 
+text-script has several commands built in to streamline usage. I recommend using them in a text input field as some of these paste the result of the command and require a text input field to do so. Please also note that I have moved commands to their own delimiter (!) to separate them from regular shortcuts. 
 
 **!help** - Typing this command followed by space, tab, or enter pastes the help text, which shows how to use the program. As it pastes text, some kind of textfield is required.
 
@@ -111,14 +111,13 @@ necessary to store and load textblocks.
 
 At this time, Text-Script does not have a GUI and textblocks must be created manually. 
 
-I recommend either using notepad, or another application that allows you to specify encoding when saving the file. Below are the instructions to create the 
-textblock using notepad:
+I recommend either using notepad to create the textblock. Any text editor that lets you select encoding will also work.
 
 1. Navigate to the textblock directory you set in the Config file. Using subdirectories in this location is supported, shouldn't cause any issues, and is a helpful way to organize the textblocks.
 2. Create a new text file in this location. The naming convention for the text file is #________.txt where the blank is the shortcut
 you will type to recall the textblock. 
 3. Open the file. Paste the actual text you want to replace the shortcut with into this file. 
-4. Click save-as. Change the encoding to "Unicode". Click save, then click yes to overwrite the file. 
+4. Although Text-Script should be able to read any common text encoding now, I recommend using Unicode if you experience any errors. Click save-as. Change the encoding to "Unicode". Click save, then click yes to overwrite the file. 
 5. If you are currently running Text-Script, typing #reload (version 1.3.0) or !reload (version 1.3.1 +) will automatically reload the shortcuts into the
 program including any new shortcuts that have been added. 
 
@@ -128,9 +127,15 @@ While Text-Script is running, it can be minimized, and listens for the shortcuts
 
 Text-Script works by copying the contents of your textblock into your clipboard, and then emulates a keyboard clicking CTRL+V. This works on Windows and Linux for the time being, but support for Mac is also planned, where the program will utilize CMD+V instead. As this program saves the text to the clipboard, it overwrites previous copied text, so ensure you paste any important text that is not backed up elsewhere. 
 
+## Known Bugs
+
 ### Textblocks are formatted wrong or cause Text-Script to crash
 
 Text-Script now attempts to determine the encoding of the Text-Block using the Chardet library. Despite this, encoding is notoriously difficult to determine with perfect accuracy. If the textblocks are formatted wrong when they are pasted, or if the program crashes, try changing the encoding to unicode. You can do this by opening the file in notepad or another text editor that lets you set the encoding, and overwriting the original file. 
+
+### Shortcuts with numeric names are not pasting
+
+There is a known issue where typing shortcuts using the numpad doesn't work. We are trying to fix this bug, but for now, use the regular number keys to type it in and it should work. 
 
 ## Credits
 George Ciesinski (Lead Developer)
