@@ -32,13 +32,6 @@ class WordCatcher:
         # Creates instance wide keyboard variable
         self._keyboard = _keyboard
 
-        # Map virtual key codes for key codes outside the typical ASCII keyboard range
-        self._vk_map = {
-            110: '.',  # [Num .]
-        }
-        # Numpad support
-        self._vk_map.update({i: f'{i - 96}' for i in range(96, 106)})  # [Num 0] = 96, [Num 1] = 97, etc
-
         # Delimiter
         self._shortcut_delimiter = "#"
         self._command_delimiter = "!"
@@ -111,20 +104,9 @@ class WordCatcher:
         Converts KeyCode to string and strips quotations (into variable: keydata).
         """
 
-        key = ""  # Default the returned key press to be a blank string
-
-        # Handle special virtual key code cases
-        if hasattr(self._key, 'vk'):
-            # Map the vk values
-            if self._key.vk in self._vk_map:
-                key = self._vk_map[self._key.vk]
-
-        # If no special cases need to be handled, then perform the default conversion
-        if key == "":
-            key = str(self._key)  # Converts KeyData to string
-
-        key = key.strip("'")  # Strips ' from around the returned character
-        self._keydata = key
+        # Converts KeyData to string, strips ' from result
+        self._keydata = str(self._key)
+        self._keydata = self._keydata.strip("'")
 
     def _check_delimiter(self):
         """
