@@ -128,8 +128,8 @@ def print_shortcuts(_file_dirs, _shortcuts):
 
 if __name__ == "__main__":
 
-    test_word = '#12321#'
+    test_word = '#12321!'
 
     is_compatible = _shortcut_compatibility_check(test_word)
 
-    print(is_compatible)
+    print(f"Is compatible: {is_compatible}")

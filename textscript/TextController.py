@@ -85,7 +85,8 @@ class WordCatcher:
         # Converts to raw value string
         self._keycode_to_keydata()
 
-        print(self._keydata)
+        # Prints keys to console -- debugging
+        # print(self._keydata)
 
         # Checks delimiter
         self._check_delimiter()
