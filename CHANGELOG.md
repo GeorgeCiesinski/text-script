@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Planned Updates]
 - Check for duplicate shortcuts & handle
 - Ability to correct shortcut typos using arrow keys instead of just backspace
+- GUI support
 
 ## [1.3.1] - 2020-03-09
 #Added
