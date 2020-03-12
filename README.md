@@ -1,6 +1,6 @@
 # >text-script
 
-![Python Version](https://img.shields.io/badge/Python-3.8-blue)
+![Python Version](https://img.shields.io/badge/Python-3.7-blue)
 ![License Information](https://img.shields.io/github/license/GeorgeCiesinski/text-script)
 
 ![Build](https://api.travis-ci.com/GeorgeCiesinski/text-script.svg?branch=develop)
@@ -19,8 +19,11 @@ I came up with this idea when I discovered there were few quality open source ap
 - Pyperclip
 
 ## Prerequisites
-- Python 3.8
+- Python 3.7
 - Dependencies from requirements.txt
+
+## Python version notice
+Please be advised that I have decided to roll back to Python 3.7 as Pyinstaller, which we use to create executables, is not compatible with 3.8 yet. Once Pyinstaller supports 3.8, we will consider moving Text-Script back to this version as well. Sorry in advance if this causes any issues on your forks.
 
 ## Screenshots
 
