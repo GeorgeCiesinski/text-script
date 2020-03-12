@@ -3,6 +3,7 @@
 ![Python Version](https://img.shields.io/badge/Python-3.8-blue)
 ![License Information](https://img.shields.io/github/license/GeorgeCiesinski/text-script)
 
+![Build](https://api.travis-ci.com/GeorgeCiesinski/text-script.svg?branch=develop)
 ![Dependencies](https://img.shields.io/requires/github/GeorgeCiesinski/text-script)
 ![Open Issues](https://img.shields.io/github/issues/GeorgeCiesinski/text-script)
 
@@ -139,7 +140,8 @@ Text-Script now attempts to determine the encoding of the Text-Block using the C
 There is a known issue where typing shortcuts using the numpad doesn't work. We are trying to fix this bug, but for now, use the regular number keys to type it in and it should work without issue.
 
 ## Credits
-George Ciesinski (Lead Developer)
+- George Ciesinski (Lead Developer)
+- [Jakub Wlodek](https://github.com/jwlodek) (Continuous Integration)
 
 ## License
 Please see LICENSE.md
