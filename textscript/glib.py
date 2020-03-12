@@ -65,8 +65,11 @@ def list_files(_directory):
 
     for root, dirs, files in os.walk(_directory, topdown=False):
         for name in files:
-            _file_list.append(name)
-            _file_dir_list.append(os.path.join(root, name))
+            # Check if shortcut name is compatible
+            if _shortcut_compatibility_check(name):
+                # Append to _file_list and _file_dir_list if yes
+                _file_list.append(name)
+                _file_dir_list.append(os.path.join(root, name))
 
     return _file_list, _file_dir_list
 
@@ -84,9 +87,36 @@ def list_shortcuts(_file_list):
 
     for f in _file_list:
         f = f.split(".")
+
         _shortcut_list.append(f[0])
 
     return _shortcut_list
+
+
+def _shortcut_compatibility_check(_shortcut):
+    """
+    Checks if shortcut is formatted contains a second delimiter in the name. Return _is_compatible = False
+
+    :param _shortcut:
+    :rtype bool:
+    """
+
+    # Delimiter
+    _shortcut_delimiter = "#"
+    _command_delimiter = "!"
+
+    _is_compatible = None
+
+    # If the delimiter appears in the actual shortcut, return False
+    if _shortcut_delimiter in _shortcut[1:] or _command_delimiter in _shortcut[1:]:
+
+        _is_compatible = False
+
+    else:
+
+        _is_compatible = True
+
+    return _is_compatible
 
 
 def print_shortcuts(_file_dirs, _shortcuts):
@@ -98,10 +128,8 @@ def print_shortcuts(_file_dirs, _shortcuts):
 
 if __name__ == "__main__":
 
-    text_block_dir = 'textblocks/'
+    test_word = '#12321!'
 
-    file_list = list_files(text_block_dir)
+    is_compatible = _shortcut_compatibility_check(test_word)
 
-    shortcut_list = list_shortcuts(file_list)
-
-
+    print(f"Is compatible: {is_compatible}")

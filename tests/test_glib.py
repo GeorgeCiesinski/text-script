@@ -1,45 +1,26 @@
-import unittest
-from textscript.glib import *
+import pytest
+from textscript import glib
+
+def test_check_directory():
+    assert not glib.check_directory('fasfbabfabflrfb')
+    assert glib.check_directory('.github')
 
 
-class TestGlib(unittest.TestCase):
+def test_list_subdirectories():
 
-    def test_check_directory(self):
-
-        # Pass tests directory which must exist
-        result = check_directory('tests')
-
-        # Assert test directory exists
-        assert result is True
-
-    def test_create_folder(self):
-
-        # Test Directory
-        test_directory = 'tests/test_folder'
-
-        # Create Test Directory
-        create_folder(test_directory)
-
-        # Assert tests/test_folder exists
-        assert os.path.isdir(test_directory)
-
-        # Delete test_directory
-        parent_dir = os.getcwd()
-        delete_dir = os.path.join(parent_dir, test_directory)
-        os.removedirs(delete_dir)
-
-    def test_list_subdirectories(self):
-        pass
-
-    def test_list_files(self):
-        pass
-
-    def test_list_shortcuts(self):
-        pass
-
-    def test_print_shortcuts(self):
-        pass
+    expected_list = ['./.github', './assets', './tests', './textscript']
+    dir_list = glib.list_subdirectories('.')
+    for dir in expected_list:
+        assert dir in dir_list
 
 
-if __name__ == '__main__':
-    unittest.main()
+def test_list_files():
+
+
+    expected_file_names = ['glib.py', 'README.md', '.gitignore', 'pull_request_template.md']
+    expected_file_paths = ['./textscript/glib.py', './README.md', './.gitignore', './.github/pull_request_template.md']
+    file_list, dir_list = glib.list_files('.')
+    for file in expected_file_names:
+        assert file in file_list
+    for file_path in expected_file_paths:
+        assert file_path in dir_list

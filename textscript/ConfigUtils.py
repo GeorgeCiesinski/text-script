@@ -10,8 +10,12 @@ class Config:
 
     def __init__(self, version):
         """
-        This init function creates two lists, one containing the sections and options, and the other containing the
-        default values for those sections
+        This init function creates three lists:
+        - config_sections contains the sections and options
+        - section_comments contains the comments for each section
+        - config_values contains the default values for those sections
+        Ensure that this is updated whenever a new section or option is needed in the config as this generates and
+        repairs the existing config file.
         """
 
         # Key is the sections, Value is a list of options
@@ -41,13 +45,15 @@ class Setup:
 
     def __init__(self, _log, text_script_version):
 
-        # Creates instance of current version variable
-        self.version = text_script_version
-
         # Creates instance wide log object
         self._log = _log.log
 
-        # Creates instance of ConfigParser object
+        self._log.debug("ConfigUtils: Starting Setup initialization.")
+
+        # Creates instance of current version variable
+        self.version = text_script_version
+
+        # Creates instance of ConfigParser object and allows empty values so comments are valid
         self._config = configparser.ConfigParser(allow_no_value=True)
 
         # Shortcut notification variables
@@ -65,6 +71,8 @@ class Setup:
         """
         Checks if Config file exists.
         """
+
+        self._log.debug("ConfigUtils: Starting config_exists.")
 
         # Create a default config
         _default_config = Config(self.version)
@@ -89,10 +97,12 @@ class Setup:
 
     def _check_config(self, _config_template):
         """
-        Checks if config file is outdated. Updates outdated config files.
+        Checks if config file is outdated. Updates or adds outdated sections & options config files.
 
         :param _config_template:
         """
+
+        self._log.debug("ConfigUtils: Starting _check_config.")
 
         _modified_config_template = Config(self.version)  # Create a new config template to save existing config values
 
@@ -143,13 +153,13 @@ class Setup:
 
                 _config_outdated = True
 
-            if _config_version != self.version:
+        if _config_version != self.version:
 
-                self._log.info(f"The config file is set to version {_config_version}. Updating to {self.version}")
+            self._log.info(f"The config file is set to version {_config_version}. Updating to {self.version}")
 
-                _modified_config_template.config_values["TEXTSCRIPT"][0] = self.version
+            _modified_config_template.config_values["TEXTSCRIPT"][0] = self.version
 
-                _config_outdated = True
+            _config_outdated = True
 
         # If config file is outdated, update config file
         if _config_outdated is True:
@@ -171,6 +181,8 @@ class Setup:
 
         :param _config_template:
         """
+
+        self._log.debug("ConfigUtils: Starting _create_config.")
 
         # Create directory if doesn't exist
         if not glib.check_directory(self._config_dir):
@@ -227,6 +239,10 @@ class Setup:
         Extends _shortcut_list and _file_dir_list from the _shortcuts and _file_dirs lists.
         """
 
+        self._log.debug("ConfigUtils: Starting shortcut_setup.")
+
+        # Todo: Check if exception handling is required here.
+
         _shortcut_list = []
         _file_dir_list = []
 
@@ -273,7 +289,7 @@ class Setup:
 
                     self._log.debug("Successfully extended shortcut_list")
 
-                # append file_dirs to file_dir_list
+                # extend file_dirs to file_dir_list
                 _file_dir_list.extend(_file_dirs)
 
                 self._log.debug("Successfully appended shortcuts and file_dirs.")
@@ -288,12 +304,12 @@ class Setup:
         :param _shortcut_list:
         """
 
+        self._log.debug("ConfigUtils: Starting new_shortcut_check.")
+
         # Todo: Split this into smaller functions
 
         self._log.info("Reading lastshortcuts.")
         self._read_shortcuts
-
-        self._log.info("Starting new shortcut check.")
 
         # Reads the shortcuts from the shortcuts.ini file
         self._read_shortcuts()
@@ -358,7 +374,7 @@ class Setup:
 
             self._replace_last_shortcuts(_shortcut_list)
 
-        self._log.info("Completed new shortcut check.")
+        self._log.debug("Completed new shortcut check.")
 
     def _read_shortcuts(self):
         """
@@ -404,20 +420,27 @@ class Setup:
                 self._config.write(configfile)
 
         except configparser.Error:
-            self._log.exception("Failed to update shortcut history file due to configparser Error.")
+            self._log.exception("Failed to update lastshortcuts due to configparser Error.")
+            raise
+
+        except configparser.NoSectionError:
+
+            self._log.exception("Failed to update lastshortcuts due to NoSectionError.")
             raise
 
         except Exception:
-            self._log.exception("Failed to update shortcut history file due to unexpected Error.")
+            self._log.exception("Failed to update lastshortcuts due to unexpected Error.")
             raise
 
         else:
-            self._log.debug("Successfully updated shortcut history file with updated stats.")
+            self._log.debug("Successfully updated lastshortcuts with updated stats.")
 
     def get_stats(self):
         """
         Gets the current usage stats from the config file.
         """
+
+        self._log.debug("ConfigUtils: Starting get_stats.")
 
         try:
 
@@ -441,6 +464,8 @@ class Setup:
         """
         Prints the usage stats to console.
         """
+
+        self._log.debug("ConfigUtils: Starting _calculate_stats.")
 
         try:
 
@@ -475,58 +500,112 @@ to correct the error."""
 
             print(_stats)
 
-            self._log.debug(_stats)
+            self._log.info(_stats)
 
     def _repair_history(self):
         """
         Repairs history section if an invalid value is found there.
         """
 
-        # Open the config file
-        self._config.read(self._config_file_dir)
+        self._log.debug("ConfigUtils: Starting _repair_history.")
 
-        # Reset HISTORY values to 0
-        self._config.set('HISTORY', 'shortcutsused', "0")
-        self._config.set('HISTORY', 'shortcutchars', "0")
-        self._config.set('HISTORY', 'textblockchars', "0")
+        try:
 
-        # Write to the config file
-        with open(self._config_file_dir, 'w') as configfile:
-            self._config.write(configfile)
+            # Open the config file
+            self._config.read(self._config_file_dir)
 
-        # Run get_stats again after repair
-        self.get_stats()
+            # Reset HISTORY values to 0
+            self._config.set('HISTORY', 'shortcutsused', "0")
+            self._config.set('HISTORY', 'shortcutchars', "0")
+            self._config.set('HISTORY', 'textblockchars', "0")
+
+        except configparser.Error:
+            self._log.exception("Failed to read shortcut history due to configparser Error.")
+            raise
+
+        except configparser.NoSectionError:
+
+            self._log.exception("Failed to read shortcut history due to NoSectionError.")
+            raise
+
+        except Exception:
+            self._log.exception("Failed to read shortcut history due to unexpected Error.")
+            raise
+
+        else:
+            self._log.debug("Successfully read shortcut history.")
+
+        try:
+
+            # Write to the config file
+            with open(self._config_file_dir, 'w') as configfile:
+                self._config.write(configfile)
+                self._log.debug("Successfully repaired HISTORY.")
+
+        except OSError:
+
+            self._log.exception("Failed to repair history due to OSError.")
+
+        else:
+
+            # Run get_stats again after repair
+            self.get_stats()
 
     def find_directories(self):
         """
         Finds the directories in the config file
         """
 
-        self._config.read(self._config_file_dir)
-        _default_directory = self._config['DIRECTORIES']['defaultdirectory']
-        _local_directory = self._config['DIRECTORIES']['localdirectory']
-        _remote_directory = self._config['DIRECTORIES']['remotedirectory']
+        self._log.debug("ConfigUtils: Starting find_directories.")
 
-        if _default_directory == "None" or _default_directory == "":
-            _default_directory = None
-            self._log.debug("Default directory is set to None.")
-        else:
-            self._log.debug(f"Default directory is set to {_default_directory}")
-        if _local_directory == "None" or _local_directory == "":
-            _local_directory = None
-            self._log.debug("Local directory is set to None.")
-        else:
-            self._log.debug(f"Local directory is set to {_local_directory}")
-        if _remote_directory == "None" or _remote_directory == "":
-            _remote_directory = None
-            self._log.debug("Remote directory is set to None.")
-        else:
-            self._log.debug(f"Remote directory is set to {_remote_directory}")
+        try:
 
-        _directories = [_default_directory, _local_directory, _remote_directory]
-        self._log.debug(f"Retrieved the following directories from config: {_directories}")
+            self._config.read(self._config_file_dir)
 
-        return _directories
+        except configparser.Error:
+
+            self._log.exception("Failed to read directories due to configparser Error.")
+            raise
+
+        except configparser.NoSectionError:
+
+            self._log.exception("Failed to read directories due to NoSectionError.")
+            raise
+
+        except Exception:
+
+            self._log.exception("Failed to read directories due to unexpected Error.")
+            raise
+
+        else:
+
+            # Assign the default, local, and remote directory with value from config file
+            _default_directory = self._config['DIRECTORIES']['defaultdirectory']
+            _local_directory = self._config['DIRECTORIES']['localdirectory']
+            _remote_directory = self._config['DIRECTORIES']['remotedirectory']
+
+            if _default_directory == "None" or _default_directory == "":
+                _default_directory = None
+                self._log.debug("Default directory is set to None.")
+            else:
+                self._log.debug(f"Default directory is set to {_default_directory}")
+
+            if _local_directory == "None" or _local_directory == "":
+                _local_directory = None
+                self._log.debug("Local directory is set to None.")
+            else:
+                self._log.debug(f"Local directory is set to {_local_directory}")
+
+            if _remote_directory == "None" or _remote_directory == "":
+                _remote_directory = None
+                self._log.debug("Remote directory is set to None.")
+            else:
+                self._log.debug(f"Remote directory is set to {_remote_directory}")
+
+            _directories = [_default_directory, _local_directory, _remote_directory]
+            self._log.debug(f"Retrieved the following directories from config: {_directories}")
+
+            return _directories
 
     @staticmethod
     def _append_directories(_directory):
@@ -591,9 +670,15 @@ class Update:
         except configparser.Error:
             self._log.exception("Failed to update config file due to configparser Error.")
             raise
+
+        except OSError:
+            self._log.exception("Failed to update config file due to OSError.")
+            raise
+
         except Exception:
             self._log.exception("Failed to update config file due to unexpected Error.")
             raise
+
         else:
             self._log.debug("Successfully updated config file with updated stats.")
 

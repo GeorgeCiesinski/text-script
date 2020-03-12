@@ -1,4 +1,5 @@
 import sys
+from chardet import detect
 from pynput.keyboard import Controller, Key, Listener
 import pyperclip
 from Logger import Logger
@@ -14,47 +15,57 @@ class WordCatcher:
         # Creates instance wide log object
         self._log = _log.log
 
+        self._log.debug("TextController: Starting WordCatcher initialization.")
+
         # Creates instance wide Setup object
         self._setup = Setup(_log, _version)
+
+        self._log.debug("TextController: Successfully initialized new Setup object in WordCatcher.")
+        # Todo: Will passing the setup object work to save from new object being initialized?
 
         # Creates instance wide Update object
         self._update = Update(_log)
 
+        self._log.debug("TextController: Successfully initialized new Update object in WordCatcher.")
+        # Todo: Will passing the update object work to save from new object being initialized?
+
         # Creates instance wide keyboard variable
         self._keyboard = _keyboard
 
+        # Delimiter
+        self._shortcut_delimiter = "#"
+        self._command_delimiter = "!"
+
         # List of Text-Script commands
         self._commands = [
-            "#help",
-            "#exit",
-            "#reload"
+            "!help",
+            "!exit",
+            "!reload"
         ]
 
         # Creates instance wide shortcut_list & file_dir_list
         self._shortcut_list = _shortcut_list
         self._file_dir_list = _file_dir_list
 
-        # Temporary word variable
-        self._word_in_progress = False
-        self._current_word = ""
+        # Temporary word variables
+        self._word_in_progress = False  # There is a word currently being built
+        self._current_word = ""  # The current word
+        self._is_command = False  # Is this word a command
 
         # Current key and KeyData
         self._key = None
         self._keydata = None
 
-        # Delimiter
-        self._delimiter = "#"
-
         # Textblock Variable
         self._textblock = ""
 
-        self._log.debug("WordCatcher initialized.")
+        self._log.debug("WordCatcher initialized successfully.")
 
         # TODO: Look into self.listener.join and why this is even working. Might need to be changed.
         # Start self.listener
         with Listener(on_press=self.word_builder) as self._listener:
             self._listener.join()
-            self._log.debug("Listener started.")
+            self._log.debug("TextController: Listener started.")
 
     def word_builder(self, key):
         """
@@ -73,6 +84,9 @@ class WordCatcher:
 
         # Converts to raw value string
         self._keycode_to_keydata()
+
+        # Prints keys to console -- debugging
+        # print(self._keydata)
 
         # Checks delimiter
         self._check_delimiter()
@@ -97,25 +111,26 @@ class WordCatcher:
 
     def _check_delimiter(self):
         """
-        Checks if delimiter has been entered. Either starts self.current_word or restarts it.
+        Checks if shortcut or command delimiter has been entered. Either starts self.current_word or restarts it.
         """
 
-        # If delimiter is entered but there is a word in progress, clear the word and start a new word
-        if self._keydata == self._delimiter and self._word_in_progress is True:
+        if self._keydata == self._shortcut_delimiter or self._keydata == self._command_delimiter:
+
+            self._is_command = False  # Words are not commands by default
+
+            if self._word_in_progress is True:
+                self._log.debug("TextController: Delimiter detected while word in progress. Restarting word.")
+            else:
+                self._log.debug("TextController: Delimiter detected. Starting new word.")
 
             self._clear_current_word()
 
             # Sets word_in_progress to True as new word has been started
             self._word_in_progress = True
 
-            self._log.debug("Delimiter detected while word in progress. Restarting word.")
-
-        # If delimiter is entered and there is no word in progress, start a new word
-        elif self._keydata == self._delimiter and self._word_in_progress is False:
-
-            self._word_in_progress = True
-
-            self._log.debug("Delimiter detected. Starting new word.")
+            # Sets _is_command to true if _command_delimiter is detected.
+            if self._keydata == self._command_delimiter:
+                self._is_command = True
 
     def _check_word_end(self):
         """
@@ -127,7 +142,7 @@ class WordCatcher:
             # Checks if there is a word in progress, clears it if true
             if self._word_in_progress is True:
 
-                self._log.debug(f"Word ended by {self._keydata}: {self._current_word}")
+                self._log.debug(f"TextController: Word ended by {self._keydata}: {self._current_word}")
 
                 self._check_shortcut()
 
@@ -144,7 +159,7 @@ class WordCatcher:
             # Removes last letter from word
             self._current_word = self._current_word[:-1]
 
-            self._log.debug("Key.backspace entered.")
+            self._log.debug("TextController: Key.backspace detected.")
 
     def _append_letter(self):
         """
@@ -156,12 +171,14 @@ class WordCatcher:
             # Adds letter to the word
             self._current_word += self._keydata
 
-            self._log.debug(f"Appended {self._keydata} to the current word.")
+            self._log.debug(f"TextController: Appended {self._keydata} to the current word.")
 
     def _check_shortcut(self):
         """
         Checks list of shortcuts for a match. Sets text block if match is found.
         """
+
+        self._log.debug(f"TextController: Checking the shortcut {self._current_word}.")
 
         # If shortcut is in command list, determine which command was used
         if self._current_word in self._commands:
@@ -177,11 +194,11 @@ class WordCatcher:
             # Passes the above index to self.read_textblock
             self._find_file_directory(shortcut_index)
 
-            # Deletes the typed out shortcut
-            self._keyboard.delete_shortcut(self._current_word)
-
             # Update history
             self._update.update_history(self._current_word, self._textblock)
+
+            # Deletes the typed out shortcut
+            self._keyboard.delete_shortcut(self._current_word)
 
             # Passes the textbox to the keyboard
             self._keyboard.paste_block(self._textblock)
@@ -189,18 +206,18 @@ class WordCatcher:
     def _determine_command(self):
 
         # Exit program if user typed in #exit
-        if self._current_word == "#exit":
+        if self._current_word == "!exit":
 
             self._log.debug("The user has typed #exit. Exiting program.")
             self._exit_program()
 
         # Paste help menu if user typed in #help
-        elif self._current_word == "#help":
+        if self._current_word == "!help":
 
             self._log.debug("The user has typed in #help. Pasting help menu.")
             self._help_menu()
 
-        elif self._current_word == "#reload":
+        if self._current_word == "!reload":
 
             self._log.debug("The user has typed in #reload. Reloading shortcut_list and file_dir_list.")
             self._reload_shortcuts()
@@ -220,6 +237,8 @@ class WordCatcher:
         self._setup.new_shortcut_check(self._shortcut_list)
 
         reload_text = "Shortcuts Reloaded."
+
+        self._log.info("TextController: Shortcuts Reloaded.")
 
         self._keyboard.delete_shortcut(self._current_word)
 
@@ -253,17 +272,12 @@ How to make a shortcut:
 
 Note: Other formats may still work, but this is designed to read unicode text files.
 
-To reload shortcuts, type: #reload
-To exit Text-Script, type: #exit"""
+To reload shortcuts, type: !reload
+To exit Text-Script, type: !exit"""
 
         self._keyboard.delete_shortcut(self._current_word)
 
         self._keyboard.paste_block(_help_text)
-
-    def update_shortcuts(self):
-
-        # TODO: Create update_shortcuts method
-        pass
 
     def _find_file_directory(self, index):
         """
@@ -272,7 +286,7 @@ To exit Text-Script, type: #exit"""
 
         # Searches self.file_dir_list by index for the directory
         _textblock_directory = self._file_dir_list[index]
-        self._log.debug(f"Successfully found the textblock directory: {_textblock_directory}")
+        self._log.debug(f"TextController: Successfully found the textblock directory: {_textblock_directory}")
 
         # Reads the textblock file
         self._read_textblock(_textblock_directory)
@@ -282,41 +296,41 @@ To exit Text-Script, type: #exit"""
         Reads the file located in textblock_directory.
         """
 
-        #TODO: Guess file encoding
-
-        #TODO: Determine whether to end the program if exception, or output exception type to GUI
-
-        # Attempt to open file in UTF-16
+        # Chardet attempts to guess the file encoding
         try:
-            # Opens the textblock directory
-            with open(_textblock_directory, mode="r", encoding="UTF-16") as f:
+            _chardet_result = detect(open(_textblock_directory, "rb").read())
+            self._log.debug(f"TextController: Chardet encoding guess: {_chardet_result}")
 
-                # Assigns textblock content to the variable
-                self._textblock = f.read()
+            _encoding = _chardet_result['encoding']
+
+        except Exception:
+            self._log.debug("TextController: Failed to guess the encoding using Chardet.")
+            raise
+
         except FileNotFoundError:
-            self._log.exception("Unable to open textblock as the file is missing.")
-        except UnicodeDecodeError:
-            self._log.exception("Attempted to open file in UTF-16. Unsuccessful.")
+            self._log.debug("TextController: Textblock location cannot be found. Please check if the shortcut still exists.")
+            raise
+
         else:
-            self._log.debug("Successfully read the textblock using UTF-16.")
-            return
 
-        # Attempt to open file in UTF-8
-        try:
-            # Opens the textblock directory
-            with open(_textblock_directory, mode="r", encoding="UTF-8") as f:
+            self._log.debug("TextController: Successfully guessed the textblock encoding.")
 
-                # Assigns textblock content to the variable
-                self._textblock = f.read()
-        except FileNotFoundError:
-            self._log.exception("Unable to open textblock as the file is missing.")
-        except UnicodeDecodeError:
-            self._log.exception("Attempted to open file in UTF-8. Unsuccessful.")
-        else:
-            self._log.debug("Successfully read the textblock using UTF-8.")
-            return
+            # Attempt to open file in UTF-16
+            try:
+                # Opens the textblock directory
+                with open(_textblock_directory, mode="r", encoding=_encoding) as t:
 
-        # Todo: Ansi appears to work, but loads in UTF-8 on this computer. Is a third check required, or should error be raised?
+                    # Assigns textblock content to the variable
+                    self._textblock = t.read()
+            except FileNotFoundError:
+                self._log.exception("Unable to open textblock as the file is missing.")
+                raise
+            except UnicodeDecodeError:
+                self._log.exception(f"Failed to open file in {_encoding} encoding. Try changing the textblock encoding to Unicode.")
+                raise
+            else:
+                self._log.debug(f"Successfully opened the file in {_encoding} encoding.")
+                return
 
     def _clear_current_word(self):
         """
@@ -326,21 +340,22 @@ To exit Text-Script, type: #exit"""
         self._current_word = ""
         self._word_in_progress = False
 
-        self._log.debug("Cleared current word & self.current_word changed to False.")
+        self._log.debug("TextController: Cleared current word & self.current_word changed to False.")
 
 
 class KeyboardEmulator:
 
-    def __init__(self, log):
+    def __init__(self, _log):
 
-        self.log = log.log
+        self._log = _log.log
 
-        self.log.debug("KeyboardEmulator initialized.")
+        self._log.debug("TextController: Starting KeyboardEmulator initialization.")
 
         # Initializes controller
         self._controller = Controller()
 
-        self.log.debug("Controller initialized.")
+        self._log.debug("Controller initialized.")
+        self._log.debug("KeyboardEmulator initialized successfully.")
 
     def delete_shortcut(self, current_word):
         """
@@ -352,13 +367,13 @@ class KeyboardEmulator:
             for i in range(word_length + 1):
                 self._controller.press(Key.backspace)
                 self._controller.release(Key.backspace)
-        except:
-            self.log.exception(f"Failed to delete the shortcut.{current_word}")
+        except Exception:
+            self._log.exception(f"TextController: Failed to delete the shortcut.{current_word}")
             raise
         else:
-            self.log.debug(f"Successfully deleted the shortcut: {current_word}")
+            self._log.debug(f"TextController: Successfully deleted the shortcut: {current_word}")
 
-    def paste_block(self, textblock):
+    def paste_block(self, _textblock):
         """
         paste_block copies the textblock into the clipboard and pastes it using pyinput controller.
         """
@@ -367,7 +382,7 @@ class KeyboardEmulator:
 
         try:
 
-            pyperclip.copy(textblock)
+            pyperclip.copy(_textblock)
 
             # TODO: Look up Pyperclip documentation for OSX & Linux implementation
 
@@ -377,11 +392,14 @@ class KeyboardEmulator:
             self._controller.release(Key.ctrl_l)
             self._controller.release('v')
 
-        except:
-            self.log.exception(f"Failed to paste the textblock: {textblock}")
+        except Exception:
+
+            self._log.exception("TextController: Failed to paste the textblock.")
+            print("An error has occurred while pasting the textblock. Please see the logs for more detail.")
+            # Todo: What is the behavior if we do not raise this?
 
         else:
-            self.log.debug(f"Successfully pasted the textblock: {textblock}")
+            self._log.debug("TextController: Successfully pasted the textblock.")
 
 
 if __name__ == "__main__":

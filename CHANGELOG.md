@@ -7,10 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Planned Updates]
 - Check for duplicate shortcuts & handle
 - Ability to correct shortcut typos using arrow keys instead of just backspace
+- GUI support
+- OSX & Linux Support
 
-## [Unreleased]
+## [1.3.1] - 2020-03-12
+#Added
+- Implemented Continuous Integration 
+- Added command delimiter (!)
+- Added functions to predict the codec and decode textblocks with greater accuracy. This should
+resolve bugs encountered when using non unicode textblocks.
+- Added better compatibility check for textblock naming convention.
+#Changed
+- Updated logging to better capture errors which occur during textblock decoding
+- Moved commands from shortcut delimiter (#) to command delimiter (!)
 
-## [1.3.0] - TBA
+## [1.3.0] - 2020-02-21
 # Changed
 - Added reload function which adds shortcuts without restarting the program
 - Added mechanism to update config file and repair broken sections
