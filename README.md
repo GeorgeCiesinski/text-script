@@ -1,6 +1,6 @@
 # >text-script
 
-![Python Version](https://img.shields.io/badge/Python-3.8-blue)
+![Python Version](https://img.shields.io/badge/Python-3.7-blue)
 ![License Information](https://img.shields.io/github/license/GeorgeCiesinski/text-script)
 
 ![Build](https://api.travis-ci.com/GeorgeCiesinski/text-script.svg?branch=develop)
@@ -19,8 +19,11 @@ I came up with this idea when I discovered there were few quality open source ap
 - Pyperclip
 
 ## Prerequisites
-- Python 3.8
+- Python 3.7
 - Dependencies from requirements.txt
+
+## Python version notice
+Please be advised that I have decided to roll back to Python 3.7 as Pyinstaller, which we use to create executables, is not compatible with 3.8 yet. Once Pyinstaller supports 3.8, we will consider moving Text-Script back to this version as well. Sorry in advance if this causes any issues on your forks.
 
 ## Screenshots
 
@@ -87,6 +90,11 @@ At this time, the program is still in early development, so I recommend always d
 5. Create your shortcuts and textblocks in one of these directories as per the "Using Text-Script" section of this README (below).
 6. Click text-script.exe to run the program. You may need to click yes to allow the program to run.
 
+### Executable upgrade steps
+1. Follow steps 1-3 of Executable installation steps.
+2. Simply drag the text-script.exe file into your previous installation location, and click yes to overwrite the old file.
+3. Run the program. This should automatically upgrade the files and preserve your textblocks and stats.
+
 ### Source Code
 
 1. Download or clone the repository.
@@ -118,9 +126,10 @@ I recommend either using notepad to create the textblock. Any text editor that l
 2. Create a new text file in this location. The naming convention for the text file is #________.txt where the blank is the shortcut
 you will type to recall the textblock. 
 3. Open the file. Paste the actual text you want to replace the shortcut with into this file. 
-4. Although Text-Script should be able to read any common text encoding now, I recommend using Unicode if you experience any errors. Click save-as. Change the encoding to "Unicode". Click save, then click yes to overwrite the file. 
-5. If you are currently running Text-Script, typing #reload (version 1.3.0) or !reload (version 1.3.1 +) will automatically reload the shortcuts into the
+4. If you are currently running Text-Script, typing #reload (version 1.3.0) or !reload (version 1.3.1 +) will automatically reload the shortcuts into the
 program including any new shortcuts that have been added. 
+
+**Note:** Text-Script should be able to handle most common text encodings such as ANSI and Unicode. Despite this, you may encounter an error or crash under rare circumstances. If this happens, please open your textblock, and try saving it as "Unicode" or "UTF-16", overwriting the old file. 
 
 ### Pasting the textblocks
 
@@ -132,11 +141,11 @@ Text-Script works by copying the contents of your textblock into your clipboard,
 
 ### Textblocks are formatted wrong or cause Text-Script to crash
 
-Text-Script now attempts to determine the encoding of the Text-Block using the Chardet library. Despite this, encoding is notoriously difficult to determine with perfect accuracy. If the textblocks are formatted wrong when they are pasted, or if the program crashes, try changing the encoding to unicode. You can do this by opening the file in notepad or another text editor that lets you set the encoding, and overwriting the original file. 
+Text-Script now attempts to determine the encoding of the Text-Block using the Chardet library. Despite this, encoding is notoriously difficult to determine with complete accuracy. If the textblocks are formatted wrong when they are pasted, or if the program crashes, try changing the encoding to unicode or UTF-16. You can do this by opening the file in notepad or another text editor that lets you set the encoding, and overwriting the original file. 
 
 ### Shortcuts with numeric names are not pasting
 
-There is a known issue where typing shortcuts using the numpad doesn't work. We are trying to fix this bug, but for now, use the regular number keys to type it in and it should work. 
+There is a known issue where typing shortcuts using the numpad doesn't work. We are trying to fix this bug, but for now, use the regular number keys to type it in and it should work without issue.
 
 ## Credits
 - George Ciesinski (Lead Developer)
