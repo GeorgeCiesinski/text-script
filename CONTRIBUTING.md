@@ -24,4 +24,5 @@ Please note we have a code of conduct, please follow it in all your interactions
 2. Update the README.md with any required details such as new features, important new information, or screenshots if needed.
 3. Increase the text_script_version number in text-script.py and the README.md to the new version that this
    Pull Request would represent. The versioning scheme we use is [SemVer](http://semver.org/).
-4. You may create a merge request and wait for one of the developers to review the changes and sign off on them. Once this is done, we will merge it into develop.
+4. You may create a merge request and wait for one of the developers to review the changes and sign off on them. 
+5. Once this is done, we will merge it into develop.

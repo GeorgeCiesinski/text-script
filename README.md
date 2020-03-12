@@ -87,6 +87,11 @@ At this time, the program is still in early development, so I recommend always d
 5. Create your shortcuts and textblocks in one of these directories as per the "Using Text-Script" section of this README (below).
 6. Click text-script.exe to run the program. You may need to click yes to allow the program to run.
 
+### Executable upgrade steps
+1. Follow steps 1-3 of Executable installation steps.
+2. Simply drag the text-script.exe file into your previous installation location, and click yes to overwrite the old file.
+3. Run the program. This should automatically upgrade the files and preserve your textblocks and stats.
+
 ### Source Code
 
 1. Download or clone the repository.
