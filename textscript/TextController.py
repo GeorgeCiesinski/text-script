@@ -1,5 +1,5 @@
 import sys
-import chardet
+from chardet import detect
 from pynput.keyboard import Controller, Key, Listener
 import pyperclip
 from Logger import Logger
@@ -298,7 +298,7 @@ To exit Text-Script, type: !exit"""
 
         # Chardet attempts to guess the file encoding
         try:
-            _chardet_result = chardet.detect(open(_textblock_directory, "rb").read())
+            _chardet_result = detect(open(_textblock_directory, "rb").read())
             self._log.debug(f"TextController: Chardet encoding guess: {_chardet_result}")
 
             _encoding = _chardet_result['encoding']

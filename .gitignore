@@ -3,8 +3,6 @@ __pycache__/
 textscript/Logs/*
 !textscript/Logs/.logfolder.txt
 venv/
-build/*
-dist/*
 textscript/build/*
 textscript/dist/*
-app.spec
+textscript/text-script.spec
