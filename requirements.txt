@@ -3,3 +3,4 @@ pynput==1.6.8
 pyperclip==1.7.0
 python-xlib==0.26
 six==1.14.0
+pytest
