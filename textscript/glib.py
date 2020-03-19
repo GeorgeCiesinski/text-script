@@ -16,6 +16,7 @@ def get_version():
 
     return current_version
 
+
 def check_directory(directory):
     """
     Checks directory to see if folder exists

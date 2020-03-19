@@ -57,5 +57,8 @@ def main():
     w = WordCatcher(L, k, shortcut_list, file_dir_list, text_script_version)
 
 
-if __name__ == "main":
+print(__name__)
+
+
+if __name__ == "__main__":
     main()
