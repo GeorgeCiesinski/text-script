@@ -1,9 +1,20 @@
 """
-Contains non-class or miscellaneous methods
+Contains non-class or miscellaneous functions, and Text-Script information
 """
 
 import os
 
+
+def get_version():
+    """
+    Current app version / / Ensure this is correct during updates
+
+    :return current_version:
+    :rtype string:
+    """
+    current_version = "1.3.1"
+
+    return current_version
 
 def check_directory(directory):
     """

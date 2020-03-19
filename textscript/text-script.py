@@ -1,11 +1,13 @@
+import glib
 from ConfigUtils import Setup
 from Logger import Logger
 from TextController import WordCatcher, KeyboardEmulator
 
-if __name__ == "__main__":
 
-    # Current app version / / Ensure this is correct during updates
-    text_script_version = "1.3.1"
+def main():
+
+    # Get's the current version from glib. Make sure this is accurate before a public release.
+    text_script_version = glib.get_version()
 
     """
     Initialize Logger
@@ -53,3 +55,7 @@ if __name__ == "__main__":
 
     # Initialize WordCatcher
     w = WordCatcher(L, k, shortcut_list, file_dir_list, text_script_version)
+
+
+if __name__ == "main":
+    main()
