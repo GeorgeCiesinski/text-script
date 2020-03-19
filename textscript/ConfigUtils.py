@@ -69,7 +69,7 @@ class Setup:
 
     def config_exists(self):
         """
-        Checks if Config file exists.
+        Checks if Config file exists. Calls function to create a new config if doesn't exist.
         """
 
         self._log.debug("ConfigUtils: Starting config_exists.")
