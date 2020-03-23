@@ -38,6 +38,9 @@ were added or removed since the program was last ran. A GUI planned for a future
 ### Save Shortcuts & Textblocks
 text-script lets you create shortcuts which are used to quickly and easily recall textblocks later. I have outlined the process to create new textblocks in the "Using Text-Script" section of the README file.
 
+### Works on Windows, Linux, and OSX
+Support has been added for Linux and OSX as of version 1.3.2. Please make sure you download the correct binary for your system.
+
 ### Supports Local and Remote Shortcuts
 text-script allows both local and remote shortcuts to be used. Remote shortcuts can be created by a manager or supervisor and can be shared with the whole team on the network drive. While using these remote shortcuts, you can also create your own local shortcuts that only you can see and use.
 
@@ -135,7 +138,7 @@ program including any new shortcuts that have been added.
 
 While Text-Script is running, it can be minimized, and listens for the shortcuts you made when creating your textblocks. You can type these shortcuts into any text input field, such as an email, or a notepad, and Text-Script will replace your shortcuts with the textblock. 
 
-Text-Script works by copying the contents of your textblock into your clipboard, and then emulates a keyboard clicking CTRL+V. This works on Windows and Linux for the time being, but support for Mac is also planned, where the program will utilize CMD+V instead. As this program saves the text to the clipboard, it overwrites previous copied text, so ensure you paste any important text that is not backed up elsewhere. 
+Text-Script works by copying the contents of your textblock into your clipboard, and then emulates a keyboard entry of CTRL+V (Win & Linux) or CMD+V (Mac). As this program saves the text to the clipboard, it overwrites previous copied text, so ensure you paste any important text that is not backed up elsewhere. 
 
 ## Known Bugs
 
@@ -149,6 +152,7 @@ There is a known issue where typing shortcuts using the numpad doesn't work. We 
 
 ## Credits
 - George Ciesinski (Lead Developer)
+- [Daniel Kokoszka](https://github.com/nulldozer) (OSX Support)
 - [Jakub Wlodek](https://github.com/jwlodek) (Continuous Integration)
 
 ## License

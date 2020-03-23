@@ -7,8 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Planned Updates]
 - Check for duplicate shortcuts & handle
 - Ability to correct shortcut typos using arrow keys instead of just backspace
+- Fix clipboard overwrite issue
 - GUI support
-- OSX & Linux Support
+
+## [Unreleased] - Date TBA
+# Added
+- OSX is now supported. Text-script identifies your OS and uses the correct paste shortcut. 
+# Changed
+- Improved testing so that modules are correctly imported now. 
 
 ## [1.3.1] - 2020-03-12
 #Added
