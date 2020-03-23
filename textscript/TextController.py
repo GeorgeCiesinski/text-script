@@ -2,6 +2,7 @@ import sys
 import chardet
 from pynput.keyboard import Controller, Key, Listener
 import pyperclip
+import platform
 from Logger import Logger
 from ConfigUtils import Setup
 from ConfigUtils import Update
@@ -351,6 +352,14 @@ class KeyboardEmulator:
 
         self._log.debug("TextController: Starting KeyboardEmulator initialization.")
 
+        # Decide whether to use ctrl+v or cmd+v to paste, depending on the OS
+        if platform.system() == 'Darwin':
+            self._log.debug("TextController: Detected OS 'Darwin'. Using modifier key 'cmd'.")
+            self._modifier_key = Key.cmd
+        else:
+            self._log.debug("TextController: Using default modifier key 'ctrl_l'.")
+            self._modifier_key = Key.ctrl_l
+
         # Initializes controller
         self._controller = Controller()
 
@@ -387,9 +396,9 @@ class KeyboardEmulator:
             # TODO: Look up Pyperclip documentation for OSX & Linux implementation
 
             # TODO: Test pyperclip.paste()
-            self._controller.press(Key.ctrl_l)
+            self._controller.press(self._modifier_key)
             self._controller.press('v')
-            self._controller.release(Key.ctrl_l)
+            self._controller.release(self._modifier_key)
             self._controller.release('v')
 
         except Exception:
