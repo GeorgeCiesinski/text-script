@@ -386,7 +386,6 @@ class KeyboardEmulator:
 
             # TODO: Look up Pyperclip documentation for OSX & Linux implementation
 
-            # TODO: Test pyperclip.paste()
             self._controller.press(Key.ctrl_l)
             self._controller.press('v')
             self._controller.release(Key.ctrl_l)
