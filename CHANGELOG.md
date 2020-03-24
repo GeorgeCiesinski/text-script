@@ -7,11 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Planned Updates]
 - Check for duplicate shortcuts & handle
 - Ability to correct shortcut typos using arrow keys instead of just backspace
-- Fix clipboard overwrite issue
 - GUI support
 
 ## [Unreleased] - Date TBA
 # Added
+- Last clipboard item is preserved during textblock paste
 - OSX is now supported. Text-script identifies your OS and uses the correct paste shortcut. 
 # Changed
 - Improved testing so that modules are correctly imported now. 

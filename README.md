@@ -138,7 +138,7 @@ program including any new shortcuts that have been added.
 
 While Text-Script is running, it can be minimized, and listens for the shortcuts you made when creating your textblocks. You can type these shortcuts into any text input field, such as an email, or a notepad, and Text-Script will replace your shortcuts with the textblock. 
 
-Text-Script works by copying the contents of your textblock into your clipboard, and then emulates a keyboard entry of CTRL+V (Win & Linux) or CMD+V (Mac). As this program saves the text to the clipboard, it overwrites previous copied text, so ensure you paste any important text that is not backed up elsewhere. 
+Text-Script works by copying the contents of your textblock into your clipboard, and then emulates a keyboard entry of CTRL+V (Win & Linux) or CMD+V (Mac). Text-script 1.3.2 & later should no longer overwrite the last clipboard item with the textblock. 
 
 ## Known Bugs
 
