@@ -1,4 +1,5 @@
 import sys
+from time import sleep
 from chardet import detect
 from pynput.keyboard import Controller, Key, Listener
 import pyperclip
@@ -47,6 +48,9 @@ class WordCatcher:
         # Creates instance wide shortcut_list & file_dir_list
         self._shortcut_list = _shortcut_list
         self._file_dir_list = _file_dir_list
+
+        # Temporary clipboard variable
+        self._current_clipboard = ""
 
         # Temporary word variables
         self._word_in_progress = False  # There is a word currently being built
@@ -201,8 +205,50 @@ class WordCatcher:
             # Deletes the typed out shortcut
             self._keyboard.delete_shortcut(self._current_word)
 
+            # Saves current clipboard item
+            self._save_clipboard()
+
             # Passes the textbox to the keyboard
             self._keyboard.paste_block(self._textblock)
+
+            # Retrieves the saved clipboard item
+            self._retrieve_clipboard()
+
+    def _save_clipboard(self):
+        """
+        Saves the current item in the clipboard to be retrieved after textblock is pasted.
+        """
+
+        _clipboard_item = pyperclip.paste()
+
+        if len(_clipboard_item) > 0:
+
+            self._current_clipboard = _clipboard_item
+
+            self._log.info("Clipboard item saved.")
+
+        else:
+
+            self._log.info("Clipboard item not saved as there doesn't appear to be any item.")
+
+    def _retrieve_clipboard(self):
+        """
+        Returns the clipboard item after pasting textblock
+        """
+
+        if len(self._current_clipboard) > 0:
+
+            sleep(0.05)
+
+            pyperclip.copy(self._current_clipboard)
+
+            self._log.info("Clipboard item retrieved.")
+
+            self._current_clipboard = ""
+
+        else:
+
+            self._log.debug("Unable to retrieve clipboard item as there does not appear to be any item saved.")
 
     def _determine_command(self):
 
@@ -387,13 +433,9 @@ class KeyboardEmulator:
         paste_block copies the textblock into the clipboard and pastes it using pyinput controller.
         """
 
-        # TODO: Determine why pyperclip can't save clipboard item and paste back into clipboard later
-
         try:
 
             pyperclip.copy(_textblock)
-
-            # TODO: Look up Pyperclip documentation for OSX & Linux implementation
 
             self._controller.press(self._modifier_key)
             self._controller.press('v')
