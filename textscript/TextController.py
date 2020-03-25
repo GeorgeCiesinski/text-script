@@ -14,25 +14,32 @@ class WordCatcher:
 
     def __init__(self, _log, _keyboard, _shortcut_list, _file_dir_list, _version):
 
+        """
+        Setup Class Objects
+        """
         # Creates instance wide log object
         self._log = _log.log
-
         self._log.debug("TextController: Starting WordCatcher initialization.")
 
         # Creates instance wide Setup object
         self._setup = Setup(_log, _version)
-
         self._log.debug("TextController: Successfully initialized new Setup object in WordCatcher.")
         # Todo: Will passing the setup object work to save from new object being initialized?
 
         # Creates instance wide Update object
         self._update = Update(_log)
-
         self._log.debug("TextController: Successfully initialized new Update object in WordCatcher.")
         # Todo: Will passing the update object work to save from new object being initialized?
 
         # Creates instance wide keyboard variable
         self._keyboard = _keyboard
+
+        # Define listener in __init__
+        self._listener = None
+
+        """
+        Setup Text-Script Variables
+        """
 
         # Delimiter
         self._shortcut_delimiter = "#"
@@ -45,28 +52,35 @@ class WordCatcher:
             "!reload"
         ]
 
+        # Current key and KeyData
+        self._key = None
+        self._keydata = None
+
         # Creates instance wide shortcut_list & file_dir_list
         self._shortcut_list = _shortcut_list
         self._file_dir_list = _file_dir_list
-
-        # Temporary clipboard variable
-        self._current_clipboard = ""
 
         # Temporary word variables
         self._word_in_progress = False  # There is a word currently being built
         self._current_word = ""  # The current word
         self._is_command = False  # Is this word a command
 
-        # Current key and KeyData
-        self._key = None
-        self._keydata = None
+        # Temporary clipboard variable
+        self._current_clipboard = ""
 
         # Textblock Variable
         self._textblock = ""
 
         self._log.debug("WordCatcher initialized successfully.")
 
-        # TODO: Look into self.listener.join and why this is even working. Might need to be changed.
+        """
+        Start Listener
+        """
+
+        self.run_listener()
+
+    def run_listener(self):
+
         # Start self.listener
         with Listener(on_press=self.word_builder) as self._listener:
             self._listener.join()
