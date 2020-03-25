@@ -73,11 +73,11 @@ class WordCatcher:
 
         self._log.debug("WordCatcher initialized successfully.")
 
-        """
-        Start Listener
-        """
-
-        self.run_listener()
+        # """
+        # Start Listener
+        # """
+        #
+        # self.run_listener()
 
     def run_listener(self):
 
