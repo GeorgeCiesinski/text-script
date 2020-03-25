@@ -54,7 +54,7 @@ def main():
     k = KeyboardEmulator(L)
 
     # Initialize WordCatcher
-    w = WordCatcher(L, k, shortcut_list, file_dir_list, text_script_version)
+    w = WordCatcher(L, k, shortcut_list, file_dir_list, setup)
 
 
 print(__name__)

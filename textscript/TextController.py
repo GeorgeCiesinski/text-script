@@ -12,7 +12,7 @@ from ConfigUtils import Update
 # Class catches individual words as they are typed
 class WordCatcher:
 
-    def __init__(self, _log, _keyboard, _shortcut_list, _file_dir_list, _version):
+    def __init__(self, _log, _keyboard, _shortcut_list, _file_dir_list, _setup):
 
         """
         Setup Class Objects
@@ -22,8 +22,8 @@ class WordCatcher:
         self._log.debug("TextController: Starting WordCatcher initialization.")
 
         # Creates instance wide Setup object
-        self._setup = Setup(_log, _version)
-        self._log.debug("TextController: Successfully initialized new Setup object in WordCatcher.")
+        self._setup = _setup
+        self._log.debug("TextController: Successfully inherited Setup instance.")
         # Todo: Will passing the setup object work to save from new object being initialized?
 
         # Creates instance wide Update object
