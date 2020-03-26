@@ -71,7 +71,7 @@ class WordCatcher:
         # Textblock Variable
         self._textblock = ""
 
-        self._log.debug("WordCatcher initialized successfully.")
+        self._log.debug("TextController: WordCatcher initialized successfully.")
 
         # """
         # Start Listener

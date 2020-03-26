@@ -16,7 +16,6 @@ def main():
 
     # Initialize Logger
     L = Logger()
-
     L.log.debug(f"Program started from text-script. Version: {text_script_version}")
 
     # Output version
@@ -44,8 +43,6 @@ def main():
 
     # Load shortcuts and file directories
     shortcut_list, file_dir_list = setup.shortcut_setup(directories)
-
-    # Todo: Check if this log is required.
     L.log.debug("text-script retrieved shortcut_list, file_dir_list:")
 
     # Check if new shortcuts have been added
@@ -61,7 +58,7 @@ def main():
     Start Gui
     """
 
-    g = Gui(w)
+    g = Gui(w, L)
 
 
 if __name__ == "__main__":
