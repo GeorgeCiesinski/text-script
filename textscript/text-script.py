@@ -1,6 +1,5 @@
 import glib
-import threading
-import tkinter as tk
+from Gui import Gui
 from ConfigUtils import Setup
 from Logger import Logger
 from TextController import WordCatcher, KeyboardEmulator
@@ -59,35 +58,12 @@ def main():
     w = WordCatcher(L, k, shortcut_list, file_dir_list, setup)
 
     """
-    Setup GUI
+    Start Gui
     """
 
-    root = tk.Tk()
-
-    root.title("Text-Script")
-
-    root.geometry("400x400")
-
-    start_word_catcher(w)
-
-    root.mainloop()
-
-
-def start_thread(target):
-
-    stop_event.clear()
-    thread = threading.Thread(target=target)
-    thread.start()
-    return thread
-
-
-def start_word_catcher(w):
-
-    word_catcher_thread = start_thread(target=w.run_listener)
+    g = Gui(w)
 
 
 if __name__ == "__main__":
-
-    stop_event = threading.Event()
 
     main()
