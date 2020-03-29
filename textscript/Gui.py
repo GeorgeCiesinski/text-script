@@ -37,23 +37,10 @@ class Gui:
         self._log.debug("Starting root mainloop.")
         self._root.mainloop()
 
-    def _on_closing(self):
-        """
-        Closes program if user clicks x button on the window
-        """
-
-        self._log.debug("User clicked the x button. Quiting program.")
-        self.close_text_script()
-
-    def close_text_script(self):
-        """
-        Kills the GUI. Callable from outside Gui so Listener can kill it.
-        """
-
-        self._word_catcher.stop_listener()
-        self._root.destroy()
-
     def _setup_window(self):
+        """
+        Window Setup
+        """
 
         self._log.debug("Gui: Setting up root window.")
 
@@ -69,7 +56,49 @@ class Gui:
         # Window size
         self._root.geometry("400x400")
 
+        # Create menu
+        self._create_menu()
+
         self._log.debug("Root window setup successfully.")
+
+    def _create_menu(self):
+
+        # Create menu object
+        _menu = tk.Menu(self._root)
+        self._root.config(menu=_menu)
+        self._log.debug("Gui: Successfully created top menu.")
+
+        # File menu
+        _file_menu = tk.Menu(_menu, tearoff=False)
+        _menu.add_cascade(label="File", underline=0, menu=_file_menu)
+
+        # File Menu
+        _file_menu.add_command(
+            label="Quit",
+            underline=0,
+            command=self.close_text_script,
+            accelerator="Ctrl+Q"
+        )
+
+        # Help Menu
+        _help_menu = tk.Menu(_menu, tearoff=False)
+        _menu.add_cascade(label="Help", underline=0, menu=_help_menu)
+
+        # Help Menu
+        _help_menu.add_command(
+            label="Help",
+            underline=0,
+            command=self._do_nothing(),
+            accelerator="Ctrl+H"
+        )
+
+        # Shortcuts for menu options
+        self._root.bind_all("<Control-q>", self.close_text_script)
+        self._root.bind_all("<Control-h>", self._do_nothing())
+
+    def _do_nothing(self):
+
+        pass
 
     def _start_word_catcher(self):
         """
@@ -91,3 +120,20 @@ class Gui:
         thread = threading.Thread(target=target)
         thread.start()
         return thread
+
+    def _on_closing(self):
+        """
+        Closes program if user clicks x button on the window
+        """
+
+        self._log.debug("User clicked the x button. Quiting program.")
+        self.close_text_script()
+
+    def close_text_script(self, event=None):
+        """
+        Kills the GUI. Callable from outside Gui so Listener can kill it.
+        """
+
+        self._word_catcher.stop_listener()
+        self._log.debug("Gui: Listener stopped successfully. Destroying the window.")
+        self._root.destroy()

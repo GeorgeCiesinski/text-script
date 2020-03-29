@@ -60,6 +60,7 @@ def main():
 
     g = Gui(w, L)
 
+    # Close program if all threads are killed
     raise SystemExit
 
 
