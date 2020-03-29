@@ -51,8 +51,6 @@ text-script has several commands built in to streamline usage. I recommend using
 
 **!reload** - Typing this command after adding new textblocks loads them into text-script without having to restart the app.
 
-**!exit** - Typing this command exits the program.
-
 ### Saves your statistics
 As you use shortcuts, text-script saves the number of shortcuts you use, and the keystrokes you save. Each time the program starts, you are
 presented with an estimated amount of time you saved by using text-script.

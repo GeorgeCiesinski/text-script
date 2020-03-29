@@ -43,14 +43,14 @@ class Gui:
         """
 
         self._log.debug("User clicked the x button. Quiting program.")
-        self._word_catcher.stop_listener()
-        self.close_gui()
+        self.close_text_script()
 
-    def close_gui(self):
+    def close_text_script(self):
         """
         Kills the GUI. Callable from outside Gui so Listener can kill it.
         """
 
+        self._word_catcher.stop_listener()
         self._root.destroy()
 
     def _setup_window(self):

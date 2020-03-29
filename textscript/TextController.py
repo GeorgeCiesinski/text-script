@@ -5,7 +5,6 @@ from pynput.keyboard import Controller, Key, Listener
 import pyperclip
 import platform
 from Logger import Logger
-from ConfigUtils import Setup
 from ConfigUtils import Update
 
 
@@ -51,7 +50,6 @@ class WordCatcher:
         # List of Text-Script commands
         self._commands = [
             "!help",
-            "!exit",
             "!reload"
         ]
 
@@ -276,12 +274,6 @@ class WordCatcher:
 
     def _determine_command(self):
 
-        # Exit program if user typed in #exit
-        if self._current_word == "!exit":
-
-            self._log.debug("The user has typed #exit. Exiting program.")
-            self._exit_program()
-
         # Paste help menu if user typed in #help
         if self._current_word == "!help":
 
@@ -315,23 +307,6 @@ class WordCatcher:
 
         self._keyboard.paste_block(reload_text)
 
-    def _exit_program(self):
-        """
-        Exits the program.
-        """
-
-        exit_text = "Text-Script exited."
-
-        self._keyboard.delete_shortcut(self._current_word)
-
-        self._keyboard.paste_block(exit_text)
-
-        # Closes the TKinter window
-        self._gui.close_gui()
-
-        # Close the program with no error
-        sys.exit(0)
-
     def _help_menu(self):
 
         _help_text = """Help Menu:
@@ -347,7 +322,7 @@ How to make a shortcut:
 Note: Other formats may still work, but this is designed to read unicode text files.
 
 To reload shortcuts, type: !reload
-To exit Text-Script, type: !exit"""
+"""
 
         self._keyboard.delete_shortcut(self._current_word)
 
