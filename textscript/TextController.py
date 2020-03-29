@@ -21,6 +21,9 @@ class WordCatcher:
         self._log = _log.log
         self._log.debug("TextController: Starting WordCatcher initialization.")
 
+        # Gui variable
+        self._gui = None
+
         # Creates instance wide Setup object
         self._setup = _setup
         self._log.debug("TextController: Successfully inherited Setup instance.")
@@ -73,18 +76,25 @@ class WordCatcher:
 
         self._log.debug("TextController: WordCatcher initialized successfully.")
 
-        # """
-        # Start Listener
-        # """
-        #
-        # self.run_listener()
+    def set_gui(self, _gui):
+        """
+        Sets Gui instance so the window can be closed from TextController
+        """
 
-    def run_listener(self):
+        self._gui = _gui
+        self._log.debug("TextController: Successfully set Gui object.")
+
+    def run_listener(self, ):
 
         # Start self.listener
         with Listener(on_press=self.word_builder) as self._listener:
-            self._listener.join()
             self._log.debug("TextController: Listener started.")
+            self._listener.join()
+
+    def stop_listener(self):
+
+        self._log.debug("TextController: Stopping listener.")
+        self._listener.stop()
 
     def word_builder(self, key):
         """
@@ -315,6 +325,9 @@ class WordCatcher:
         self._keyboard.delete_shortcut(self._current_word)
 
         self._keyboard.paste_block(exit_text)
+
+        # Closes the TKinter window
+        self._gui.close_gui()
 
         # Close the program with no error
         sys.exit(0)

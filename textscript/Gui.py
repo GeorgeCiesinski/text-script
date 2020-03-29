@@ -10,8 +10,11 @@ class Gui:
         self._log = _log.log
         self._log.debug("Gui: Starting Gui initialization.")
 
-        # Creates instance wide WordCatcher object
+        # Imports WordCatcher object initialized in text-script
         self._word_catcher = _word_catcher
+
+        # Sends the self object to TextController so the Tkinter window can be closed
+        self._word_catcher.set_gui(self)
 
         # Initialize root in __init__
         self._root = None
@@ -27,9 +30,28 @@ class Gui:
         self._start_word_catcher()
         self._log.debug("Gui: WordCatcher started successfully.")
 
+        # Close program if window is destroyed
+        self._root.protocol("WM_DELETE_WINDOW", self._on_closing)
+
         # Starts the window loop
         self._log.debug("Starting root mainloop.")
         self._root.mainloop()
+
+    def _on_closing(self):
+        """
+        Closes program if user clicks x button on the window
+        """
+
+        self._log.debug("User clicked the x button. Quiting program.")
+        self._word_catcher.stop_listener()
+        self.close_gui()
+
+    def close_gui(self):
+        """
+        Kills the GUI. Callable from outside Gui so Listener can kill it.
+        """
+
+        self._root.destroy()
 
     def _setup_window(self):
 
