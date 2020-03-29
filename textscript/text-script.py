@@ -60,6 +60,8 @@ def main():
 
     g = Gui(w, L)
 
+    raise SystemExit
+
 
 if __name__ == "__main__":
 

@@ -13,8 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 # Added
 - Last clipboard item is preserved during textblock paste
 - OSX is now supported. Text-script identifies your OS and uses the correct paste shortcut. 
+- A Gui has been added to text-script to replace the console window.
 # Changed
 - Improved testing so that modules are correctly imported now. 
+- Removed the !exit command, replaced this with simply closing the window.
 
 ## [1.3.1] - 2020-03-12
 #Added
