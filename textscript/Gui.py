@@ -1,3 +1,4 @@
+import glib
 import threading
 import webbrowser
 import tkinter as tk
@@ -20,8 +21,7 @@ class Gui:
         # Initialize root in __init__
         self._root = None
 
-        # Threading event
-        # Todo: More helpful comment
+        # Threading event: used for communication between threads
         self._stop_event = threading.Event()
 
         # Sets up the window layout
@@ -75,6 +75,10 @@ class Gui:
 
         # File Menu
         _file_menu.add_command(
+            label="Settings",
+            command=self._do_nothing,
+        )
+        _file_menu.add_command(
             label="Quit",
             underline=0,
             command=self.close_text_script,
@@ -89,7 +93,7 @@ class Gui:
         _help_menu.add_command(
             label="Help",
             underline=0,
-            command=self._do_nothing,
+            command=self._open_help,
             accelerator="Ctrl+H"
         )
         _help_menu.add_command(
@@ -101,39 +105,63 @@ class Gui:
         self._root.bind_all("<Control-q>", self.close_text_script)
         self._root.bind_all("<Control-h>", self._do_nothing())
 
+    def _open_settings(self):
+        """
+        Opens a window with the available settings. Alters the config file.
+        """
+
+        pass
+
+    def _open_help(self):
+        """
+        Opens a window with the Text-Script Instructions
+        """
+
+        # Help text
+        _help_text = glib.help_text()
+
+        # Creates a new window
+        self._help_window = tk.Tk()
+
+        # Window Setup
+        self._help_window.title("Text-Script: Help")
+        self._help_window.iconbitmap(default='../assets/textscript.ico')  # Sets the window corner icon
+
+        # Labels
+        _help_label = tk.Label(
+            self._help_window,
+            justify="left",
+            text=_help_text,
+        )
+
+        # Packs labels into window
+        _help_label.grid(row=0, column=0, sticky="w", padx=4, pady=2)
+
     def _open_documentation(self):
         """
         Shows the user the link to the documentation and offers to open this in browser. Selecting no closes the window.
         """
 
         # Repository URL
-        self._documentation_url = "https://github.com/GeorgeCiesinski/text-script"
+        self._documentation_url = """You can find the documentation at the below link: 
+        
+https://github.com/GeorgeCiesinski/text-script
+
+"""
 
         # Creates a new window
         self._doc_window = tk.Tk()
 
         # Window setup
-        self._doc_window.title("Documentation")
+        self._doc_window.title("Text-Script: Documentation")
         self._doc_window.iconbitmap(default='../assets/textscript.ico')  # Sets the window corner icon
-        self._doc_window.geometry("370x120")
+        self._doc_window.geometry("310x130")
 
         # Create Labels
-        _info_label = tk.Label(
-            self._doc_window,
-            text="You can find the most up to date documentation at the below link:",
-        )
         _link_label = tk.Label(
             self._doc_window,
+            justify="left",
             text=self._documentation_url
-        )
-        # Empty elements to occupy grid layout
-        _empty = tk.Label(
-            self._doc_window,
-            text=""
-        )
-        _empty_2 = tk.Label(
-            self._doc_window,
-            text=""
         )
 
         # Create Buttons
@@ -148,12 +176,9 @@ class Gui:
 
         # Packs widgets into window
         # Labels
-        _info_label.grid(row=1, column=0, columnspan=3)
-        _empty.grid(row=2, column=0, columnspan=3)
-        _link_label.grid(row=3, column=0, columnspan=3)
-        _empty_2.grid(row=4, column=0, columnspan=3)
+        _link_label.grid(row=1, column=0, padx=4, pady=2)
         # Buttons
-        _open_link.grid(row=5, column=1)
+        _open_link.grid(row=2, column=0)
 
     def _open_link(self):
         """
@@ -174,6 +199,9 @@ class Gui:
         self._doc_window.destroy()
 
     def _do_nothing(self):
+        """
+        Temporary placeholder function. To be removed once GUI elements are complete.
+        """
 
         pass
 
@@ -208,7 +236,7 @@ class Gui:
 
     def close_text_script(self, event=None):
         """
-        Kills the GUI. Callable from outside Gui so Listener can kill it.
+        Kills the GUI. Can be called from outside Gui so Listener can kill it.
         """
 
         self._word_catcher.stop_listener()
