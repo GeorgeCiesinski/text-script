@@ -76,7 +76,7 @@ class Gui:
         # File Menu
         _file_menu.add_command(
             label="Settings",
-            command=self._do_nothing,
+            command=self._open_settings
         )
         _file_menu.add_command(
             label="Quit",
@@ -91,10 +91,8 @@ class Gui:
 
         # Help Menu
         _help_menu.add_command(
-            label="Help",
-            underline=0,
-            command=self._open_help,
-            accelerator="Ctrl+H"
+            label="How to Use",
+            command=self._open_help
         )
         _help_menu.add_command(
             label="Documentation",
@@ -110,7 +108,12 @@ class Gui:
         Opens a window with the available settings. Alters the config file.
         """
 
-        pass
+        # Creates a new window
+        self._settings_window = tk.Tk()
+
+        # Window Setup
+        self._settings_window.title("Settings")
+        self._settings_window.iconbitmap(default='../assets/textscript.ico')  # Sets the window corner icon
 
     def _open_help(self):
         """
@@ -124,7 +127,7 @@ class Gui:
         self._help_window = tk.Tk()
 
         # Window Setup
-        self._help_window.title("Text-Script: Help")
+        self._help_window.title("How to use Text-Script")
         self._help_window.iconbitmap(default='../assets/textscript.ico')  # Sets the window corner icon
 
         # Labels
@@ -153,7 +156,7 @@ https://github.com/GeorgeCiesinski/text-script
         self._doc_window = tk.Tk()
 
         # Window setup
-        self._doc_window.title("Text-Script: Documentation")
+        self._doc_window.title("Text-Script Documentation")
         self._doc_window.iconbitmap(default='../assets/textscript.ico')  # Sets the window corner icon
         self._doc_window.geometry("310x130")
 
