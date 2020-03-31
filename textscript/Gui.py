@@ -146,9 +146,10 @@ class Gui:
         """
 
         # Repository URL
-        self._documentation_url = """You can find the documentation at the below link: 
-        
-https://github.com/GeorgeCiesinski/text-script
+        self._documentation_url = "https://github.com/GeorgeCiesinski/text-script"
+        _documentation_message = f"""You can find the documentation at the below link: 
+
+{self._documentation_url}
 
 """
 
@@ -164,7 +165,7 @@ https://github.com/GeorgeCiesinski/text-script
         _link_label = tk.Label(
             self._doc_window,
             justify="left",
-            text=self._documentation_url
+            text=_documentation_message
         )
 
         # Create Buttons
