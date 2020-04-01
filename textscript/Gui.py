@@ -71,6 +71,10 @@ class Gui:
 
         self._log.debug("Root window setup successfully.")
 
+    """
+    Menu and Menu Widgets
+    """
+
     def _create_menu(self):
 
         # Create menu object
@@ -285,7 +289,7 @@ class Gui:
 
     def _enable_default(self):
         """
-        Sets the default directory
+        Sets the default directory in settings menu
         """
         try:
             self._default_sv.set("./textblocks/")
@@ -299,7 +303,7 @@ class Gui:
 
     def _disable_default(self):
         """
-        Disables the default directory
+        Disables the default directory in settings menu
         """
         try:
             self._default_sv.set("Not Set")
@@ -312,7 +316,7 @@ class Gui:
 
     def _set_local(self):
         """
-        Sets local directory
+        Sets local directory in settings menu
         """
 
         try:
@@ -327,7 +331,7 @@ class Gui:
 
     def _disable_local(self):
         """
-        Disables the local directory
+        Disables the local directory in settings menu
         """
 
         try:
@@ -342,7 +346,7 @@ class Gui:
 
     def _set_remote(self):
         """
-        Save remote directory
+        Save remote directory in settings menu
         """
 
         try:
@@ -357,7 +361,7 @@ class Gui:
 
     def _disable_remote(self):
         """
-        Disables the remote directory
+        Disables the remote directory in settings menu
         """
 
         try:
@@ -450,7 +454,7 @@ class Gui:
         # Repository URL
         self._documentation_url = "https://github.com/GeorgeCiesinski/text-script"
 
-        # Label for documentation window
+        # Label text for documentation window
         _documentation_message = f"""You can find the documentation at the below link: 
 
 {self._documentation_url}
@@ -498,14 +502,22 @@ class Gui:
         webbrowser.open(self._documentation_url, new=0, autoraise=True)
 
         # Calls function to close window
-        self._close_window()
+        self._close_doc_window()
 
-    def _close_window(self):
+    def _close_doc_window(self):
         """
         Destroys the documentation window.
         """
 
         self._doc_window.destroy()
+
+    def _update_stats_frame(self):
+
+        pass
+
+    """
+    Temporary Methods
+    """
 
     def _do_nothing(self):
         """
@@ -513,6 +525,10 @@ class Gui:
         """
 
         pass
+
+    """
+    WordCatcher and Threading
+    """
 
     def _start_word_catcher(self):
         """
