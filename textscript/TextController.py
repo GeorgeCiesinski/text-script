@@ -283,9 +283,9 @@ class WordCatcher:
         if self._current_word == "!reload":
 
             self._log.debug("The user has typed in #reload. Reloading shortcut_list and file_dir_list.")
-            self._reload_shortcuts()
+            self.reload_shortcuts()
 
-    def _reload_shortcuts(self):
+    def reload_shortcuts(self, called_externally=None):
         """
         Reloads the shortcuts without restarting the program.
         """
@@ -303,9 +303,11 @@ class WordCatcher:
 
         self._log.info("TextController: Shortcuts Reloaded.")
 
-        self._keyboard.delete_shortcut(self._current_word)
+        if called_externally is False:
 
-        self._keyboard.paste_block(reload_text)
+            self._keyboard.delete_shortcut(self._current_word)
+
+            self._keyboard.paste_block(reload_text)
 
     def _help_menu(self):
 

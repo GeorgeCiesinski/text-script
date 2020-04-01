@@ -2,6 +2,7 @@ import glib
 import threading
 import webbrowser
 import tkinter as tk
+from tkinter import filedialog, messagebox
 
 
 class Gui:
@@ -120,17 +121,17 @@ class Gui:
         _directories = self._setup.find_directories()
 
         # Sets the entry values
-        if _directories[0] is None:
+        if (_directories[0] is None) or (len(_directories[0]) == 0):
             _current_default = "Not Set"
         else:
             _current_default = _directories[0]
 
-        if _directories[1] is None:
+        if (_directories[1] is None) or (len(_directories[1]) == 0):
             _current_local = "Not Set"
         else:
             _current_local = _directories[1]
 
-        if _directories[2] is None:
+        if (_directories[2] is None) or (len(_directories[2]) == 0):
             _current_remote = "Not Set"
         else:
             _current_remote = _directories[2]
@@ -172,26 +173,38 @@ class Gui:
             justify="left",
             text="Remote Directory: ",
         )
+        # Save Result Label - shows the result of self._save_settings
+        self._save_result = tk.Label(
+            self._settings_window,
+            justify="left",
+            fg="red",
+            font=self._global_bold,
+            text=""
+        )
 
         # TK StringVars (required to change text of entry fields automatically)
+        # Entry
         self._default_sv = tk.StringVar(self._settings_window, value=_current_default)
         self._local_sv = tk.StringVar(self._settings_window, value=_current_local)
         self._remote_sv = tk.StringVar(self._settings_window, value=_current_remote)
 
         # Directory Entry Fields
-        _default_entry = tk.Entry(
+        self._default_entry = tk.Entry(
             self._settings_window,
             justify="left",
+            width=45,
             textvariable=self._default_sv,
         )
-        _local_entry = tk.Entry(
+        self._local_entry = tk.Entry(
             self._settings_window,
             justify="left",
+            width=45,
             textvariable=self._local_sv,
         )
-        _remote_entry = tk.Entry(
+        self._remote_entry = tk.Entry(
             self._settings_window,
             justify="left",
+            width=45,
             textvariable=self._remote_sv,
         )
 
@@ -240,7 +253,7 @@ class Gui:
             self._settings_window,
             width=11,
             text="Save",
-            command=self._do_nothing
+            command=self._save_settings
         )
 
         # Pack Widgets
@@ -250,9 +263,9 @@ class Gui:
         _local_label.grid(row=2, column=0, sticky="w", padx=4, pady=2)
         _remote_label.grid(row=3, column=0, sticky="w", padx=4, pady=2)
         # Entry Fields
-        _default_entry.grid(row=1, column=1, sticky="w", padx=4, pady=2)
-        _local_entry.grid(row=2, column=1, sticky="w", padx=4, pady=2)
-        _remote_entry.grid(row=3, column=1, sticky="w", padx=4, pady=2)
+        self._default_entry.grid(row=1, column=1, sticky="w", padx=4, pady=2)
+        self._local_entry.grid(row=2, column=1, sticky="w", padx=4, pady=2)
+        self._remote_entry.grid(row=3, column=1, sticky="w", padx=4, pady=2)
         # Buttons
         _btn_enable_default.grid(row=1, column=2, sticky="w", padx=4, pady=2)
         _btn_disable_default.grid(row=1, column=3, sticky="w", padx=4, pady=2)
@@ -261,7 +274,8 @@ class Gui:
         _btn_set_remote.grid(row=3, column=2, sticky="w", padx=4, pady=2)
         _btn_disable_remote.grid(row=3, column=3, sticky="w", padx=4, pady=2)
         _btn_save.grid(row=4, column=3, sticky="w", padx=4, pady=2)
-
+        # Save Result
+        self._save_result.grid(row=4, column=1, sticky="w", padx=4, pady=2)
 
     def _enable_default(self):
         """
@@ -269,6 +283,7 @@ class Gui:
         """
 
         self._default_sv.set("./textblocks/")
+        self._save_result['text'] = ""
 
     def _disable_default(self):
         """
@@ -276,9 +291,16 @@ class Gui:
         """
 
         self._default_sv.set("Not Set")
+        self._save_result['text'] = ""
 
     def _set_local(self):
-        pass
+        """
+        Sets local directory
+        """
+
+        # Uses askdirectory to set the directory
+        self._local_sv.set(filedialog.askdirectory())
+        self._save_result['text'] = ""
 
     def _disable_local(self):
         """
@@ -286,9 +308,16 @@ class Gui:
         """
 
         self._local_sv.set("Not Set")
+        self._save_result['text'] = ""
 
     def _set_remote(self):
-        pass
+        """
+        Save remote directory
+        """
+
+        # Uses askdirectory to set the directory
+        self._remote_sv.set(filedialog.askdirectory())
+        self._save_result['text'] = ""
 
     def _disable_remote(self):
         """
@@ -296,6 +325,53 @@ class Gui:
         """
 
         self._remote_sv.set("Not Set")
+        self._save_result['text'] = ""
+
+    def _save_settings(self):
+        """
+        Overwrites the directories in the config file
+        """
+
+        # Initialize Variables
+        _save_successful = False  # Variable that tracks if save was successful
+
+        # Gets the values from the entry fields
+        _default = self._default_entry.get()
+        _local = self._local_entry.get()
+        _remote = self._remote_entry.get()
+
+        _real_dirs = True  # Tracks if all directories are real before saving
+        _error_message = ""
+
+        # Sets values to None if Not Set
+        if _default == "Not Set":
+            _default = "None"
+        if _local == "Not Set":
+            _local = "None"
+        if _remote == "Not Set":
+            _remote = "None"
+
+        _directories = [_default, _local, _remote]  # List of directories
+
+        for _directory in _directories:  # For each directory
+
+            if _directory != "None":
+                _exists = glib.check_directory(_directory)  # Check if the directory exists
+
+                if _exists is False:  # If doesn't exist
+                    _real_dirs = False  # Set _real_dirs to false, else leave it True
+                    _error_message += f"Invalid directory: {_directory}\n"
+
+        if _real_dirs is False:
+            messagebox.showinfo("Save settings failed", _error_message)
+        else:
+            # Writes to config
+            print(f"Saving directories: {_default}, {_local}, {_remote}")
+            _save_successful = self._setup.save_settings(_directories)
+
+        if _save_successful is True:
+            self._word_catcher.reload_shortcuts(called_externally=True)
+            self._save_result['text'] = "Save Successful"
 
     def _open_help(self):
         """
