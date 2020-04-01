@@ -435,7 +435,8 @@ class Gui:
         _help_label = tk.Label(
             self._help_window,
             justify="left",
-            text=_help_text,
+            font=self._global_bold,
+            text=_help_text
         )
 
         # Packs labels into window
@@ -462,12 +463,13 @@ class Gui:
         # Window setup
         self._doc_window.title("Text-Script Documentation")
         self._doc_window.iconbitmap(default='../assets/textscript.ico')  # Sets the window corner icon
-        self._doc_window.geometry("310x130")
+        self._doc_window.geometry("340x130")
 
         # Create Labels
         _link_label = tk.Label(
             self._doc_window,
             justify="left",
+            font=self._global_bold,
             text=_documentation_message
         )
 

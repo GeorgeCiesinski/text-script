@@ -33,9 +33,9 @@ How to make a shortcut:
 2. Either navigate to an existing folder in Textblocks, or create a new one
 3. Create a new text file here. The naming convention is #____.txt where ____ is the shortcut you will type
 4. Open the text file and put your text block / signature / template in here
-5. Click "Save As" and select the same text file, but change encoding to unicode
 
-Note: Other formats may still work, but this is designed to read unicode text files.
+Note: As long as this is a .txt file, the encoding should not matter, however if you are getting formatting issues
+or crashes with that textblock, try changing the encoding to unicode.
 
 To see this at any time, type: !help into a text input field.
 To reload shortcuts, type: !reload
