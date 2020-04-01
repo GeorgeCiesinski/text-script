@@ -142,10 +142,12 @@ class Gui:
 
         # Creates a new window
         self._settings_window = tk.Tk()
+        self._log.debug("Gui: Settings window created successfully.")
 
         # Window Setup
         self._settings_window.title("Settings")
         self._settings_window.iconbitmap(default='../assets/textscript.ico')  # Sets the window corner icon
+        self._log.debug("Successfully setup settings window.")
 
         """
         Create Widgets
@@ -256,6 +258,8 @@ class Gui:
             command=self._save_settings
         )
 
+        self._log.debug("Successfully created widgets.")
+
         # Pack Widgets
         # Description Labels
         _directories_label.grid(row=0, column=0, sticky="w", padx=4, pady=2)
@@ -277,55 +281,93 @@ class Gui:
         # Save Result
         self._save_result.grid(row=4, column=1, sticky="w", padx=4, pady=2)
 
+        self._log.debug("Successfully placed widgets in the window.")
+
     def _enable_default(self):
         """
         Sets the default directory
         """
+        try:
+            self._default_sv.set("./textblocks/")
+            self._save_result['text'] = ""
+            self._settings_window.lift()
+        except Exception:
+            self._log.exception("Gui: An error has occurred in _enable_default")
+        else:
+            self._log.debug("Gui: Successfully enabled default directory")
 
-        self._default_sv.set("./textblocks/")
-        self._save_result['text'] = ""
 
     def _disable_default(self):
         """
         Disables the default directory
         """
-
-        self._default_sv.set("Not Set")
-        self._save_result['text'] = ""
+        try:
+            self._default_sv.set("Not Set")
+            self._save_result['text'] = ""
+            self._settings_window.lift()
+        except Exception:
+            self._log.exception("Gui: An error has occurred in _disable_default")
+        else:
+            self._log.debug("Gui: Successfully disabled default directory")
 
     def _set_local(self):
         """
         Sets local directory
         """
 
-        # Uses askdirectory to set the directory
-        self._local_sv.set(filedialog.askdirectory())
-        self._save_result['text'] = ""
+        try:
+            # Uses askdirectory to set the directory
+            self._local_sv.set(filedialog.askdirectory())  # Shows askdirectory dialog, saves result to StringVar
+            self._save_result['text'] = ""  # Deletes the save result text
+            self._settings_window.lift()  # Lifts the settings window to the front
+        except Exception:
+            self._log.exception("Gui: An error has occurred in _set_local")
+        else:
+            self._log.debug("Gui: Successfully set the local directory")
 
     def _disable_local(self):
         """
         Disables the local directory
         """
 
-        self._local_sv.set("Not Set")
-        self._save_result['text'] = ""
+        try:
+            self._local_sv.set("Not Set")
+            self._save_result['text'] = ""
+            self._settings_window.lift()
+        except Exception:
+            self._log.exception("Gui: An error has occurred in _disable_local")
+        else:
+            self._log.debug("Gui: Successfully disabled local directory")
+
 
     def _set_remote(self):
         """
         Save remote directory
         """
 
-        # Uses askdirectory to set the directory
-        self._remote_sv.set(filedialog.askdirectory())
-        self._save_result['text'] = ""
+        try:
+            # Uses askdirectory to set the directory
+            self._remote_sv.set(filedialog.askdirectory())
+            self._save_result['text'] = ""
+            self._settings_window.lift()
+        except Exception:
+            self._log.exception("Gui: An error has occurred in _set_remote")
+        else:
+            self._log.debug("Gui: Successfully set the remote directory")
 
     def _disable_remote(self):
         """
         Disables the remote directory
         """
 
-        self._remote_sv.set("Not Set")
-        self._save_result['text'] = ""
+        try:
+            self._remote_sv.set("Not Set")
+            self._save_result['text'] = ""
+            self._settings_window.lift()
+        except Exception:
+            self._log.exception("Gui: An error has occurred in _disable_remote")
+        else:
+            self._log.debug("Gui: Successfully disabled remote directory")
 
     def _save_settings(self):
         """
