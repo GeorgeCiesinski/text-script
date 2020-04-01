@@ -285,10 +285,12 @@ class WordCatcher:
             self._log.debug("The user has typed in #reload. Reloading shortcut_list and file_dir_list.")
             self.reload_shortcuts()
 
-    def reload_shortcuts(self, called_externally=None):
+    def reload_shortcuts(self, called_externally=False):
         """
         Reloads the shortcuts without restarting the program.
         """
+
+        self._log.debug(f"TextController: Starting reload_shortcuts. Called_externally set to {called_externally}")
 
         # Gets a list with default, local, and remote directories
         directories = self._setup.find_directories()
