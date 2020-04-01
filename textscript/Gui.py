@@ -412,8 +412,9 @@ class Gui:
             _save_successful = self._setup.save_settings(_directories)
 
         if _save_successful is True:
-            self._word_catcher.reload_shortcuts(called_externally=True)
+            self._log.debug("Successfully saved the settings.")
             self._save_result['text'] = "Save Successful"
+            self._word_catcher.reload_shortcuts(called_externally=True)
 
     def _open_help(self):
         """
