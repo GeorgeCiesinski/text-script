@@ -6,7 +6,7 @@ import tkinter as tk
 
 class Gui:
 
-    def __init__(self, _word_catcher, _log):
+    def __init__(self, _word_catcher, _log, _setup):
 
         # Creates instance wide log object
         self._log = _log.log
@@ -14,6 +14,9 @@ class Gui:
 
         # Imports WordCatcher object initialized in text-script
         self._word_catcher = _word_catcher
+
+        # Imports Setup object initialized in text-script
+        self._setup = _setup
 
         # Sends the self object to TextController so the Tkinter window can be closed
         self._word_catcher.set_gui(self)
@@ -23,6 +26,11 @@ class Gui:
 
         # Threading event: used for communication between threads
         self._stop_event = threading.Event()
+
+        # Global GUI settings
+        self._global_categories = "Helvetica 12 bold"
+        self._global_labels = "Helvetica"
+        self._global_bold = "Helvetica 10 bold"
 
         # Sets up the window layout
         self._setup_window()
@@ -108,12 +116,186 @@ class Gui:
         Opens a window with the available settings. Alters the config file.
         """
 
+        # Get the directories from config file
+        _directories = self._setup.find_directories()
+
+        # Sets the entry values
+        if _directories[0] is None:
+            _current_default = "Not Set"
+        else:
+            _current_default = _directories[0]
+
+        if _directories[1] is None:
+            _current_local = "Not Set"
+        else:
+            _current_local = _directories[1]
+
+        if _directories[2] is None:
+            _current_remote = "Not Set"
+        else:
+            _current_remote = _directories[2]
+
+        """
+        Create Window
+        """
+
         # Creates a new window
         self._settings_window = tk.Tk()
 
         # Window Setup
         self._settings_window.title("Settings")
         self._settings_window.iconbitmap(default='../assets/textscript.ico')  # Sets the window corner icon
+
+        """
+        Create Widgets
+        """
+
+        # Static Labels
+        _directories_label = tk.Label(
+            self._settings_window,
+            justify="left",
+            text="DIRECTORIES",
+            font=self._global_categories
+        )
+        _default_label = tk.Label(
+            self._settings_window,
+            justify="left",
+            text="Default Directory: "
+        )
+        _local_label = tk.Label(
+            self._settings_window,
+            justify="left",
+            text="Local Directory: "
+        )
+        _remote_label = tk.Label(
+            self._settings_window,
+            justify="left",
+            text="Remote Directory: ",
+        )
+
+        # TK StringVars (required to change text of entry fields automatically)
+        self._default_sv = tk.StringVar(self._settings_window, value=_current_default)
+        self._local_sv = tk.StringVar(self._settings_window, value=_current_local)
+        self._remote_sv = tk.StringVar(self._settings_window, value=_current_remote)
+
+        # Directory Entry Fields
+        _default_entry = tk.Entry(
+            self._settings_window,
+            justify="left",
+            textvariable=self._default_sv,
+        )
+        _local_entry = tk.Entry(
+            self._settings_window,
+            justify="left",
+            textvariable=self._local_sv,
+        )
+        _remote_entry = tk.Entry(
+            self._settings_window,
+            justify="left",
+            textvariable=self._remote_sv,
+        )
+
+        # Buttons
+        # Default
+        _btn_enable_default = tk.Button(
+            self._settings_window,
+            width=11,
+            text="Enable",
+            command=self._enable_default
+        )
+        _btn_disable_default = tk.Button(
+            self._settings_window,
+            width=11,
+            text="Disable",
+            command=self._disable_default
+        )
+        # Local
+        _btn_set_local = tk.Button(
+            self._settings_window,
+            width=11,
+            text="Set",
+            command=self._set_local
+        )
+        _btn_disable_local = tk.Button(
+            self._settings_window,
+            width=11,
+            text="Disable",
+            command=self._disable_local
+        )
+        # Remote
+        _btn_set_remote = tk.Button(
+            self._settings_window,
+            width=11,
+            text="Set",
+            command=self._set_remote
+        )
+        _btn_disable_remote = tk.Button(
+            self._settings_window,
+            width=11,
+            text="Disable",
+            command=self._disable_remote
+        )
+        # Save
+        _btn_save = tk.Button(
+            self._settings_window,
+            width=11,
+            text="Save",
+            command=self._do_nothing
+        )
+
+        # Pack Widgets
+        # Description Labels
+        _directories_label.grid(row=0, column=0, sticky="w", padx=4, pady=2)
+        _default_label.grid(row=1, column=0, sticky="w", padx=4, pady=2)
+        _local_label.grid(row=2, column=0, sticky="w", padx=4, pady=2)
+        _remote_label.grid(row=3, column=0, sticky="w", padx=4, pady=2)
+        # Entry Fields
+        _default_entry.grid(row=1, column=1, sticky="w", padx=4, pady=2)
+        _local_entry.grid(row=2, column=1, sticky="w", padx=4, pady=2)
+        _remote_entry.grid(row=3, column=1, sticky="w", padx=4, pady=2)
+        # Buttons
+        _btn_enable_default.grid(row=1, column=2, sticky="w", padx=4, pady=2)
+        _btn_disable_default.grid(row=1, column=3, sticky="w", padx=4, pady=2)
+        _btn_set_local.grid(row=2, column=2, sticky="w", padx=4, pady=2)
+        _btn_disable_local.grid(row=2, column=3, sticky="w", padx=4, pady=2)
+        _btn_set_remote.grid(row=3, column=2, sticky="w", padx=4, pady=2)
+        _btn_disable_remote.grid(row=3, column=3, sticky="w", padx=4, pady=2)
+        _btn_save.grid(row=4, column=3, sticky="w", padx=4, pady=2)
+
+
+    def _enable_default(self):
+        """
+        Sets the default directory
+        """
+
+        self._default_sv.set("./textblocks/")
+
+    def _disable_default(self):
+        """
+        Disables the default directory
+        """
+
+        self._default_sv.set("Not Set")
+
+    def _set_local(self):
+        pass
+
+    def _disable_local(self):
+        """
+        Disables the local directory
+        """
+
+        self._local_sv.set("Not Set")
+
+    def _set_remote(self):
+        pass
+
+    def _disable_remote(self):
+        """
+        Disables the remote directory
+        """
+
+        self._remote_sv.set("Not Set")
 
     def _open_help(self):
         """
@@ -147,6 +329,8 @@ class Gui:
 
         # Repository URL
         self._documentation_url = "https://github.com/GeorgeCiesinski/text-script"
+
+        # Label for documentation window
         _documentation_message = f"""You can find the documentation at the below link: 
 
 {self._documentation_url}
