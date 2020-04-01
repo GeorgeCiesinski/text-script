@@ -1,4 +1,4 @@
-import sys
+import glib
 from time import sleep
 from chardet import detect
 from pynput.keyboard import Controller, Key, Listener
@@ -283,9 +283,9 @@ class WordCatcher:
         if self._current_word == "!reload":
 
             self._log.debug("The user has typed in #reload. Reloading shortcut_list and file_dir_list.")
-            self._reload_shortcuts()
+            self.reload_shortcuts()
 
-    def _reload_shortcuts(self):
+    def reload_shortcuts(self, called_externally=None):
         """
         Reloads the shortcuts without restarting the program.
         """
@@ -303,26 +303,15 @@ class WordCatcher:
 
         self._log.info("TextController: Shortcuts Reloaded.")
 
-        self._keyboard.delete_shortcut(self._current_word)
+        if called_externally is False:
 
-        self._keyboard.paste_block(reload_text)
+            self._keyboard.delete_shortcut(self._current_word)
+
+            self._keyboard.paste_block(reload_text)
 
     def _help_menu(self):
 
-        _help_text = """Help Menu:
-
-How to make a shortcut:
-
-1. Navigate to the program folder, and go to the Textblocks folder
-2. Either navigate to an existing folder in Textblocks, or create a new one
-3. Create a new text file here. The naming convention is #____.txt where ____ is the shortcut you will type
-4. Open the text file and put your text block / signature / template in here
-5. Click "Save As" and select the same text file, but change encoding to unicode
-
-Note: Other formats may still work, but this is designed to read unicode text files.
-
-To reload shortcuts, type: !reload
-"""
+        _help_text = glib.help_text()
 
         self._keyboard.delete_shortcut(self._current_word)
 

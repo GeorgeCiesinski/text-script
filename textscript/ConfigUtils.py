@@ -620,6 +620,41 @@ to correct the error."""
 
         return _shortcuts, _file_dirs
 
+    def save_settings(self, _directories):
+        """
+        Overwrites the directories in config.ini
+        """
+
+        try:
+            self._log.debug("ConfigUtils: Attempting to save new directories.")
+
+            # Read config file for the shortcuts used, shortcut characters, and textblock characters
+            self._config.read(self._config_file_dir)
+
+            # Update the config categories with the updated data
+            self._config.set('DIRECTORIES', 'defaultdirectory', _directories[0])
+            self._config.set('DIRECTORIES', 'localdirectory', _directories[1])
+            self._config.set('DIRECTORIES', 'remotedirectory', _directories[2])
+
+            # Write to the config file
+            with open(self._config_file_dir, 'w') as configfile:
+                self._config.write(configfile)
+
+        except configparser.Error:
+            self._log.exception("Failed to update config file due to configparser Error.")
+            raise
+
+        except OSError:
+            self._log.exception("Failed to update config file due to OSError.")
+            raise
+
+        except Exception:
+            self._log.exception("Failed to update config file due to unexpected Error.")
+            raise
+
+        else:
+            self._log.debug("Successfully updated config file with updated stats.")
+            return True
 
 class Update:
 

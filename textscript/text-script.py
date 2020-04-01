@@ -58,8 +58,9 @@ def main():
     Start Gui
     """
 
-    g = Gui(w, L)
+    g = Gui(w, L, setup)
 
+    # Close program if all threads are killed
     raise SystemExit
 
 
