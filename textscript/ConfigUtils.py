@@ -458,9 +458,9 @@ class Setup:
         else:
 
             self._log.debug("Stats retrieved successfully.")
-            self._calculate_stats(_shortcuts_used, _shortcut_chars, _textblock_chars)
+            return _shortcuts_used, _shortcut_chars, _textblock_chars
 
-    def _calculate_stats(self, _shortcuts_used, _shortcut_chars, _textblock_chars):
+    def calculate_stats(self, _shortcuts_used, _shortcut_chars, _textblock_chars):
         """
         Prints the usage stats to console.
         """
@@ -490,17 +490,21 @@ to correct the error."""
 
             self._log.info("The stats were calculated successfully.")
 
-            _stats = f"""Your stats:
+            return _saved_keystrokes, _seconds_to_paste, _time_saved
 
-- Number of shortcuts used: {_shortcuts_used}
-- You typed a total of {_shortcut_chars} shortcut characters
-- Text-Script pasted a total of {_textblock_chars} characters
-- You saved {_saved_keystrokes} keystrokes
-- If it takes {_seconds_to_paste} seconds to copy & paste an item, you saved {_time_saved}"""
+    def print_stats(self, _shortcuts_used, _shortcut_chars, _textblock_chars, _saved_keystrokes, _seconds_to_paste, _time_saved):
 
-            print(_stats)
+        _stats = f"""Your stats:
 
-            self._log.info(_stats)
+        - Number of shortcuts used: {_shortcuts_used}
+        - You typed a total of {_shortcut_chars} shortcut characters
+        - Text-Script pasted a total of {_textblock_chars} characters
+        - You saved {_saved_keystrokes} keystrokes
+        - If it takes {_seconds_to_paste} seconds to copy & paste an item, you saved {_time_saved}"""
+
+        print(_stats)
+
+        self._log.info(_stats)
 
     def _repair_history(self):
         """
