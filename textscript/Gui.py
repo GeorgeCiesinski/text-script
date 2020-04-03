@@ -34,7 +34,7 @@ class Gui:
         self._global_bold = "Helvetica 10 bold"
 
         # Sets up the window layout
-        self._setup_window()
+        self._setup_root_window()
 
         # Starts WordCatcher listener
         self._start_word_catcher()
@@ -47,7 +47,7 @@ class Gui:
         self._log.debug("Starting root mainloop.")
         self._root.mainloop()
 
-    def _setup_window(self):
+    def _setup_root_window(self):
         """
         Window Setup
         """
@@ -68,6 +68,9 @@ class Gui:
 
         # Create menu
         self._create_menu()
+
+        # Create the stats frame
+        self._create_stats_frame()
 
         self._log.debug("Root window setup successfully.")
 
@@ -111,10 +114,63 @@ class Gui:
             label="Documentation",
             command=self._open_documentation
         )
+        _help_menu.add_command(
+            label="Report a Bug",
+            command=self._do_nothing
+        )
 
         # Shortcuts for menu options
         self._root.bind_all("<Control-q>", self.close_text_script)
         self._root.bind_all("<Control-h>", self._do_nothing())
+
+    def _create_stats_frame(self):
+        """
+        Creates a new frame for the stats labels
+        """
+
+        # Create the frame
+        _stats_frame = tk.Frame(self._root)
+
+        # Create Information Labels
+        _shortcuts_label = tk.Label(
+            _stats_frame,
+            text="Shortcuts Used: "
+        )
+        _characters_typed = tk.Label(
+            _stats_frame,
+            text="Shortcut characters typed: "
+        )
+        _characters_pasted = tk.Label(
+            _stats_frame,
+            text="Textblock characters pasted: "
+        )
+        _keystrokes_saved = tk.Label(
+            _stats_frame,
+            text="Keystrokes saved: "
+        )
+        _time_to_copy_paste = tk.Label(
+            _stats_frame,
+            text="Time to copy and paste: "
+        )
+        _total_time_saved = tk.Label(
+            _stats_frame,
+            text="Total amount of time saved: "
+        )
+
+        # Create StringVars
+        # self._shortcuts_sv = tk.StringVar(self._settings_window, value=)
+
+        # Pack Widgets
+        # Info Labels
+        _shortcuts_label.grid(column=0, row=0, sticky="w")
+        _characters_typed.grid(column=0, row=1, sticky="w")
+        _characters_pasted.grid(column=0, row=2, sticky="w")
+        _keystrokes_saved.grid(column=0, row=3, sticky="w")
+        _time_to_copy_paste.grid(column=0, row=4, sticky="w")
+        _total_time_saved.grid(column=0, row=5, sticky="w")
+
+        # Pack frame
+        _stats_frame.pack()
 
     def _open_settings(self):
         """
