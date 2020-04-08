@@ -458,14 +458,23 @@ class Setup:
         else:
 
             self._log.debug("Stats retrieved successfully.")
-            return _shortcuts_used, _shortcut_chars, _textblock_chars
 
-    def calculate_stats(self, _shortcuts_used, _shortcut_chars, _textblock_chars):
+            # Stats Tuple
+            _stats = (_shortcuts_used, _shortcut_chars, _textblock_chars)
+
+            return _stats
+
+    def calculate_stats(self, _stats):
         """
         Prints the usage stats to console.
         """
 
         self._log.debug("ConfigUtils: Starting _calculate_stats.")
+
+        # Extract values from Tuple
+        _shortcuts_used = _stats[0]
+        _shortcut_chars = _stats[1]
+        _textblock_chars = _stats[2]
 
         try:
 
@@ -490,11 +499,20 @@ to correct the error."""
 
             self._log.info("The stats were calculated successfully.")
 
-            return _saved_keystrokes, _seconds_to_paste, _time_saved
+            _complete_stats = (_shortcuts_used, _shortcut_chars, _textblock_chars, _saved_keystrokes, _seconds_to_paste, _time_saved)
 
-    def print_stats(self, _shortcuts_used, _shortcut_chars, _textblock_chars, _saved_keystrokes, _seconds_to_paste, _time_saved):
+            return _complete_stats
 
-        _stats = f"""Your stats:
+    def print_stats(self, _stats):
+
+        _shortcuts_used = _stats[0]
+        _shortcut_chars = _stats[1]
+        _textblock_chars = _stats[2]
+        _saved_keystrokes = _stats[3]
+        _seconds_to_paste = _stats[4]
+        _time_saved = _stats[5]
+
+        _stat_message = f"""Your stats:
 
         - Number of shortcuts used: {_shortcuts_used}
         - You typed a total of {_shortcut_chars} shortcut characters
@@ -502,9 +520,9 @@ to correct the error."""
         - You saved {_saved_keystrokes} keystrokes
         - If it takes {_seconds_to_paste} seconds to copy & paste an item, you saved {_time_saved}"""
 
-        print(_stats)
+        print(_stat_message)
 
-        self._log.info(_stats)
+        self._log.info(_stat_message)
 
     def _repair_history(self):
         """

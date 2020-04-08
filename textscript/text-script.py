@@ -32,11 +32,11 @@ def main():
     setup.config_exists()
 
     # Get stats from config
-    shortcuts_used, shortcut_chars, textblock_chars = setup.get_stats()
+    stats = setup.get_stats()
     # Calculate remaining stats
-    saved_keystrokes, seconds_to_paste, time_saved = setup.calculate_stats(shortcuts_used, shortcut_chars, textblock_chars)
+    complete_stats = setup.calculate_stats(stats)
     # Print stats to console
-    setup.print_stats(shortcuts_used, shortcut_chars, textblock_chars, saved_keystrokes, seconds_to_paste, time_saved)
+    setup.print_stats(complete_stats)
 
     # Gets a list with default, local, and remote directories
     directories = setup.find_directories()
