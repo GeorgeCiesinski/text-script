@@ -157,7 +157,11 @@ class Gui:
             text="Total amount of time saved: "
         )
 
+        # Get Stats
+
+
         # Create StringVars
+        # Todo: Fix the stats object first. It should return a list or tuple
         # self._shortcuts_sv = tk.StringVar(self._settings_window, value=)
 
         # Pack Widgets
