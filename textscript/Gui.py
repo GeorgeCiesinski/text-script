@@ -128,53 +128,125 @@ class Gui:
         Creates a new frame for the stats labels
         """
 
+        self._log.debug("Gui: Creating the stats frame.")
+
         # Create the frame
-        _stats_frame = tk.Frame(self._root)
+        self._stats_frame = tk.Frame(self._root)
 
         # Create Information Labels
         _shortcuts_label = tk.Label(
-            _stats_frame,
+            self._stats_frame,
             text="Shortcuts Used: "
         )
-        _characters_typed = tk.Label(
-            _stats_frame,
+        _characters_typed_label = tk.Label(
+            self._stats_frame,
             text="Shortcut characters typed: "
         )
-        _characters_pasted = tk.Label(
-            _stats_frame,
+        _characters_pasted_label = tk.Label(
+            self._stats_frame,
             text="Textblock characters pasted: "
         )
-        _keystrokes_saved = tk.Label(
-            _stats_frame,
+        _keystrokes_saved_label = tk.Label(
+            self._stats_frame,
             text="Keystrokes saved: "
         )
-        _time_to_copy_paste = tk.Label(
-            _stats_frame,
+        _time_to_copy_paste_label = tk.Label(
+            self._stats_frame,
             text="Time to copy and paste: "
         )
-        _total_time_saved = tk.Label(
-            _stats_frame,
+        _total_time_saved_label = tk.Label(
+            self._stats_frame,
             text="Total amount of time saved: "
         )
 
         # Get Stats
-
+        _stats = self._setup.get_stats()
+        _complete_stats = self._setup.calculate_stats(_stats)
 
         # Create StringVars
-        # Todo: Fix the stats object first. It should return a list or tuple
-        # self._shortcuts_sv = tk.StringVar(self._settings_window, value=)
+        self._shortcuts_sv = tk.StringVar(self._stats_frame, value=_complete_stats[0])
+        self._shortcut_chars_sv = tk.StringVar(self._stats_frame, value=_complete_stats[1])
+        self._textblock_chars_sv = tk.StringVar(self._stats_frame, value=_complete_stats[2])
+        self._saved_keystrokes_sv = tk.StringVar(self._stats_frame, value=_complete_stats[3])
+        self._seconds_paste_sv = tk.StringVar(self._stats_frame, value=_complete_stats[4])
+        self._time_saved_sv = tk.StringVar(self._stats_frame, value=_complete_stats[5])
+
+        # Updates StringVars
+        self.update_stats_frame()
+
+        # Create StringVar Labels
+        _shortcuts = tk.Entry(
+            self._stats_frame,
+            state="disabled",
+            textvariable=self._shortcuts_sv
+        )
+        _characters_typed = tk.Entry(
+            self._stats_frame,
+            state="disabled",
+            textvariable=self._shortcut_chars_sv
+        )
+        _characters_pasted = tk.Entry(
+            self._stats_frame,
+            state="disabled",
+            textvariable=self._textblock_chars_sv
+        )
+        _keystrokes_saved = tk.Entry(
+            self._stats_frame,
+            state="disabled",
+            textvariable=self._saved_keystrokes_sv
+        )
+        _time_to_copy_paste = tk.Entry(
+            self._stats_frame,
+            state="disabled",
+            textvariable=self._seconds_paste_sv
+        )
+        _total_time_saved = tk.Entry(
+            self._stats_frame,
+            state="disabled",
+            textvariable=self._time_saved_sv
+        )
 
         # Pack Widgets
         # Info Labels
         _shortcuts_label.grid(column=0, row=0, sticky="w")
-        _characters_typed.grid(column=0, row=1, sticky="w")
-        _characters_pasted.grid(column=0, row=2, sticky="w")
-        _keystrokes_saved.grid(column=0, row=3, sticky="w")
-        _time_to_copy_paste.grid(column=0, row=4, sticky="w")
-        _total_time_saved.grid(column=0, row=5, sticky="w")
+        _characters_typed_label.grid(column=0, row=1, sticky="w")
+        _characters_pasted_label.grid(column=0, row=2, sticky="w")
+        _keystrokes_saved_label.grid(column=0, row=3, sticky="w")
+        _time_to_copy_paste_label.grid(column=0, row=4, sticky="w")
+        _total_time_saved_label.grid(column=0, row=5, sticky="w")
+        # StringVar Fields
+        _shortcuts.grid(column=1, row=0, sticky="w")
+        _characters_typed.grid(column=1, row=1, sticky="w")
+        _characters_pasted.grid(column=1, row=2, sticky="w")
+        _keystrokes_saved.grid(column=1, row=3, sticky="w")
+        _time_to_copy_paste.grid(column=1, row=4, sticky="w")
+        _total_time_saved.grid(column=1, row=5, sticky="w")
 
         # Pack frame
-        _stats_frame.pack()
+        self._stats_frame.pack()
+
+        self._log.debug("Gui: Successfully setup the stats frame.")
+
+    def update_stats_frame(self):
+        """
+        Updates the StringVars, which immediately updates the labels
+        """
+
+        self._log.debug("Gui: Updating stats frame.")
+
+        # Get Stats
+        _stats = self._setup.get_stats()
+        _complete_stats = self._setup.calculate_stats(_stats)
+
+        # Create StringVars
+        self._shortcuts_sv.set(_complete_stats[0])
+        self._shortcut_chars_sv.set(_complete_stats[1])
+        self._textblock_chars_sv.set(_complete_stats[2])
+        self._saved_keystrokes_sv.set(_complete_stats[3])
+        self._seconds_paste_sv.set(_complete_stats[4])
+        self._time_saved_sv.set(_complete_stats[5])
+
+        self._log.debug("Gui: Successfully updated stats frame.")
 
     def _open_settings(self):
         """
@@ -570,10 +642,6 @@ class Gui:
         """
 
         self._doc_window.destroy()
-
-    def _update_stats_frame(self):
-
-        pass
 
     """
     Temporary Methods

@@ -499,12 +499,20 @@ to correct the error."""
 
             self._log.info("The stats were calculated successfully.")
 
-            _complete_stats = (_shortcuts_used, _shortcut_chars, _textblock_chars, _saved_keystrokes, _seconds_to_paste, _time_saved)
+            _complete_stats = (
+                _shortcuts_used,
+                _shortcut_chars,
+                _textblock_chars,
+                _saved_keystrokes,
+                _seconds_to_paste,
+                _time_saved
+            )
 
             return _complete_stats
 
     def print_stats(self, _stats):
 
+        # Extract values from Tuple
         _shortcuts_used = _stats[0]
         _shortcut_chars = _stats[1]
         _textblock_chars = _stats[2]
@@ -677,6 +685,7 @@ to correct the error."""
         else:
             self._log.debug("Successfully updated config file with updated stats.")
             return True
+
 
 class Update:
 
