@@ -28,10 +28,13 @@ class Gui:
         # Threading event: used for communication between threads
         self._stop_event = threading.Event()
 
-        # Global GUI settings
-        self._global_categories = "Helvetica 12 bold"
-        self._global_labels = "Helvetica"
-        self._global_bold = "Helvetica 10 bold"
+        # Global Font Settings
+        # Category Font: Bold and larger than regular font
+        self._font_category = "Helvetica 12 bold"
+        # Regular Font
+        self._font_regular = "Helvetica"
+        # Bold Font
+        self._font_bold = "Helvetica 10 bold"
 
         # Sets up the window layout
         self._setup_root_window()
@@ -43,8 +46,10 @@ class Gui:
         # Close program if window is destroyed
         self._root.protocol("WM_DELETE_WINDOW", self._on_closing)
 
+        self._log.debug("Gui: Initialization complete.")
+
         # Starts the window loop
-        self._log.debug("Starting root mainloop.")
+        self._log.debug("Gui: Starting root mainloop.")
         self._root.mainloop()
 
     def _setup_root_window(self):
@@ -294,7 +299,7 @@ class Gui:
             self._settings_window,
             justify="left",
             text="DIRECTORIES",
-            font=self._global_categories
+            font=self._font_category
         )
         _default_label = tk.Label(
             self._settings_window,
@@ -316,7 +321,7 @@ class Gui:
             self._settings_window,
             justify="left",
             fg="red",
-            font=self._global_bold,
+            font=self._font_bold,
             text=""
         )
 
@@ -571,7 +576,7 @@ class Gui:
         _help_label = tk.Label(
             self._help_window,
             justify="left",
-            font=self._global_bold,
+            font=self._font_bold,
             text=_help_text
         )
 
@@ -605,7 +610,7 @@ class Gui:
         _link_label = tk.Label(
             self._doc_window,
             justify="left",
-            font=self._global_bold,
+            font=self._font_bold,
             text=_documentation_message
         )
 
