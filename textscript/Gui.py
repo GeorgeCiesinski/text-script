@@ -69,13 +69,17 @@ class Gui:
         self._root.title("Text-Script")
 
         # Window size
-        self._root.geometry("400x400")
+        # self._root.geometry("400x400")
 
         # Create menu
         self._create_menu()
 
-        # Create the stats frame
+        # Create the Info frames
         self._create_stats_frame()
+        self._textblock_frame()
+
+        # Place Info Frames
+        self._organize_frames()
 
         self._log.debug("Root window setup successfully.")
 
@@ -236,9 +240,6 @@ class Gui:
         _time_to_copy_paste.grid(column=1, row=5, sticky="w")
         _total_time_saved.grid(column=1, row=6, sticky="w")
 
-        # Pack frame
-        self._stats_frame.pack()
-
         self._log.debug("Gui: Successfully setup the stats frame.")
 
     def update_stats_frame(self):
@@ -261,6 +262,34 @@ class Gui:
         self._time_saved_sv.set(_complete_stats[5])
 
         self._log.debug("Gui: Successfully updated stats frame.")
+
+    def _textblock_frame(self):
+        """
+        Creates a new frame for the stats labels
+        """
+
+        self._log.debug("Gui: Creating the textblock frame.")
+
+        # Create the frame
+        self._textblock_frame = tk.Frame(self._root)
+
+        # Create Information Label
+        _textblocks_label = tk.Label(
+            self._textblock_frame,
+            font=self._font_category,
+            text="TEXTBLOCKS:"
+        )
+
+
+
+        # Pack Widgets
+        # Info Labels
+        _textblocks_label.grid(column=0, row=0, columnspan=2, sticky="w")
+
+    def _organize_frames(self):
+
+        self._textblock_frame.grid(column=0, row=0, sticky="nw")
+        self._stats_frame.grid(column=1, row=0, sticky="nw")
 
     def _open_settings(self):
         """
