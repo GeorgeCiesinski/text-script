@@ -85,10 +85,11 @@ class Gui:
 
     def _create_menu(self):
 
+        self._log.debug("Gui: Setting up top menu.")
+
         # Create menu object
         _menu = tk.Menu(self._root)
         self._root.config(menu=_menu)
-        self._log.debug("Gui: Successfully created top menu.")
 
         # File menu
         _file_menu = tk.Menu(_menu, tearoff=False)
@@ -128,6 +129,8 @@ class Gui:
         self._root.bind_all("<Control-q>", self.close_text_script)
         self._root.bind_all("<Control-h>", self._do_nothing())
 
+        self._log.debug("Gui: Successfully created top menu.")
+
     def _create_stats_frame(self):
         """
         Creates a new frame for the stats labels
@@ -139,6 +142,11 @@ class Gui:
         self._stats_frame = tk.Frame(self._root)
 
         # Create Information Labels
+        _your_stats_label = tk.Label(
+            self._stats_frame,
+            font=self._font_category,
+            text="YOUR STATS:"
+        )
         _shortcuts_label = tk.Label(
             self._stats_frame,
             text="Shortcuts Used: "
@@ -213,19 +221,20 @@ class Gui:
 
         # Pack Widgets
         # Info Labels
-        _shortcuts_label.grid(column=0, row=0, sticky="w")
-        _characters_typed_label.grid(column=0, row=1, sticky="w")
-        _characters_pasted_label.grid(column=0, row=2, sticky="w")
-        _keystrokes_saved_label.grid(column=0, row=3, sticky="w")
-        _time_to_copy_paste_label.grid(column=0, row=4, sticky="w")
-        _total_time_saved_label.grid(column=0, row=5, sticky="w")
+        _your_stats_label.grid(column=0, row=0, columnspan=2, sticky="w")
+        _shortcuts_label.grid(column=0, row=1, sticky="w")
+        _characters_typed_label.grid(column=0, row=2, sticky="w")
+        _characters_pasted_label.grid(column=0, row=3, sticky="w")
+        _keystrokes_saved_label.grid(column=0, row=4, sticky="w")
+        _time_to_copy_paste_label.grid(column=0, row=5, sticky="w")
+        _total_time_saved_label.grid(column=0, row=6, sticky="w")
         # StringVar Fields
-        _shortcuts.grid(column=1, row=0, sticky="w")
-        _characters_typed.grid(column=1, row=1, sticky="w")
-        _characters_pasted.grid(column=1, row=2, sticky="w")
-        _keystrokes_saved.grid(column=1, row=3, sticky="w")
-        _time_to_copy_paste.grid(column=1, row=4, sticky="w")
-        _total_time_saved.grid(column=1, row=5, sticky="w")
+        _shortcuts.grid(column=1, row=1, sticky="w")
+        _characters_typed.grid(column=1, row=2, sticky="w")
+        _characters_pasted.grid(column=1, row=3, sticky="w")
+        _keystrokes_saved.grid(column=1, row=4, sticky="w")
+        _time_to_copy_paste.grid(column=1, row=5, sticky="w")
+        _total_time_saved.grid(column=1, row=6, sticky="w")
 
         # Pack frame
         self._stats_frame.pack()
