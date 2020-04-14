@@ -35,6 +35,8 @@ class Gui:
         self._font_regular = "Helvetica"
         # Bold Font
         self._font_bold = "Helvetica 10 bold"
+        # Monospace Font
+        self._mono_font = "TkFixedFont"
 
         # Sets up the window layout
         self._setup_root_window()
@@ -76,7 +78,7 @@ class Gui:
 
         # Create the Info frames
         self._create_stats_frame()
-        self._textblock_frame()
+        self._create_textblock_frame()
 
         # Place Info Frames
         self._organize_frames()
@@ -263,7 +265,7 @@ class Gui:
 
         self._log.debug("Gui: Successfully updated stats frame.")
 
-    def _textblock_frame(self):
+    def _create_textblock_frame(self):
         """
         Creates a new frame for the stats labels
         """
@@ -288,28 +290,49 @@ class Gui:
             text="TEXTBLOCKS:"
         )
 
+        # Scrollbar
+        _textblocks_scrollbar = tk.Scrollbar(
+            self._textblock_frame
+        )
+
         # Create Textblock Listbox
         _textblocks_listbox = tk.Listbox(
             self._textblock_frame,
+            yscrollcommand=_textblocks_scrollbar.set,
             bd=4,
             width=100,
+            font=self._mono_font,
             selectmode="single"
         )
 
+        _textblocks_scrollbar.config(command=_textblocks_listbox.yview)
+
         for _shortcut in _shortcut_list:
+
             # Get shortcut index
             _shortcut_index = _shortcut_list.index(_shortcut)
             # Get filedir for above index
             _file_dir = _file_dir_list[_shortcut_index]
+
             # Create list item
-            _list_item = _shortcut + " - - - " + _file_dir
+            _list_item = _shortcut
+
+            # Adds spaces to fill up max allowance
+            _shortcut_length = len(_shortcut)
+            _add_spaces = _shortcut_len_allowance - _shortcut_length
+            for _spaces in range(_add_spaces):
+                _list_item += " "
+            _list_item += f" - Directory: {_file_dir}"
+
             # Add item to listbox
             _textblocks_listbox.insert((_shortcut_index + 1), _list_item)
 
         # Pack Widgets
         # Info Labels
         _textblocks_label.grid(column=0, row=0, columnspan=2, sticky="w")
+        # Listbox & scrollbar
         _textblocks_listbox.grid(column=0, row=1, sticky="w")
+        _textblocks_scrollbar.grid(column=1, row=1, sticky="ns")
 
     def _organize_frames(self):
 
