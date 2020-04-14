@@ -342,6 +342,9 @@ class Gui:
         _horizontal_scrollbar.grid(column=0, row=2, sticky="ew")
 
     def _organize_frames(self):
+        """
+        Organizes frames and widgets in root frame
+        """
 
         self._textblock_frame.grid(column=0, row=0, sticky="nw")
         self._stats_frame.grid(column=1, row=0, sticky="nw")
