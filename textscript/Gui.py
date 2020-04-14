@@ -290,22 +290,28 @@ class Gui:
             text="TEXTBLOCKS:"
         )
 
-        # Scrollbar
-        _textblocks_scrollbar = tk.Scrollbar(
+        # Scrollbars
+        _vertical_scrollbar = tk.Scrollbar(
             self._textblock_frame
+        )
+        _horizontal_scrollbar = tk.Scrollbar(
+            self._textblock_frame,
+            orient="horizontal"
         )
 
         # Create Textblock Listbox
         _textblocks_listbox = tk.Listbox(
             self._textblock_frame,
-            yscrollcommand=_textblocks_scrollbar.set,
+            yscrollcommand=_vertical_scrollbar.set,
+            xscrollcommand=_horizontal_scrollbar.set,
             bd=4,
             width=100,
             font=self._mono_font,
             selectmode="single"
         )
 
-        _textblocks_scrollbar.config(command=_textblocks_listbox.yview)
+        _vertical_scrollbar.config(command=_textblocks_listbox.yview)
+        _horizontal_scrollbar.config(command=_textblocks_listbox.xview)
 
         for _shortcut in _shortcut_list:
 
@@ -332,7 +338,8 @@ class Gui:
         _textblocks_label.grid(column=0, row=0, columnspan=2, sticky="w")
         # Listbox & scrollbar
         _textblocks_listbox.grid(column=0, row=1, sticky="w")
-        _textblocks_scrollbar.grid(column=1, row=1, sticky="ns")
+        _vertical_scrollbar.grid(column=1, row=1, sticky="ns")
+        _horizontal_scrollbar.grid(column=0, row=2, sticky="ew")
 
     def _organize_frames(self):
 
