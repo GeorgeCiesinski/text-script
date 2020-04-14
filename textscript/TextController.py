@@ -224,6 +224,9 @@ class WordCatcher:
             # Update history
             self._update.update_history(self._current_word, self._textblock)
 
+            # Update GUI
+            self._gui.update_stats_frame()
+
             # Deletes the typed out shortcut
             self._keyboard.delete_shortcut(self._current_word)
 

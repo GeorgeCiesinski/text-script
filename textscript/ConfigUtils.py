@@ -458,14 +458,23 @@ class Setup:
         else:
 
             self._log.debug("Stats retrieved successfully.")
-            self._calculate_stats(_shortcuts_used, _shortcut_chars, _textblock_chars)
 
-    def _calculate_stats(self, _shortcuts_used, _shortcut_chars, _textblock_chars):
+            # Stats Tuple
+            _stats = (_shortcuts_used, _shortcut_chars, _textblock_chars)
+
+            return _stats
+
+    def calculate_stats(self, _stats):
         """
         Prints the usage stats to console.
         """
 
         self._log.debug("ConfigUtils: Starting _calculate_stats.")
+
+        # Extract values from Tuple
+        _shortcuts_used = _stats[0]
+        _shortcut_chars = _stats[1]
+        _textblock_chars = _stats[2]
 
         try:
 
@@ -490,17 +499,38 @@ to correct the error."""
 
             self._log.info("The stats were calculated successfully.")
 
-            _stats = f"""Your stats:
+            _complete_stats = (
+                _shortcuts_used,
+                _shortcut_chars,
+                _textblock_chars,
+                _saved_keystrokes,
+                _seconds_to_paste,
+                _time_saved
+            )
 
-- Number of shortcuts used: {_shortcuts_used}
-- You typed a total of {_shortcut_chars} shortcut characters
-- Text-Script pasted a total of {_textblock_chars} characters
-- You saved {_saved_keystrokes} keystrokes
-- If it takes {_seconds_to_paste} seconds to copy & paste an item, you saved {_time_saved}"""
+            return _complete_stats
 
-            print(_stats)
+    def print_stats(self, _stats):
 
-            self._log.info(_stats)
+        # Extract values from Tuple
+        _shortcuts_used = _stats[0]
+        _shortcut_chars = _stats[1]
+        _textblock_chars = _stats[2]
+        _saved_keystrokes = _stats[3]
+        _seconds_to_paste = _stats[4]
+        _time_saved = _stats[5]
+
+        _stat_message = f"""Your stats:
+
+        - Number of shortcuts used: {_shortcuts_used}
+        - You typed a total of {_shortcut_chars} shortcut characters
+        - Text-Script pasted a total of {_textblock_chars} characters
+        - You saved {_saved_keystrokes} keystrokes
+        - If it takes {_seconds_to_paste} seconds to copy & paste an item, you saved {_time_saved}"""
+
+        print(_stat_message)
+
+        self._log.info(_stat_message)
 
     def _repair_history(self):
         """
@@ -655,6 +685,7 @@ to correct the error."""
         else:
             self._log.debug("Successfully updated config file with updated stats.")
             return True
+
 
 class Update:
 

@@ -28,13 +28,18 @@ class Gui:
         # Threading event: used for communication between threads
         self._stop_event = threading.Event()
 
-        # Global GUI settings
-        self._global_categories = "Helvetica 12 bold"
-        self._global_labels = "Helvetica"
-        self._global_bold = "Helvetica 10 bold"
+        # Global Font Settings
+        # Category Font: Bold and larger than regular font
+        self._font_category = "Helvetica 12 bold"
+        # Regular Font
+        self._font_regular = "Helvetica"
+        # Bold Font
+        self._font_bold = "Helvetica 10 bold"
+        # Monospace Font
+        self._mono_font = "TkFixedFont"
 
         # Sets up the window layout
-        self._setup_window()
+        self._setup_root_window()
 
         # Starts WordCatcher listener
         self._start_word_catcher()
@@ -43,11 +48,13 @@ class Gui:
         # Close program if window is destroyed
         self._root.protocol("WM_DELETE_WINDOW", self._on_closing)
 
+        self._log.debug("Gui: Initialization complete.")
+
         # Starts the window loop
-        self._log.debug("Starting root mainloop.")
+        self._log.debug("Gui: Starting root mainloop.")
         self._root.mainloop()
 
-    def _setup_window(self):
+    def _setup_root_window(self):
         """
         Window Setup
         """
@@ -64,19 +71,31 @@ class Gui:
         self._root.title("Text-Script")
 
         # Window size
-        self._root.geometry("400x400")
+        # self._root.geometry("400x400")
 
         # Create menu
         self._create_menu()
 
+        # Create the Info frames
+        self._create_stats_frame()
+        self._create_textblock_frame()
+
+        # Place Info Frames
+        self._organize_frames()
+
         self._log.debug("Root window setup successfully.")
 
+    """
+    Menu and Menu Widgets
+    """
+
     def _create_menu(self):
+
+        self._log.debug("Gui: Setting up top menu.")
 
         # Create menu object
         _menu = tk.Menu(self._root)
         self._root.config(menu=_menu)
-        self._log.debug("Gui: Successfully created top menu.")
 
         # File menu
         _file_menu = tk.Menu(_menu, tearoff=False)
@@ -107,10 +126,228 @@ class Gui:
             label="Documentation",
             command=self._open_documentation
         )
+        _help_menu.add_command(
+            label="Report a Bug",
+            command=self._do_nothing
+        )
 
         # Shortcuts for menu options
         self._root.bind_all("<Control-q>", self.close_text_script)
         self._root.bind_all("<Control-h>", self._do_nothing())
+
+        self._log.debug("Gui: Successfully created top menu.")
+
+    def _create_stats_frame(self):
+        """
+        Creates a new frame for the stats labels
+        """
+
+        self._log.debug("Gui: Creating the stats frame.")
+
+        # Create the frame
+        self._stats_frame = tk.Frame(self._root)
+
+        # Create Information Labels
+        _your_stats_label = tk.Label(
+            self._stats_frame,
+            font=self._font_category,
+            text="YOUR STATS:"
+        )
+        _shortcuts_label = tk.Label(
+            self._stats_frame,
+            text="Shortcuts Used: "
+        )
+        _characters_typed_label = tk.Label(
+            self._stats_frame,
+            text="Shortcut characters typed: "
+        )
+        _characters_pasted_label = tk.Label(
+            self._stats_frame,
+            text="Textblock characters pasted: "
+        )
+        _keystrokes_saved_label = tk.Label(
+            self._stats_frame,
+            text="Keystrokes saved: "
+        )
+        _time_to_copy_paste_label = tk.Label(
+            self._stats_frame,
+            text="Time to copy and paste: "
+        )
+        _total_time_saved_label = tk.Label(
+            self._stats_frame,
+            text="Total amount of time saved: "
+        )
+
+        # Get Stats
+        _stats = self._setup.get_stats()
+        _complete_stats = self._setup.calculate_stats(_stats)
+
+        # Create StringVars
+        self._shortcuts_sv = tk.StringVar(self._stats_frame, value=_complete_stats[0])
+        self._shortcut_chars_sv = tk.StringVar(self._stats_frame, value=_complete_stats[1])
+        self._textblock_chars_sv = tk.StringVar(self._stats_frame, value=_complete_stats[2])
+        self._saved_keystrokes_sv = tk.StringVar(self._stats_frame, value=_complete_stats[3])
+        self._seconds_paste_sv = tk.StringVar(self._stats_frame, value=_complete_stats[4])
+        self._time_saved_sv = tk.StringVar(self._stats_frame, value=_complete_stats[5])
+
+        # Updates StringVars
+        self.update_stats_frame()
+
+        # Create StringVar Labels
+        _shortcuts = tk.Entry(
+            self._stats_frame,
+            state="disabled",
+            textvariable=self._shortcuts_sv
+        )
+        _characters_typed = tk.Entry(
+            self._stats_frame,
+            state="disabled",
+            textvariable=self._shortcut_chars_sv
+        )
+        _characters_pasted = tk.Entry(
+            self._stats_frame,
+            state="disabled",
+            textvariable=self._textblock_chars_sv
+        )
+        _keystrokes_saved = tk.Entry(
+            self._stats_frame,
+            state="disabled",
+            textvariable=self._saved_keystrokes_sv
+        )
+        _time_to_copy_paste = tk.Entry(
+            self._stats_frame,
+            state="disabled",
+            textvariable=self._seconds_paste_sv
+        )
+        _total_time_saved = tk.Entry(
+            self._stats_frame,
+            state="disabled",
+            textvariable=self._time_saved_sv
+        )
+
+        # Pack Widgets
+        # Info Labels
+        _your_stats_label.grid(column=0, row=0, columnspan=2, sticky="w")
+        _shortcuts_label.grid(column=0, row=1, sticky="w")
+        _characters_typed_label.grid(column=0, row=2, sticky="w")
+        _characters_pasted_label.grid(column=0, row=3, sticky="w")
+        _keystrokes_saved_label.grid(column=0, row=4, sticky="w")
+        _time_to_copy_paste_label.grid(column=0, row=5, sticky="w")
+        _total_time_saved_label.grid(column=0, row=6, sticky="w")
+        # StringVar Fields
+        _shortcuts.grid(column=1, row=1, sticky="w")
+        _characters_typed.grid(column=1, row=2, sticky="w")
+        _characters_pasted.grid(column=1, row=3, sticky="w")
+        _keystrokes_saved.grid(column=1, row=4, sticky="w")
+        _time_to_copy_paste.grid(column=1, row=5, sticky="w")
+        _total_time_saved.grid(column=1, row=6, sticky="w")
+
+        self._log.debug("Gui: Successfully setup the stats frame.")
+
+    def update_stats_frame(self):
+        """
+        Updates the StringVars, which immediately updates the labels
+        """
+
+        self._log.debug("Gui: Updating stats frame.")
+
+        # Get Stats
+        _stats = self._setup.get_stats()
+        _complete_stats = self._setup.calculate_stats(_stats)
+
+        # Create StringVars
+        self._shortcuts_sv.set(_complete_stats[0])
+        self._shortcut_chars_sv.set(_complete_stats[1])
+        self._textblock_chars_sv.set(_complete_stats[2])
+        self._saved_keystrokes_sv.set(_complete_stats[3])
+        self._seconds_paste_sv.set(_complete_stats[4])
+        self._time_saved_sv.set(_complete_stats[5])
+
+        self._log.debug("Gui: Successfully updated stats frame.")
+
+    def _create_textblock_frame(self):
+        """
+        Creates a new frame for the stats labels
+        """
+
+        self._log.debug("Gui: Creating the textblock frame.")
+
+        # Directories, shortcuts, file dirs
+        _directories = self._setup.find_directories()
+        _shortcut_list, _file_dir_list = self._setup.shortcut_setup(_directories)
+
+        # Get longest shortcut
+        _max_shortcut_len = len(max(_shortcut_list, key=len))
+        _shortcut_len_allowance = _max_shortcut_len + 1
+
+        # Create the frame
+        self._textblock_frame = tk.Frame(self._root)
+
+        # Create Information Label
+        _textblocks_label = tk.Label(
+            self._textblock_frame,
+            font=self._font_category,
+            text="TEXTBLOCKS:"
+        )
+
+        # Scrollbars
+        _vertical_scrollbar = tk.Scrollbar(
+            self._textblock_frame
+        )
+        _horizontal_scrollbar = tk.Scrollbar(
+            self._textblock_frame,
+            orient="horizontal"
+        )
+
+        # Create Textblock Listbox
+        _textblocks_listbox = tk.Listbox(
+            self._textblock_frame,
+            yscrollcommand=_vertical_scrollbar.set,
+            xscrollcommand=_horizontal_scrollbar.set,
+            bd=4,
+            width=100,
+            font=self._mono_font,
+            selectmode="single"
+        )
+
+        _vertical_scrollbar.config(command=_textblocks_listbox.yview)
+        _horizontal_scrollbar.config(command=_textblocks_listbox.xview)
+
+        for _shortcut in _shortcut_list:
+
+            # Get shortcut index
+            _shortcut_index = _shortcut_list.index(_shortcut)
+            # Get filedir for above index
+            _file_dir = _file_dir_list[_shortcut_index]
+
+            # Create list item
+            _list_item = _shortcut
+
+            # Adds spaces to fill up max allowance
+            _shortcut_length = len(_shortcut)
+            _add_spaces = _shortcut_len_allowance - _shortcut_length
+            for _spaces in range(_add_spaces):
+                _list_item += " "
+            _list_item += f" - Directory: {_file_dir}"
+
+            # Add item to listbox
+            _textblocks_listbox.insert((_shortcut_index + 1), _list_item)
+
+        # Pack Widgets
+        # Info Labels
+        _textblocks_label.grid(column=0, row=0, columnspan=2, sticky="w")
+        # Listbox & scrollbar
+        _textblocks_listbox.grid(column=0, row=1, sticky="w")
+        _vertical_scrollbar.grid(column=1, row=1, sticky="ns")
+        _horizontal_scrollbar.grid(column=0, row=2, sticky="ew")
+
+    def _organize_frames(self):
+        """
+        Organizes frames and widgets in root frame
+        """
+
+        self._textblock_frame.grid(column=0, row=0, sticky="nw")
+        self._stats_frame.grid(column=1, row=0, sticky="nw")
 
     def _open_settings(self):
         """
@@ -158,7 +395,7 @@ class Gui:
             self._settings_window,
             justify="left",
             text="DIRECTORIES",
-            font=self._global_categories
+            font=self._font_category
         )
         _default_label = tk.Label(
             self._settings_window,
@@ -180,7 +417,7 @@ class Gui:
             self._settings_window,
             justify="left",
             fg="red",
-            font=self._global_bold,
+            font=self._font_bold,
             text=""
         )
 
@@ -285,7 +522,7 @@ class Gui:
 
     def _enable_default(self):
         """
-        Sets the default directory
+        Sets the default directory in settings menu
         """
         try:
             self._default_sv.set("./textblocks/")
@@ -299,7 +536,7 @@ class Gui:
 
     def _disable_default(self):
         """
-        Disables the default directory
+        Disables the default directory in settings menu
         """
         try:
             self._default_sv.set("Not Set")
@@ -312,7 +549,7 @@ class Gui:
 
     def _set_local(self):
         """
-        Sets local directory
+        Sets local directory in settings menu
         """
 
         try:
@@ -327,7 +564,7 @@ class Gui:
 
     def _disable_local(self):
         """
-        Disables the local directory
+        Disables the local directory in settings menu
         """
 
         try:
@@ -342,7 +579,7 @@ class Gui:
 
     def _set_remote(self):
         """
-        Save remote directory
+        Save remote directory in settings menu
         """
 
         try:
@@ -357,7 +594,7 @@ class Gui:
 
     def _disable_remote(self):
         """
-        Disables the remote directory
+        Disables the remote directory in settings menu
         """
 
         try:
@@ -435,7 +672,7 @@ class Gui:
         _help_label = tk.Label(
             self._help_window,
             justify="left",
-            font=self._global_bold,
+            font=self._font_bold,
             text=_help_text
         )
 
@@ -450,7 +687,7 @@ class Gui:
         # Repository URL
         self._documentation_url = "https://github.com/GeorgeCiesinski/text-script"
 
-        # Label for documentation window
+        # Label text for documentation window
         _documentation_message = f"""You can find the documentation at the below link: 
 
 {self._documentation_url}
@@ -469,7 +706,7 @@ class Gui:
         _link_label = tk.Label(
             self._doc_window,
             justify="left",
-            font=self._global_bold,
+            font=self._font_bold,
             text=_documentation_message
         )
 
@@ -498,14 +735,18 @@ class Gui:
         webbrowser.open(self._documentation_url, new=0, autoraise=True)
 
         # Calls function to close window
-        self._close_window()
+        self._close_doc_window()
 
-    def _close_window(self):
+    def _close_doc_window(self):
         """
         Destroys the documentation window.
         """
 
         self._doc_window.destroy()
+
+    """
+    Temporary Methods
+    """
 
     def _do_nothing(self):
         """
@@ -513,6 +754,10 @@ class Gui:
         """
 
         pass
+
+    """
+    WordCatcher and Threading
+    """
 
     def _start_word_catcher(self):
         """

@@ -31,8 +31,12 @@ def main():
     # Check if config file exists, and is up to date
     setup.config_exists()
 
+    # Get stats from config
+    stats = setup.get_stats()
+    # Calculate remaining stats
+    complete_stats = setup.calculate_stats(stats)
     # Print stats to console
-    setup.get_stats()
+    setup.print_stats(complete_stats)
 
     # Gets a list with default, local, and remote directories
     directories = setup.find_directories()
