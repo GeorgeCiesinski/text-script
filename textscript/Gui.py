@@ -270,6 +270,14 @@ class Gui:
 
         self._log.debug("Gui: Creating the textblock frame.")
 
+        # Directories, shortcuts, file dirs
+        _directories = self._setup.find_directories()
+        _shortcut_list, _file_dir_list = self._setup.shortcut_setup(_directories)
+
+        # Get longest shortcut
+        _max_shortcut_len = len(max(_shortcut_list, key=len))
+        _shortcut_len_allowance = _max_shortcut_len + 1
+
         # Create the frame
         self._textblock_frame = tk.Frame(self._root)
 
@@ -280,11 +288,28 @@ class Gui:
             text="TEXTBLOCKS:"
         )
 
+        # Create Textblock Listbox
+        _textblocks_listbox = tk.Listbox(
+            self._textblock_frame,
+            bd=4,
+            width=100,
+            selectmode="single"
+        )
 
+        for _shortcut in _shortcut_list:
+            # Get shortcut index
+            _shortcut_index = _shortcut_list.index(_shortcut)
+            # Get filedir for above index
+            _file_dir = _file_dir_list[_shortcut_index]
+            # Create list item
+            _list_item = _shortcut + " - - - " + _file_dir
+            # Add item to listbox
+            _textblocks_listbox.insert((_shortcut_index + 1), _list_item)
 
         # Pack Widgets
         # Info Labels
         _textblocks_label.grid(column=0, row=0, columnspan=2, sticky="w")
+        _textblocks_listbox.grid(column=0, row=1, sticky="w")
 
     def _organize_frames(self):
 
