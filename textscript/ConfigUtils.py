@@ -58,8 +58,8 @@ class Setup:
 
         # Shortcut notification variables
         self._last_shortcuts = []
-        self._new_shortcuts = []
-        self._removed_shortcuts = []
+        self.new_shortcuts = []
+        self.removed_shortcuts = []
 
         # Config Directories
         self._config_dir = "./config/"
@@ -325,19 +325,19 @@ class Setup:
             # If shortcut isn't in the _last_shortcuts list, add it to _new_shortcuts
             if shortcut not in self._last_shortcuts:
 
-                self._new_shortcuts.append(shortcut)
+                self.new_shortcuts.append(shortcut)
 
         # If there are more than zero new shortcuts, print the new shortcuts
-        if len(self._new_shortcuts) == 0:
+        if len(self.new_shortcuts) == 0:
 
             self._log.info("No new shortcuts have been added.")
             print("No new shortcuts have been added.")
 
         else:
 
-            self._log.info(f"The following shortcuts have been added:{self._new_shortcuts}")
+            self._log.info(f"The following shortcuts have been added:{self.new_shortcuts}")
             print("The following shortcuts have been added:")
-            print(self._new_shortcuts)
+            print(self.new_shortcuts)
 
         """
         Removed shortcut check
@@ -350,21 +350,21 @@ class Setup:
             # If shortcut is not in _shortcut_list, add it to the _removed_shortcuts list
             if shortcut not in _shortcut_list:
 
-                self._removed_shortcuts.append(shortcut)
+                self.removed_shortcuts.append(shortcut)
 
         # If there are more than 0 removed shortcuts, print the removed shortcuts
-        if len(self._removed_shortcuts) == 1 and self._removed_shortcuts[0] == "":
+        if len(self.removed_shortcuts) == 1 and self.removed_shortcuts[0] == "":
 
             self._log.info("No shortcuts have been removed.")
             print("No shortcuts have been removed.")
 
-        elif len(self._removed_shortcuts) > 0:
+        elif len(self.removed_shortcuts) > 0:
 
-            self._log.info(f"The following shortcuts have been removed: {self._removed_shortcuts}")
+            self._log.info(f"The following shortcuts have been removed: {self.removed_shortcuts}")
             print("The following shortcuts have been removed:")
-            print(self._removed_shortcuts)
+            print(self.removed_shortcuts)
 
-        elif len(self._removed_shortcuts) == 0:
+        elif len(self.removed_shortcuts) == 0:
 
             self._log.info("No shortcuts have been removed.")
             print("No shortcuts have been removed.")

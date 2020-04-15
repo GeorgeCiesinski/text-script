@@ -38,12 +38,12 @@ def main():
     # Print stats to console
     setup.print_stats(complete_stats)
 
-    # Gets a list with default, local, and remote directories
-    directories = setup.find_directories()
-
     """
     Initialize Text Controller
     """
+
+    # Gets a list with default, local, and remote directories
+    directories = setup.find_directories()
 
     # Load shortcuts and file directories
     shortcut_list, file_dir_list = setup.shortcut_setup(directories)
@@ -62,6 +62,7 @@ def main():
     Start Gui
     """
 
+    # Initialize GUI
     g = Gui(w, L, setup)
 
     # Close program if all threads are killed
