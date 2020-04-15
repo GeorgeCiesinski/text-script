@@ -341,6 +341,16 @@ class Gui:
         _vertical_scrollbar.grid(column=1, row=1, sticky="ns")
         _horizontal_scrollbar.grid(column=0, row=2, sticky="ew")
 
+    def _create_new_shortcuts_frame(self):
+        """
+        Creates a new frame for the stats labels
+        """
+
+        self._log.debug("Gui: Creating the textblock frame.")
+
+        # Create the frame
+        self._new_shortcuts_frame = tk.Frame(self._root)
+
     def _organize_frames(self):
         """
         Organizes frames and widgets in root frame

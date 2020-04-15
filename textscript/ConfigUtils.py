@@ -258,22 +258,22 @@ class Setup:
                 # Print shortcut title
                 if _directory is _directories[0]:
 
-                    print("\nDefault Directory: \n")
+                    # print("\nDefault Directory: \n")
                     self._log.debug("Appending shortcuts from default directory.")
 
                 elif _directory is _directories[1]:
 
-                    print(f"\nLocal Directory: {_directory}\n")
+                    # print(f"\nLocal Directory: {_directory}\n")
                     self._log.debug(f"Appending shortcuts from local directory: {_directory}")
 
                 elif _directory is _directories[2]:
 
-                    print(f"\nRemote Directory: {_directory}\n")
+                    # print(f"\nRemote Directory: {_directory}\n")
                     self._log.debug(f"Appending shortcuts from remote directory: {_directory}")
 
                 # Print shortcuts
                 self._log.info(_shortcuts)
-                glib.print_shortcuts(_file_dirs, _shortcuts)
+                # glib.print_shortcuts(_file_dirs, _shortcuts)
 
                 # extends shortcut_list with values in shortcuts
                 try:
