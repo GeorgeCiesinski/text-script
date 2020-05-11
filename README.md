@@ -80,7 +80,7 @@ The logs are manually created and have to be manually provided when bugs are enc
 
 ## Installing
 
-At this time, the program is still in early development, so I recommend always downloading the latest version as it will usually contain fixes for large bugs or issues. 
+At this time, the program is still in early development, so I recommend always downloading the latest version as it will usually contain fixes for large bugs or issues. The develop version typically is not in a usable state at all times. 
 
 ### Executable installation steps
 
