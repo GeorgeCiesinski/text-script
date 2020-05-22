@@ -424,10 +424,10 @@ class Gui:
         Organizes frames and widgets in root frame
         """
 
-        self._textblock_frame.grid(column=0, row=0, rowspan=2, columnspan=3, sticky="nw")
-        self._stats_frame.grid(column=2, row=2, sticky="nw")
-        self._new_shortcuts_frame.grid(column=0, row=2, sticky="nw")
-        self._removed_shortcuts_frame.grid(column=1, row=2, sticky="nw")
+        self._textblock_frame.grid(column=0, row=0, rowspan=2, columnspan=3, padx="3", pady="1", sticky="nw")
+        self._stats_frame.grid(column=2, row=2, padx="3", pady="1", sticky="nw")
+        self._new_shortcuts_frame.grid(column=0, row=2, padx="3", pady="1", sticky="nw")
+        self._removed_shortcuts_frame.grid(column=1, row=2, padx="3", pady="1", sticky="nw")
 
     def _open_settings(self):
         """
