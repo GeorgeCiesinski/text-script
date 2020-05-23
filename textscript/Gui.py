@@ -64,6 +64,9 @@ class Gui:
         # Creates the root window
         self._root = tk.Tk()
 
+        # Prevents window from being resizable
+        self._root.resizable(False, False)
+
         # Sets the window corner icon
         self._root.iconbitmap(default='../assets/textscript.ico')
 
@@ -366,6 +369,7 @@ class Gui:
             bd=4,
             font=self._mono_font,
             selectmode="single",
+            height=5,
             width=30
         )
 
@@ -404,6 +408,7 @@ class Gui:
             bd=4,
             font=self._mono_font,
             selectmode="single",
+            height=5,
             width=30
         )
 
