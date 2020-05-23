@@ -64,6 +64,9 @@ class Gui:
         # Creates the root window
         self._root = tk.Tk()
 
+        # Prevents window from being resizable
+        self._root.resizable(False, False)
+
         # Sets the window corner icon
         self._root.iconbitmap(default='../assets/textscript.ico')
 
@@ -79,6 +82,8 @@ class Gui:
         # Create the Info frames
         self._create_stats_frame()
         self._create_textblock_frame()
+        self._create_new_shortcuts_frame()
+        self._create_removed_shortcuts_frame()
 
         # Place Info Frames
         self._organize_frames()
@@ -341,13 +346,93 @@ class Gui:
         _vertical_scrollbar.grid(column=1, row=1, sticky="ns")
         _horizontal_scrollbar.grid(column=0, row=2, sticky="ew")
 
+    def _create_new_shortcuts_frame(self):
+        """
+        Creates a new frame for the new shortcuts
+        """
+
+        self._log.debug("Gui: Creating the New Shortcuts frame.")
+
+        # Create the frame
+        self._new_shortcuts_frame = tk.Frame(self._root)
+
+        # Create Information Label
+        _new_shortcuts_label = tk.Label(
+            self._new_shortcuts_frame,
+            font=self._font_category,
+            text="NEW SHORTCUTS:"
+        )
+
+        # Create Textblock Listbox
+        _new_shortcuts_listbox = tk.Listbox(
+            self._new_shortcuts_frame,
+            bd=4,
+            font=self._mono_font,
+            selectmode="single",
+            height=5,
+            width=30
+        )
+
+        _new_shortcut_list = self._setup.new_shortcuts
+
+        for _shortcut in _new_shortcut_list:
+            _shortcut_index = _new_shortcut_list.index(_shortcut)
+            _new_shortcuts_listbox.insert((_shortcut_index + 1), _shortcut)
+
+        # Pack Widgets
+        # Info Labels
+        _new_shortcuts_label.grid(column=0, row=0, sticky="w")
+        # Listbox & scrollbar
+        _new_shortcuts_listbox.grid(column=0, row=1, sticky="w")
+
+    def _create_removed_shortcuts_frame(self):
+        """
+        Creates a new frame for the removed shortcuts
+        """
+
+        self._log.debug("Gui: Creating the Removed Shortcuts frame.")
+
+        # Create the frame
+        self._removed_shortcuts_frame = tk.Frame(self._root)
+
+        # Create Information Label
+        _removed_shortcuts_label = tk.Label(
+            self._removed_shortcuts_frame,
+            font=self._font_category,
+            text="REMOVED SHORTCUTS:"
+        )
+
+        # Create Textblock Listbox
+        _removed_shortcuts_listbox = tk.Listbox(
+            self._removed_shortcuts_frame,
+            bd=4,
+            font=self._mono_font,
+            selectmode="single",
+            height=5,
+            width=30
+        )
+
+        _removed_shortcut_list = self._setup.removed_shortcuts
+
+        for _shortcut in _removed_shortcut_list:
+            _shortcut_index = _removed_shortcut_list.index(_shortcut)
+            _removed_shortcuts_listbox.insert((_shortcut_index + 1), _shortcut)
+
+        # Pack Widgets
+        # Info Labels
+        _removed_shortcuts_label.grid(column=0, row=0, sticky="w")
+        # Listbox & scrollbar
+        _removed_shortcuts_listbox.grid(column=0, row=1, sticky="w")
+
     def _organize_frames(self):
         """
         Organizes frames and widgets in root frame
         """
 
-        self._textblock_frame.grid(column=0, row=0, sticky="nw")
-        self._stats_frame.grid(column=1, row=0, sticky="nw")
+        self._textblock_frame.grid(column=0, row=0, rowspan=2, columnspan=3, padx="3", pady="1", sticky="nw")
+        self._stats_frame.grid(column=2, row=2, padx="3", pady="1", sticky="nw")
+        self._new_shortcuts_frame.grid(column=0, row=2, padx="3", pady="1", sticky="nw")
+        self._removed_shortcuts_frame.grid(column=1, row=2, padx="3", pady="1", sticky="nw")
 
     def _open_settings(self):
         """
