@@ -84,6 +84,7 @@ class Gui:
         self._create_textblock_frame()
         self._create_new_shortcuts_frame()
         self._create_removed_shortcuts_frame()
+        self._create_buttons_frame()
 
         # Place Info Frames
         self._organize_frames()
@@ -424,15 +425,51 @@ class Gui:
         # Listbox & scrollbar
         _removed_shortcuts_listbox.grid(column=0, row=1, sticky="w")
 
+    def _create_buttons_frame(self):
+        """
+        Creates a new frame containing the button controls
+        """
+
+        self._log.debug("Gui: Creating the buttons frame.")
+
+        # Create the frame
+        self._buttons_frame = tk.Frame(self._root)
+
+        _add_button = tk.Button(
+            self._buttons_frame,
+            text="Add",
+            width=10,
+            command=self._do_nothing
+        )
+
+        _edit_button = tk.Button(
+            self._buttons_frame,
+            text="Edit",
+            width=10,
+            command=self._do_nothing
+        )
+
+        _delete_button = tk.Button(
+            self._buttons_frame,
+            text="Delete",
+            width=10,
+            command=self._do_nothing
+        )
+
+        _add_button.grid(column=0, row=0, sticky="nw", padx="2", pady="2")
+        _edit_button.grid(column=1, row=0, sticky="nw", padx="2", pady="2")
+        _delete_button.grid(column=2, row=0, sticky="nw", padx="2", pady="2")
+
     def _organize_frames(self):
         """
         Organizes frames and widgets in root frame
         """
 
         self._textblock_frame.grid(column=0, row=0, rowspan=2, columnspan=3, padx="3", pady="1", sticky="nw")
-        self._stats_frame.grid(column=2, row=2, padx="3", pady="1", sticky="nw")
+        self._stats_frame.grid(column=2, row=2, rowspan=2, padx="3", pady="1", sticky="nw")
         self._new_shortcuts_frame.grid(column=0, row=2, padx="3", pady="1", sticky="nw")
         self._removed_shortcuts_frame.grid(column=1, row=2, padx="3", pady="1", sticky="nw")
+        self._buttons_frame.grid(column=0, row=3, padx="3", pady="1", sticky="nw")
 
     def _open_settings(self):
         """
