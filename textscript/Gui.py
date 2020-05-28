@@ -446,14 +446,14 @@ class Gui:
             self._buttons_frame,
             text="Edit",
             width=10,
-            command=self._do_nothing
+            command=self._edit_textblock
         )
 
         _delete_button = tk.Button(
             self._buttons_frame,
             text="Delete",
             width=10,
-            command=self._do_nothing
+            command=self._delete_textblock
         )
 
         _add_button.grid(column=0, row=0, sticky="nw", padx="2", pady="2")
@@ -883,6 +883,36 @@ class Gui:
         # Window Setup
         self._new_textblock_window.title("New Textblock")
         self._new_textblock_window.iconbitmap(default='../assets/textscript.ico')  # Sets the window corner icon
+        self._log.debug("Successfully setup new textblock window.")
+
+    def _edit_textblock(self):
+
+        """
+        Opens a new window where a textblock can be edited
+        """
+
+        # Creates a new window
+        self._edit_textblock_window = tk.Toplevel()
+        self._log.debug("Gui: Edit textblock window created successfully.")
+
+        # Window Setup
+        self._edit_textblock_window.title("Edit Textblock")
+        self._edit_textblock_window.iconbitmap(default='../assets/textscript.ico')  # Sets the window corner icon
+        self._log.debug("Successfully setup new textblock window.")
+
+    def _delete_textblock(self):
+
+        """
+        Opens a new window where a textblock can be deleted
+        """
+
+        # Creates a new window
+        self._delete_textblock_window = tk.Toplevel()
+        self._log.debug("Gui: Delete textblock window created successfully.")
+
+        # Window Setup
+        self._delete_textblock_window.title("Delete Textblock")
+        self._delete_textblock_window.iconbitmap(default='../assets/textscript.ico')  # Sets the window corner icon
         self._log.debug("Successfully setup new textblock window.")
 
     def _do_nothing(self):
