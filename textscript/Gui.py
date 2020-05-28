@@ -439,7 +439,7 @@ class Gui:
             self._buttons_frame,
             text="Add",
             width=10,
-            command=self._do_nothing
+            command=self._add_new_textblock
         )
 
         _edit_button = tk.Button(
@@ -500,7 +500,7 @@ class Gui:
         """
 
         # Creates a new window
-        self._settings_window = tk.Tk()
+        self._settings_window = tk.Toplevel()
         self._log.debug("Gui: Settings window created successfully.")
 
         # Window Setup
@@ -869,6 +869,21 @@ class Gui:
     """
     Temporary Methods
     """
+
+    def _add_new_textblock(self):
+
+        """
+        Opens a new window where textblocks can be created
+        """
+
+        # Creates a new window
+        self._new_textblock_window = tk.Toplevel()
+        self._log.debug("Gui: New textblock window created successfully.")
+
+        # Window Setup
+        self._new_textblock_window.title("New Textblock")
+        self._new_textblock_window.iconbitmap(default='../assets/textscript.ico')  # Sets the window corner icon
+        self._log.debug("Successfully setup new textblock window.")
 
     def _do_nothing(self):
         """
