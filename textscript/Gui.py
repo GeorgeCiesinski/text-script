@@ -885,6 +885,58 @@ class Gui:
         self._new_textblock_window.iconbitmap(default='../assets/textscript.ico')  # Sets the window corner icon
         self._log.debug("Successfully setup new textblock window.")
 
+        """
+        Widgets
+        """
+
+        # Labels
+        _shortcut_label = tk.Label(
+            self._new_textblock_window,
+            justify="left",
+            text="Shortcut",
+            font=self._font_category
+        )
+        _textblock_label = tk.Label(
+            self._new_textblock_window,
+            justify="left",
+            text="Textblock",
+            font=self._font_category
+        )
+        _delimiter_label = tk.Label(
+            self._new_textblock_window,
+            justify="left",
+            text="#",
+            width=1,
+        )
+
+        # Entry & Text
+        _shortcut_entry = tk.Entry(
+            self._new_textblock_window,
+            justify="left",
+            width=55
+        )
+        _textblock_text = tk.Text(
+            self._new_textblock_window,
+            width=55,
+            height=10
+        )
+
+        # Buttons
+        _btn_save = tk.Button(
+            self._new_textblock_window,
+            width=11,
+            text="Save",
+            command=self._do_nothing
+        )
+
+        # Pack Widgets
+        _shortcut_label.grid(row=0, column=0, columnspan=2, sticky="w", padx=4, pady=2)
+        _delimiter_label.grid(row=1, column=0, sticky="w", padx=4, pady=2)
+        _shortcut_entry.grid(row=1, column=1, sticky="w", padx=4, pady=2)
+        _textblock_label.grid(row=2, column=0, columnspan=2, sticky="w", padx=4, pady=2)
+        _textblock_text.grid(row=3, column=0, columnspan=2, sticky="w", padx=4, pady=2)
+        _btn_save.grid(row=4, column=1, sticky="e", padx=4, pady=2)
+
     def _edit_textblock(self):
 
         """
