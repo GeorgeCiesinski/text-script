@@ -273,7 +273,7 @@ class Gui:
 
     def _create_textblock_frame(self):
         """
-        Creates a new frame for the stats labels
+        Creates a new frame for the textblocks listbox
         """
 
         self._log.debug("Gui: Creating the textblock frame.")
