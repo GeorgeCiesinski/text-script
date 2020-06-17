@@ -313,6 +313,7 @@ class Gui:
             bd=4,
             width=100,
             font=self._mono_font,
+            relief="groove",
             selectmode="single"
         )
 
@@ -370,6 +371,7 @@ class Gui:
             bd=4,
             font=self._mono_font,
             selectmode="single",
+            relief="groove",
             height=5,
             width=30
         )
@@ -409,6 +411,7 @@ class Gui:
             bd=4,
             font=self._mono_font,
             selectmode="single",
+            relief="groove",
             height=5,
             width=30
         )
@@ -890,6 +893,12 @@ class Gui:
         """
 
         # Labels
+        _directory_label = tk.Label(
+            self._new_textblock_window,
+            justify="left",
+            text="Directory",
+            font=self._font_category
+        )
         _shortcut_label = tk.Label(
             self._new_textblock_window,
             justify="left",
@@ -918,7 +927,7 @@ class Gui:
         _textblock_text = tk.Text(
             self._new_textblock_window,
             width=55,
-            height=10
+            height=10,
         )
 
         # Buttons
@@ -930,12 +939,13 @@ class Gui:
         )
 
         # Pack Widgets
-        _shortcut_label.grid(row=0, column=0, columnspan=2, sticky="w", padx=4, pady=2)
-        _delimiter_label.grid(row=1, column=0, sticky="w", padx=4, pady=2)
-        _shortcut_entry.grid(row=1, column=1, sticky="w", padx=4, pady=2)
-        _textblock_label.grid(row=2, column=0, columnspan=2, sticky="w", padx=4, pady=2)
-        _textblock_text.grid(row=3, column=0, columnspan=2, sticky="w", padx=4, pady=2)
-        _btn_save.grid(row=4, column=1, sticky="e", padx=4, pady=2)
+        _directory_label.grid(row=0, column=0, columnspan=2, sticky="w", padx=4, pady=2)
+        _shortcut_label.grid(row=1, column=0, columnspan=2, sticky="w", padx=4, pady=2)
+        _delimiter_label.grid(row=2, column=0, sticky="w", padx=4, pady=2)
+        _shortcut_entry.grid(row=2, column=1, sticky="w", padx=4, pady=2)
+        _textblock_label.grid(row=3, column=0, columnspan=2, sticky="w", padx=4, pady=2)
+        _textblock_text.grid(row=4, column=0, columnspan=2, sticky="w", padx=4, pady=2)
+        _btn_save.grid(row=5, column=1, sticky="e", padx=4, pady=2)
 
     def _edit_textblock(self):
 
